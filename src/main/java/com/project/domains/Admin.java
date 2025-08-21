@@ -1,4 +1,4 @@
 package com.project.domains;
 
-public class Admin {
+public class Admin extends Pessoa{
 }

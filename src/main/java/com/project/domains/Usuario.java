@@ -1,4 +1,4 @@
 package com.project.domains;
 
-public class Usuario {
+public class Usuario extends Pessoa{
 }
