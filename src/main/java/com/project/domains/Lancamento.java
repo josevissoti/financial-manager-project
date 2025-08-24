@@ -1,27 +1,67 @@
 package com.project.domains;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.domains.enums.Situacao;
 import com.project.domains.enums.TipoLancamento;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
+@Entity
+@Table(name = "lancamento")
 public class Lancamento {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_lancamento")
     private Long idLancamento;
+
+    @NotNull
+    @NotBlank
     private String descricao;
+
+    @Digits(integer = 15, fraction = 3)
     private BigDecimal valor;
+
     private int parcela;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataLancamento;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate prazoVencimento;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataBaixa;
+
+    @Enumerated(EnumType.ORDINAL)
+    @JoinColumn(name = "tipolancamento")
     private TipoLancamento tipoLancamento;
+
+    @Enumerated(EnumType.ORDINAL)
+    @JoinColumn(name = "situacao")
     private Situacao situacao;
+
+    @ManyToOne
+    @JoinColumn(name = "idpessoa")
+    private Pessoa pessoa;
+
+    @ManyToOne
+    @JoinColumn(name = "idcategorialancamento")
+    private CategoriaLancamento categoriaLancamento;
+
+    @ManyToOne
+    @JoinColumn(name = "idconta")
+    private Conta conta;
 
     public Lancamento() {
     }
 
-    public Lancamento(Long idLancamento, String descricao, BigDecimal valor, int parcela, LocalDate dataLancamento, LocalDate prazoVencimento, LocalDate dataBaixa, TipoLancamento tipoLancamento, Situacao situacao) {
+    public Lancamento(Long idLancamento, String descricao, BigDecimal valor, int parcela, LocalDate dataLancamento, LocalDate prazoVencimento, LocalDate dataBaixa, TipoLancamento tipoLancamento, Situacao situacao, Pessoa pessoa, CategoriaLancamento categoriaLancamento, Conta conta) {
         this.idLancamento = idLancamento;
         this.descricao = descricao;
         this.valor = valor;
@@ -31,6 +71,9 @@ public class Lancamento {
         this.dataBaixa = dataBaixa;
         this.tipoLancamento = tipoLancamento;
         this.situacao = situacao;
+        this.pessoa = pessoa;
+        this.categoriaLancamento = categoriaLancamento;
+        this.conta = conta;
     }
 
     public Long getIdLancamento() {
@@ -103,5 +146,25 @@ public class Lancamento {
 
     public void setSituacao(Situacao situacao) {
         this.situacao = situacao;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Lancamento that = (Lancamento) o;
+        return Objects.equals(idLancamento, that.idLancamento);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idLancamento);
     }
 }

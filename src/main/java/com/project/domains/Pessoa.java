@@ -1,27 +1,69 @@
 package com.project.domains;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.domains.enums.FuncaoPessoa;
 import com.project.domains.enums.Status;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+
+@Entity
+@Table(name = "pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pessoa {
 
-    private Long idPessoa;
-    private String nome;
-    private String cpf;
-    private LocalDate dataNascimento;
-    private LocalDate dataCriacao;
-    private String telefone;
-    private String email;
-    private String senha;
-    private FuncaoPessoa funcaoPessoa;
-    private Status status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
+    @SequenceGenerator(name = "seq_pessoa", sequenceName = "seq_pessoa", allocationSize = 1)
+    protected Long idPessoa;
+
+    @NotNull
+    @NotBlank
+    protected String nome;
+
+    @NotNull
+    @NotBlank
+    protected String cpf;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    protected LocalDate dataNascimento;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    protected LocalDate dataCriacao = LocalDate.now();
+
+    @NotNull
+    @NotBlank
+    protected String telefone;
+
+    @NotNull
+    @NotBlank
+    protected String email;
+
+    @NotNull
+    @NotBlank
+    protected String senha;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "perfis", joinColumns = @JoinColumn(name = "id_pessoa"))
+    @Column(name = "funcap_pessoa")
+    protected Set<Integer> funcaoPessoa = new HashSet<>();
+
+    @Enumerated(EnumType.ORDINAL)
+    @JoinColumn(name = "status")
+    protected Status status;
 
     public Pessoa() {
+        addFuncaoPessoa(FuncaoPessoa.USUARIO);
     }
 
-    public Pessoa(Long idPessoa, String nome, String cpf, LocalDate dataNascimento, LocalDate dataCriacao, String telefone, String email, String senha, FuncaoPessoa funcaoPessoa, Status status) {
+    public Pessoa(Long idPessoa, String nome, String cpf, LocalDate dataNascimento, LocalDate dataCriacao, String telefone, String email, String senha, Status status) {
         this.idPessoa = idPessoa;
         this.nome = nome;
         this.cpf = cpf;
@@ -30,7 +72,98 @@ public abstract class Pessoa {
         this.telefone = telefone;
         this.email = email;
         this.senha = senha;
-        this.funcaoPessoa = funcaoPessoa;
         this.status = status;
+    }
+
+    public Long getIdPessoa() {
+        return idPessoa;
+    }
+
+    public void setIdPessoa(Long idPessoa) {
+        this.idPessoa = idPessoa;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Set<FuncaoPessoa> getFuncaoPessoa() {
+        return funcaoPessoa.stream().map(FuncaoPessoa::toEnum).collect(Collectors.toSet());
+    }
+
+    public void addFuncaoPessoa(FuncaoPessoa funcaoPessoa) {
+        this.funcaoPessoa.add(funcaoPessoa.getId());
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Pessoa pessoa = (Pessoa) o;
+        return Objects.equals(idPessoa, pessoa.idPessoa) && Objects.equals(cpf, pessoa.cpf) && Objects.equals(email, pessoa.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPessoa, cpf, email);
     }
 }

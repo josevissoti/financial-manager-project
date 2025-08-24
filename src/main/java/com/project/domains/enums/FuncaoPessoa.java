@@ -28,7 +28,7 @@ public enum FuncaoPessoa {
         this.funcaoPessoa = funcaoPessoa;
     }
 
-    private static FuncaoPessoa toEnum(Integer id) {
+    public static FuncaoPessoa toEnum(Integer id) {
         if (id == null) return null;
         for (FuncaoPessoa funcaoPessoa : FuncaoPessoa.values()) {
             if (id.equals(funcaoPessoa.getId())) {
