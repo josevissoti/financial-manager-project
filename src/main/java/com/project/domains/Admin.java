@@ -2,9 +2,13 @@ package com.project.domains;
 
 import com.project.domains.enums.FuncaoPessoa;
 import com.project.domains.enums.Status;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "admin")
 public class Admin extends Pessoa {
 
     public Admin(Long idPessoa, String nome, String cpf, LocalDate dataNascimento, LocalDate dataCriacao, String telefone, String email, String senha, Status status) {
