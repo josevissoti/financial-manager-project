@@ -156,6 +156,22 @@ public class Lancamento {
         this.pessoa = pessoa;
     }
 
+    public CategoriaLancamento getCategoriaLancamento() {
+        return categoriaLancamento;
+    }
+
+    public void setCategoriaLancamento(CategoriaLancamento categoriaLancamento) {
+        this.categoriaLancamento = categoriaLancamento;
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
