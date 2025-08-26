@@ -78,6 +78,7 @@ public class LancamentoDTO {
     }
 
     public Long getIdLancamento() {
+
         return idLancamento;
     }
 
