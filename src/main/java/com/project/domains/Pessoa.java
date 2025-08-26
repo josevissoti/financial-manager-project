@@ -1,6 +1,7 @@
 package com.project.domains;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.domains.enums.FuncaoPessoa;
 import com.project.domains.enums.Status;
 import jakarta.persistence.*;
@@ -8,9 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -58,6 +57,19 @@ public abstract class Pessoa {
     @Enumerated(EnumType.ORDINAL)
     @JoinColumn(name = "status")
     protected Status status;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pessoa")
+    private List<Conta> contas = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pessoa")
+    private List<CategoriaLancamento> categoriaLancamentos = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "pessoa")
+    private List<Lancamento> lancamentos = new ArrayList<>();
+
 
     public Pessoa() {
         addFuncaoPessoa(FuncaoPessoa.USUARIO);
@@ -153,6 +165,34 @@ public abstract class Pessoa {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setFuncaoPessoa(Set<Integer> funcaoPessoa) {
+        this.funcaoPessoa = funcaoPessoa;
+    }
+
+    public List<Conta> getContas() {
+        return contas;
+    }
+
+    public void setContas(List<Conta> contas) {
+        this.contas = contas;
+    }
+
+    public List<CategoriaLancamento> getCategoriaLancamentos() {
+        return categoriaLancamentos;
+    }
+
+    public void setCategoriaLancamentos(List<CategoriaLancamento> categoriaLancamentos) {
+        this.categoriaLancamentos = categoriaLancamentos;
+    }
+
+    public List<Lancamento> getLancamentos() {
+        return lancamentos;
+    }
+
+    public void setLancamentos(List<Lancamento> lancamentos) {
+        this.lancamentos = lancamentos;
     }
 
     @Override

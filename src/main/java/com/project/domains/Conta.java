@@ -1,5 +1,7 @@
 package com.project.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.domains.dtos.ContaDTO;
 import com.project.domains.enums.TipoConta;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
@@ -7,6 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +51,10 @@ public class Conta {
     @JoinColumn(name = "idbanco")
     private Banco banco;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "conta")
+    private List<Lancamento> lancamentos = new ArrayList<>();
+
     public Conta() {
     }
 
@@ -60,6 +68,15 @@ public class Conta {
         this.tipoConta = tipoConta;
         this.pessoa = pessoa;
         this.banco = banco;
+    }
+
+    public Conta(ContaDTO dto) {
+        this.idConta = dto.getIdConta();
+        this.descricao = dto.getDescricao();
+        this.saldo = dto.getSaldo();
+        this.limite = dto.getLimite();
+        this.agencia = dto.getAgencia();
+        this.numero = dto.getNumero();
     }
 
     public Long getIdConta() {
@@ -132,6 +149,14 @@ public class Conta {
 
     public void setBanco(Banco banco) {
         this.banco = banco;
+    }
+
+    public List<Lancamento> getLancamentos() {
+        return lancamentos;
+    }
+
+    public void setLancamentos(List<Lancamento> lancamentos) {
+        this.lancamentos = lancamentos;
     }
 
     @Override

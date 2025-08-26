@@ -22,4 +22,6 @@ public class BancoResource {
         return ResponseEntity.ok().body(bancoService.findAll());
     }
 
+
+
 }

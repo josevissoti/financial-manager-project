@@ -1,6 +1,7 @@
 package com.project.domains;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.domains.dtos.LancamentoDTO;
 import com.project.domains.enums.Situacao;
 import com.project.domains.enums.TipoLancamento;
 import jakarta.persistence.*;
@@ -74,6 +75,16 @@ public class Lancamento {
         this.pessoa = pessoa;
         this.categoriaLancamento = categoriaLancamento;
         this.conta = conta;
+    }
+
+    public Lancamento(LancamentoDTO dto) {
+        this.idLancamento = dto.getIdLancamento();
+        this.descricao = dto.getDescricao();
+        this.valor = dto.getValor();
+        this.parcela = dto.getParcela();
+        this.dataLancamento = dto.getDataLancamento();
+        this.prazoVencimento = dto.getPrazoVencimento();
+        this.dataBaixa = dto.getDataBaixa();
     }
 
     public Long getIdLancamento() {

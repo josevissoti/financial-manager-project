@@ -1,9 +1,13 @@
 package com.project.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.domains.dtos.CategoriaLancamentoDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +26,10 @@ public class CategoriaLancamento {
     @JoinColumn(name = "idpessoa")
     private Pessoa pessoa;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "categorialancamento")
+    private List<Lancamento> lancamentos = new ArrayList<>();
+
     public CategoriaLancamento() {
     }
 
@@ -29,6 +37,11 @@ public class CategoriaLancamento {
         this.idCategoriaLancamento = idCategoriaLancamento;
         this.descricao = descricao;
         this.pessoa = pessoa;
+    }
+
+    public CategoriaLancamento(CategoriaLancamentoDTO dto) {
+        this.idCategoriaLancamento = dto.getIdCategoriaLancamento();
+        this.descricao = dto.getDescricao();
     }
 
     public Long getIdCategoriaLancamento() {
@@ -53,6 +66,14 @@ public class CategoriaLancamento {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+    }
+
+    public List<Lancamento> getLancamentos() {
+        return lancamentos;
+    }
+
+    public void setLancamentos(List<Lancamento> lancamentos) {
+        this.lancamentos = lancamentos;
     }
 
     @Override

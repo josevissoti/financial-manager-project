@@ -1,10 +1,14 @@
 package com.project.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.domains.dtos.BancoDTO;
 import com.project.domains.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +27,10 @@ public class Banco {
     @JoinColumn(name = "status")
     private Status status;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "banco")
+    private List<Conta> contas = new ArrayList<>();
+
     public Banco() {
     }
 
@@ -30,6 +38,11 @@ public class Banco {
         this.idBanco = idBanco;
         this.razaoSocial = razaoSocial;
         this.status = status;
+    }
+
+    public Banco(BancoDTO dto) {
+        this.idBanco = dto.getIdBanco();
+        this.razaoSocial = dto.getRazaoSocial();
     }
 
     public Integer getIdBanco() {
@@ -54,6 +67,14 @@ public class Banco {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Conta> getContas() {
+        return contas;
+    }
+
+    public void setContas(List<Conta> contas) {
+        this.contas = contas;
     }
 
     @Override
