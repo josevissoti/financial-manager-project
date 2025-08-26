@@ -5,7 +5,7 @@ Funcionalidades
 
 # Diagrama de Classe
 
-<img src="./assets/diagrama.jpeg" alt="Diagrama de Classe">
+<img src="./assets/diagrama.jpeg.jpg" alt="Diagrama de Classe">
 
 ## Tecnologias
 
