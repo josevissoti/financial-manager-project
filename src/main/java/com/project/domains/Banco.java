@@ -43,6 +43,7 @@ public class Banco {
     public Banco(BancoDTO dto) {
         this.idBanco = dto.getIdBanco();
         this.razaoSocial = dto.getRazaoSocial();
+        this.status = Status.toEnum(dto.getStatus());
     }
 
     public Integer getIdBanco() {

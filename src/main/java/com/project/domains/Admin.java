@@ -32,6 +32,7 @@ public class Admin extends Pessoa {
         this.telefone = dto.getTelefone();
         this.email = dto.getEmail();
         this.senha = dto.getSenha();
+        this.status = Status.toEnum(dto.getStatus());
         this.funcaoPessoa = dto.getFuncaoPessoa().stream()
                 .map(x -> x.getId()).collect(Collectors.toSet());
         addFuncaoPessoa(FuncaoPessoa.USUARIO);

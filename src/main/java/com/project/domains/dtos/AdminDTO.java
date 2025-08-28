@@ -44,7 +44,8 @@ public class AdminDTO {
     @NotBlank(message = "O campo Senha não pode ser vazio")
     protected String senha;
 
-    protected int status;
+    @NotNull(message = "O campo Status é requerido")
+    protected Integer status;
 
     protected Set<Integer> funcaoPessoa = new HashSet<>();
 
@@ -128,11 +129,11 @@ public class AdminDTO {
         this.senha = senha;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -77,6 +77,7 @@ public class Conta {
         this.limite = dto.getLimite();
         this.agencia = dto.getAgencia();
         this.numero = dto.getNumero();
+        this.tipoConta = TipoConta.toEnum(dto.getTipoConta());
     }
 
     public Long getIdConta() {

@@ -85,6 +85,8 @@ public class Lancamento {
         this.dataLancamento = dto.getDataLancamento();
         this.prazoVencimento = dto.getPrazoVencimento();
         this.dataBaixa = dto.getDataBaixa();
+        this.situacao = Situacao.toEnum(dto.getSituacao());
+        this.tipoLancamento = TipoLancamento.toEnum(dto.getTipoLancamneto());
     }
 
     public Long getIdLancamento() {

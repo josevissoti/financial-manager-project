@@ -51,7 +51,7 @@ public abstract class Pessoa {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "perfis", joinColumns = @JoinColumn(name = "id_pessoa"))
-    @Column(name = "funcap_pessoa")
+    @Column(name = "funcao_pessoa")
     protected Set<Integer> funcaoPessoa = new HashSet<>();
 
     @Enumerated(EnumType.ORDINAL)

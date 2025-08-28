@@ -27,7 +27,7 @@ public class CategoriaLancamento {
     private Pessoa pessoa;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "categorialancamento")
+    @OneToMany(mappedBy = "categoriaLancamento")
     private List<Lancamento> lancamentos = new ArrayList<>();
 
     public CategoriaLancamento() {
