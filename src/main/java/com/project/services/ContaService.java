@@ -26,7 +26,7 @@ public class ContaService {
 
     public Conta findById(Long id) {
         Optional<Conta> obj = contaRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID> " + id));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
     }
 
     public Conta create(ContaDTO objDto) {
@@ -45,7 +45,7 @@ public class ContaService {
     public void delete(Long id) {
         Conta obj = findById(id);
         if (obj.getLancamentos().size() > 0) {
-            throw new DataIntegrityViolationException("Admin não pode ser deletado pois possui vinculos cadastrados");
+            throw new DataIntegrityViolationException("Conta não pode ser deletada pois possui vinculos cadastrados");
         }
         contaRepository.deleteById(id);
     }

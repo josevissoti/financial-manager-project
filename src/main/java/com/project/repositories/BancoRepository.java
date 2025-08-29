@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface BancoRepository extends JpaRepository<Banco, Integer> {
 
-    Optional<Banco> findByRazaoSocial(String razaoSocial);
+    Optional<Banco> findByRazaoSocial(String razaosocial);
 
 
 }

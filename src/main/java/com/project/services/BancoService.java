@@ -52,7 +52,7 @@ public class BancoService {
     public void delete(Integer id) {
         Banco obj = findById(id);
         if (obj.getContas().size() > 0) {
-            throw new DataIntegrityViolationException("Admin não pode ser deletado pois possui vinculos cadastrados");
+            throw new DataIntegrityViolationException("Banco não pode ser deletado pois possui vinculos cadastrados");
         }
         bancoRepository.deleteById(id);
     }

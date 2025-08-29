@@ -42,6 +42,8 @@ public class CategoriaLancamento {
     public CategoriaLancamento(CategoriaLancamentoDTO dto) {
         this.idCategoriaLancamento = dto.getIdCategoriaLancamento();
         this.descricao = dto.getDescricao();
+        this.pessoa = new Usuario();
+        this.pessoa.setIdPessoa(dto.getIdPessoa());
     }
 
     public Long getIdCategoriaLancamento() {

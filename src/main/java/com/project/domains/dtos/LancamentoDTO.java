@@ -47,10 +47,9 @@ public class LancamentoDTO {
     @NotNull(message = "O campo Conta é requerido")
     private Long idConta;
     private String descricaoConta;
-    @Digits(integer = 15, fraction = 3)
     private BigDecimal saldo;
     private String agencia;
-    private String conta;
+    private String numero;
 
     public LancamentoDTO() {
     }
@@ -74,7 +73,7 @@ public class LancamentoDTO {
         this.descricaoConta = lancamento.getConta().getDescricao();
         this.saldo = lancamento.getConta().getSaldo();
         this.agencia = lancamento.getConta().getAgencia();
-        this.conta = lancamento.getConta().getAgencia();
+        this.numero = lancamento.getConta().getNumero();
     }
 
     public Long getIdLancamento() {
@@ -222,11 +221,11 @@ public class LancamentoDTO {
         this.agencia = agencia;
     }
 
-    public String getConta() {
-        return conta;
+    public String getNumero() {
+        return numero;
     }
 
-    public void setConta(String conta) {
-        this.conta = conta;
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 }

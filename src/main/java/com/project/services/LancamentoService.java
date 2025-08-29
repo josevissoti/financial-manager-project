@@ -25,11 +25,11 @@ public class LancamentoService {
 
     public Lancamento findById(Long id) {
         Optional<Lancamento> obj = lancamentoRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID> " + id));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
     }
 
     public Lancamento create(LancamentoDTO objDto) {
-        objDto.setIdConta(null);
+        objDto.setIdLancamento(null);
         Lancamento newObj = new Lancamento(objDto);
         return lancamentoRepository.save(newObj);
     }

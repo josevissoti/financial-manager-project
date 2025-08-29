@@ -26,7 +26,7 @@ public class CategoriaLancamentoService {
 
     public CategoriaLancamento findById(Long id) {
         Optional<CategoriaLancamento> obj = categoriaLancamentoRepostory.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID> " + id));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
     }
 
     public CategoriaLancamento create(CategoriaLancamentoDTO objDto) {
@@ -45,7 +45,7 @@ public class CategoriaLancamentoService {
     public void delete(Long id) {
         CategoriaLancamento obj = findById(id);
         if (obj.getLancamentos().size() > 0) {
-            throw new DataIntegrityViolationException("Admin não pode ser deletado pois possui vinculos cadastrados");
+            throw new DataIntegrityViolationException("Categoria de Lançamento não pode ser deletada pois possui vinculos cadastrados");
         }
         categoriaLancamentoRepostory.deleteById(id);
     }

@@ -78,6 +78,10 @@ public class Conta {
         this.agencia = dto.getAgencia();
         this.numero = dto.getNumero();
         this.tipoConta = TipoConta.toEnum(dto.getTipoConta());
+        this.banco = new Banco();
+        this.banco.setIdBanco(dto.getIdBanco());
+        this.pessoa = new Usuario();
+        this.pessoa.setIdPessoa(dto.getIdPessoa());
     }
 
     public Long getIdConta() {

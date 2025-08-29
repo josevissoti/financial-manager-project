@@ -31,8 +31,8 @@ public class BancoResource {
     }
 
     @GetMapping(value = "/razaosocial/{razaosocial}")
-    public ResponseEntity<BancoDTO> findByRazaoSocial(@PathVariable String razaoSocial) {
-        Banco obj = this.bancoService.findByRazaoSocial(razaoSocial);
+    public ResponseEntity<BancoDTO> findByRazaoSocial(@PathVariable String razaosocial) {
+        Banco obj = this.bancoService.findByRazaoSocial(razaosocial);
         return ResponseEntity.ok().body(new BancoDTO(obj));
     }
 

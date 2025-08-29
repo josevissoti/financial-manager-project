@@ -38,6 +38,10 @@ public class ContaDTO {
     private String nome;
     private String email;
 
+    @NotNull(message = "O campo Banco é requerido")
+    private Integer idBanco;
+    private String razaoSocialBanco;
+
     public ContaDTO() {
     }
 
@@ -52,6 +56,8 @@ public class ContaDTO {
         this.idPessoa = conta.getPessoa().getIdPessoa();
         this.nome = conta.getPessoa().getNome();
         this.email = conta.getPessoa().getEmail();
+        this.idBanco = conta.getBanco().getIdBanco();
+        this.razaoSocialBanco = conta.getBanco().getRazaoSocial();
     }
 
     public Long getIdConta() {
@@ -132,5 +138,21 @@ public class ContaDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getIdBanco() {
+        return idBanco;
+    }
+
+    public void setIdBanco(Integer idBanco) {
+        this.idBanco = idBanco;
+    }
+
+    public String getRazaoSocialBanco() {
+        return razaoSocialBanco;
+    }
+
+    public void setRazaoSocialBanco(String razaoSocialBanco) {
+        this.razaoSocialBanco = razaoSocialBanco;
     }
 }
