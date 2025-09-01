@@ -7,6 +7,7 @@ import com.project.domains.enums.TipoConta;
 import com.project.domains.enums.TipoLancamento;
 import com.project.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,6 +35,9 @@ public class DBService {
     @Autowired
     private LancamentoRepository lancamentoRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     public void initDB() {
 
         Banco banco01 = new Banco(
@@ -60,7 +64,7 @@ public class DBService {
                 LocalDate.now(),
                 "(17)99387-3018",
                 "manuel@gmaill.com",
-                "manuel123",
+                encoder.encode("manuel123"),
                 Status.ATIVO
         );
         Usuario usuario02 = new Usuario(
@@ -71,7 +75,7 @@ public class DBService {
                 LocalDate.now(),
                 "(17)99864-3254",
                 "leticia@gmaill.com",
-                "leticia123",
+                encoder.encode("leticia123"),
                 Status.ATIVO
         );
 
@@ -83,7 +87,7 @@ public class DBService {
                 LocalDate.now(),
                 "(17)997183-0916",
                 "carlos@gmail.com",
-                "carlos123",
+                encoder.encode("carlos123"),
                 Status.ATIVO
         );
         Admin admin02 = new Admin(
@@ -94,7 +98,7 @@ public class DBService {
                 LocalDate.now(),
                 "(17)996972-8433",
                 "renata@gmail.com",
-                "renata123",
+                encoder.encode("renata123"),
                 Status.ATIVO
         );
 

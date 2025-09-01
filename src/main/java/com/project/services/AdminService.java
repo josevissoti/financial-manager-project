@@ -6,6 +6,7 @@ import com.project.repositories.AdminRepository;
 import com.project.services.exceptions.DataIntegrityViolationException;
 import com.project.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     public List<AdminDTO> findAll() {
         return adminRepository.findAll().stream()
@@ -41,6 +45,7 @@ public class AdminService {
 
     public Admin create(AdminDTO objDto) {
         objDto.setIdAdmin(null);
+        objDto.setSenha(encoder.encode(objDto.getSenha()));
         ValidaPorCPFeEmail(objDto);
         Admin newObj = new Admin(objDto);
         return adminRepository.save(newObj);
