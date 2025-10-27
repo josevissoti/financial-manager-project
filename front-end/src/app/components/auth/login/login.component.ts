@@ -27,24 +27,23 @@ export class LoginComponent {
   ) {}
 
   onSubmit(): void {
-    this.loading = true;
-    this.error = '';
-    console.log('🎯 Iniciando processo de login...');
-
-    this.authService.login(this.credenciais).subscribe({
-      next: (response) => {
-        console.log('🎉 Login completo! Navegando para dashboard...');
-        this.loading = false;
-        this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        console.error('💥 Erro capturado no componente:', error);
-        this.error = 'Erro ao fazer login. Verifique as credenciais.';
-        this.loading = false;
-      },
-      complete: () => {
-        console.log('📞 Observable completo');
-      }
-    });
-  }
+  this.loading = true;
+  this.error = '';
+  
+  console.log('🚀 Iniciando processo de login...');
+  
+  this.authService.login(this.credenciais).subscribe({
+    next: (response) => {
+      console.log('🎉 Login realizado com sucesso!');
+      console.log('🔄 Redirecionando para dashboard...');
+      this.loading = false;
+      this.router.navigate(['/dashboard']);
+    },
+    error: (error) => {
+      console.error('💥 Erro no login:', error);
+      this.error = 'Credenciais inválidas. Tente novamente.';
+      this.loading = false;
+    }
+  });
+}
 }

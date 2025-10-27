@@ -1,0 +1,187 @@
+<div class="container-fluid p-0">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        💰 Financial Manager
+      </a>
+      
+      <div class="navbar-nav ms-auto d-flex align-items-center">
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" 
+             data-bs-toggle="dropdown" aria-expanded="false">
+            👤 {{ userName }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><span class="dropdown-item-text small text-muted">{{ userEmail }}</span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" (click)="logout()">🚪 Sair</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <div class="container mt-4">
+    
+    <!-- Cards de Métricas -->
+    <div class="row g-3 mb-4">
+      <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm bg-success text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title mb-1">Saldo Total</h6>
+                <h3 class="mb-0">R$ 0,00</h3>
+                <small class="opacity-75">Disponível</small>
+              </div>
+              <div class="display-6">💰</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm bg-info text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title mb-1">Receitas</h6>
+                <h3 class="mb-0">R$ 0,00</h3>
+                <small class="opacity-75">Este mês</small>
+              </div>
+              <div class="display-6">📈</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm bg-warning text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title mb-1">Despesas</h6>
+                <h3 class="mb-0">R$ 0,00</h3>
+                <small class="opacity-75">Este mês</small>
+              </div>
+              <div class="display-6">📉</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm bg-danger text-white">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="card-title mb-1">Pendentes</h6>
+                <h3 class="mb-0">0</h3>
+                <small class="opacity-75">Lançamentos</small>
+              </div>
+              <div class="display-6">⏳</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu de Navegação Rápida -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-0">
+            <h5 class="mb-0">📋 Menu Rápido</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3 text-center">
+              <div class="col-lg-3 col-md-6">
+                <button class="btn btn-outline-primary btn-lg w-100 h-100 py-3" 
+                        routerLink="/lancamentos">
+                  <div class="fs-1">💸</div>
+                  <div class="fw-bold">Lançamentos</div>
+                  <small class="text-muted">Gerencie entradas e saídas</small>
+                </button>
+              </div>
+              
+              <div class="col-lg-3 col-md-6">
+                <button class="btn btn-outline-secondary btn-lg w-100 h-100 py-3"
+                        routerLink="/contas">
+                  <div class="fs-1">🏦</div>
+                  <div class="fw-bold">Contas</div>
+                  <small class="text-muted">Suas contas bancárias</small>
+                </button>
+              </div>
+              
+              <div class="col-lg-3 col-md-6">
+                <button class="btn btn-outline-success btn-lg w-100 h-100 py-3"
+                        routerLink="/categorias">
+                  <div class="fs-1">🏷️</div>
+                  <div class="fw-bold">Categorias</div>
+                  <small class="text-muted">Organize por categorias</small>
+                </button>
+              </div>
+              
+              <div class="col-lg-3 col-md-6">
+                <button class="btn btn-outline-info btn-lg w-100 h-100 py-3"
+                        routerLink="/relatorios">
+                  <div class="fs-1">📊</div>
+                  <div class="fw-bold">Relatórios</div>
+                  <small class="text-muted">Visualize seus dados</small>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações Rápidas e Últimos Lançamentos -->
+    <div class="row g-4">
+      <!-- Ações Rápidas -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">⚡ Ações Rápidas</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-success btn-lg" routerLink="/lancamentos/novo">
+                ➕ Novo Lançamento
+              </button>
+              <button class="btn btn-outline-primary" routerLink="/contas/nova">
+                🏦 Nova Conta
+              </button>
+              <button class="btn btn-outline-secondary" routerLink="/categorias/nova">
+                🏷️ Nova Categoria
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimos Lançamentos -->
+      <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">🕒 Últimos Lançamentos</h5>
+            <button class="btn btn-primary btn-sm" routerLink="/lancamentos">
+              Ver Todos
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="text-center py-4">
+              <div class="text-muted mb-2">📭</div>
+              <p class="text-muted mb-2">Nenhum lançamento cadastrado ainda</p>
+              <a routerLink="/lancamentos/novo" class="btn btn-outline-success btn-sm">
+                Cadastrar Primeiro Lançamento
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

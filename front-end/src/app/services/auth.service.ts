@@ -43,6 +43,62 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    if (!token) {
+      console.log('🔐 Usuário não autenticado: token não encontrado');
+      return false;
+    }
+    
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000; // JWT exp está em segundos
+      const isValid = Date.now() < exp;
+      
+      console.log('🔐 Verificação de autenticação:', {
+        tokenExiste: !!token,
+        expiracao: new Date(exp),
+        agora: new Date(),
+        valido: isValid
+      });
+      
+      return isValid;
+    } catch (error) {
+      console.error('❌ Erro ao verificar token:', error);
+      return false;
+    }
+  }
+
+  getUserInfo(): any {
+    const token = this.getToken();
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('👤 Informações do usuário do token:', payload);
+        return payload;
+      } catch (error) {
+        console.error('❌ Erro ao decodificar token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // Método para debug - mostra informações detalhadas do token
+  debugToken(): void {
+    const token = this.getToken();
+    if (token) {
+      console.log('🔍 DEBUG DO TOKEN:');
+      console.log(' - Token completo:', token);
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log(' - Payload decodificado:', payload);
+        console.log(' - Expiração:', new Date(payload.exp * 1000));
+        console.log(' - Subject:', payload.sub);
+      } catch (error) {
+        console.error(' - Erro ao decodificar:', error);
+      }
+    } else {
+      console.log('🔍 DEBUG: Nenhum token encontrado');
+    }
   }
 }
