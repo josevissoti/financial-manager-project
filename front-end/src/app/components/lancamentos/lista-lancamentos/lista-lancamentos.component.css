@@ -1,0 +1,16 @@
+.table-responsive {
+  border-radius: 8px;
+}
+
+.badge {
+  font-size: 0.75em;
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+/* Melhorar a visualização da tabela */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}

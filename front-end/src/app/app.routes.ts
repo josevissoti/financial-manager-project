@@ -7,9 +7,15 @@ export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { 
-    path: 'dashboard',
+    path: 'dashboard', 
     component: DashboardComponent,
-    canActivate: [AuthGuard]  // 🔐 Protegido pelo AuthGuard
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'lancamentos', 
+    loadComponent: () => import('./components/lancamentos/lista-lancamentos/lista-lancamentos.component')
+      .then(m => m.ListaLancamentosComponent),
+    canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '/dashboard' }
 ];

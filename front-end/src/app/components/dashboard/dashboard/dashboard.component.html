@@ -2,7 +2,7 @@
   <!-- Header -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">
+      <a class="navbar-brand fw-bold" routerLink="/dashboard">
         💰 Financial Manager
       </a>
       
@@ -25,18 +25,27 @@
   <!-- Conteúdo Principal -->
   <div class="container mt-4">
     
+    <!-- Loading State -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando dados financeiros...</p>
+    </div>
+
     <!-- Cards de Métricas -->
-    <div class="row g-3 mb-4">
+    <div *ngIf="!carregando" class="row g-3 mb-4">
       <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-success text-white">
+        <div class="card border-0 shadow-sm" 
+             [ngClass]="{'bg-success text-white': saldoTotal >= 0, 'bg-danger text-white': saldoTotal < 0}">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <h6 class="card-title mb-1">Saldo Total</h6>
-                <h3 class="mb-0">R$ 0,00</h3>
-                <small class="opacity-75">Disponível</small>
+                <h3 class="mb-0">{{ formatarValor(saldoTotal) }}</h3>
+                <small class="opacity-75">Saldo Disponível</small>
               </div>
-              <div class="display-6">💰</div>
+              <div class="display-6">{{ saldoTotal >= 0 ? '💰' : '💸' }}</div>
             </div>
           </div>
         </div>
@@ -48,8 +57,8 @@
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <h6 class="card-title mb-1">Receitas</h6>
-                <h3 class="mb-0">R$ 0,00</h3>
-                <small class="opacity-75">Este mês</small>
+                <h3 class="mb-0">{{ formatarValor(receitasMes) }}</h3>
+                <small class="opacity-75">Total de Entradas</small>
               </div>
               <div class="display-6">📈</div>
             </div>
@@ -63,8 +72,8 @@
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <h6 class="card-title mb-1">Despesas</h6>
-                <h3 class="mb-0">R$ 0,00</h3>
-                <small class="opacity-75">Este mês</small>
+                <h3 class="mb-0">{{ formatarValor(despesasMes) }}</h3>
+                <small class="opacity-75">Total de Saídas</small>
               </div>
               <div class="display-6">📉</div>
             </div>
@@ -73,12 +82,12 @@
       </div>
 
       <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-danger text-white">
+        <div class="card border-0 shadow-sm bg-secondary text-white">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 <h6 class="card-title mb-1">Pendentes</h6>
-                <h3 class="mb-0">0</h3>
+                <h3 class="mb-0">{{ lancamentosPendentes }}</h3>
                 <small class="opacity-75">Lançamentos</small>
               </div>
               <div class="display-6">⏳</div>
@@ -102,7 +111,7 @@
                         routerLink="/lancamentos">
                   <div class="fs-1">💸</div>
                   <div class="fw-bold">Lançamentos</div>
-                  <small class="text-muted">Gerencie entradas e saídas</small>
+                  <small class="text-muted">{{ totalLancamentos }} cadastrados</small>
                 </button>
               </div>
               
@@ -167,21 +176,49 @@
         <div class="card shadow-sm border-0 h-100">
           <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
             <h5 class="mb-0">🕒 Últimos Lançamentos</h5>
-            <button class="btn btn-primary btn-sm" routerLink="/lancamentos">
-              Ver Todos
+            <button *ngIf="ultimosLancamentos.length > 0" class="btn btn-primary btn-sm" routerLink="/lancamentos">
+              Ver Todos ({{ totalLancamentos }})
             </button>
           </div>
           <div class="card-body">
-            <div class="text-center py-4">
-              <div class="text-muted mb-2">📭</div>
-              <p class="text-muted mb-2">Nenhum lançamento cadastrado ainda</p>
-              <a routerLink="/lancamentos/novo" class="btn btn-outline-success btn-sm">
-                Cadastrar Primeiro Lançamento
-              </a>
+            <!-- Quando há lançamentos -->
+            <div *ngIf="ultimosLancamentos.length > 0; else semLancamentos">
+              <div *ngFor="let lancamento of ultimosLancamentos" 
+                   class="border-bottom pb-2 mb-2 last:border-0 last:pb-0 last:mb-0">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-1">
+                      <span class="me-2">{{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}</span>
+                      <strong [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
+                        {{ getTipoLancamentoTexto(lancamento.tipoLancamento) }}
+                      </strong>
+                      <span class="badge ms-2" [ngClass]="getSituacaoClasse(lancamento.situacao)">
+                        {{ getSituacaoTexto(lancamento.situacao) }}
+                      </span>
+                    </div>
+                    <div class="small text-muted">{{ lancamento.descricao }}</div>
+                    <div class="small">
+                      <strong>{{ formatarValor(lancamento.valor) }}</strong>
+                      <span class="text-muted ms-2">• {{ lancamento.dataLancamento }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <!-- Quando não há lançamentos -->
+            <ng-template #semLancamentos>
+              <div class="text-center py-4">
+                <div class="text-muted mb-2">📭</div>
+                <p class="text-muted mb-2">Nenhum lançamento cadastrado ainda</p>
+                <a routerLink="/lancamentos/novo" class="btn btn-outline-success btn-sm">
+                  Cadastrar Primeiro Lançamento
+                </a>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div> 
