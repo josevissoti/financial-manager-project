@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Conta {
-  idConta: number;
+  idConta?: number;  // ✅ OPCIONAL para criação
   descricao: string;
   saldo: number;
   limite: number;
@@ -25,45 +25,27 @@ export class ContaService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Buscar todas as contas
-   */
   findAll(): Observable<Conta[]> {
     console.log('📋 Buscando todas as contas...');
     return this.http.get<Conta[]>(this.API_URL);
   }
 
-  /**
-   * Buscar conta por ID
-   */
   findById(id: number): Observable<Conta> {
     return this.http.get<Conta>(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Criar nova conta
-   */
   create(conta: Conta): Observable<Conta> {
     return this.http.post<Conta>(this.API_URL, conta);
   }
 
-  /**
-   * Atualizar conta existente
-   */
   update(id: number, conta: Conta): Observable<Conta> {
     return this.http.put<Conta>(`${this.API_URL}/${id}`, conta);
   }
 
-  /**
-   * Deletar conta
-   */
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Utilitário: Obter texto do tipo de conta
-   */
   getTipoContaTexto(tipo: number): string {
     switch (tipo) {
       case 0: return 'Conta Corrente';
@@ -75,9 +57,6 @@ export class ContaService {
     }
   }
 
-  /**
-   * Utilitário: Formatar valor para exibição
-   */
   formatarValor(valor: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',

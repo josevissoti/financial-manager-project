@@ -3993,3 +3993,6041 @@
             on p1_0.id_pessoa=fp1_0.id_pessoa 
     where
         p1_0.id_pessoa=?
+2025-11-10T10:55:12.034-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:12.036-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:12.039-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:12.040-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:12.042-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:12.044-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:12.046-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:12.047-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:12.049-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:13.950-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:13.953-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:13.957-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:13.959-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:13.961-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:13.963-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:13.965-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:13.967-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:13.969-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:17.192-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:17.194-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:17.197-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p2_0.id_pessoa,
+        case 
+            when p2_1.id_pessoa is not null 
+                then 1 
+            when p2_2.id_pessoa is not null 
+                then 2 
+        end,
+        p2_0.cpf,
+        p2_0.data_criacao,
+        p2_0.data_nascimento,
+        p2_0.email,
+        fp2_0.id_pessoa,
+        fp2_0.funcao_pessoa,
+        p2_0.nome,
+        p2_0.senha,
+        p2_0.status,
+        p2_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        p3_0.id_pessoa,
+        case 
+            when p3_1.id_pessoa is not null 
+                then 1 
+            when p3_2.id_pessoa is not null 
+                then 2 
+        end,
+        p3_0.cpf,
+        p3_0.data_criacao,
+        p3_0.data_nascimento,
+        p3_0.email,
+        fp3_0.id_pessoa,
+        fp3_0.funcao_pessoa,
+        p3_0.nome,
+        p3_0.senha,
+        p3_0.status,
+        p3_0.telefone,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0 
+    left join
+        categorialancamento cl1_0 
+            on cl1_0.id_categoria_lancamento=l1_0.idcategorialancamento 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    left join
+        conta c1_0 
+            on c1_0.id_conta=l1_0.idconta 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p2_0 
+            on p2_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p2_1 
+            on p2_0.id_pessoa=p2_1.id_pessoa 
+    left join
+        usuario p2_2 
+            on p2_0.id_pessoa=p2_2.id_pessoa 
+    left join
+        perfis fp2_0 
+            on p2_0.id_pessoa=fp2_0.id_pessoa 
+    left join
+        pessoa p3_0 
+            on p3_0.id_pessoa=l1_0.idpessoa 
+    left join
+        admin p3_1 
+            on p3_0.id_pessoa=p3_1.id_pessoa 
+    left join
+        usuario p3_2 
+            on p3_0.id_pessoa=p3_2.id_pessoa 
+    left join
+        perfis fp3_0 
+            on p3_0.id_pessoa=fp3_0.id_pessoa 
+    where
+        l1_0.id_lancamento=?
+2025-11-10T10:55:17.202-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    update
+        conta 
+    set
+        agencia=?,
+        idbanco=?,
+        descricao=?,
+        limite=?,
+        numero=?,
+        idpessoa=?,
+        saldo=?,
+        tipo_conta=? 
+    where
+        id_conta=?
+2025-11-10T10:55:17.213-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    delete 
+    from
+        lancamento 
+    where
+        id_lancamento=?
+2025-11-10T10:55:17.246-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:17.249-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:17.254-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:17.256-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:17.258-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:17.260-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:17.263-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:17.265-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:19.082-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:19.084-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:19.088-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:19.089-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:19.092-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:19.094-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:19.096-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:19.097-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:26.427-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:26.429-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:26.431-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:26.432-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:26.433-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:26.435-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:26.437-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:26.438-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:31.104-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:31.106-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:31.109-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:31.109-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:31.110-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:31.110-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:31.111-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        cl1_0.idpessoa 
+    from
+        categorialancamento cl1_0
+2025-11-10T10:55:31.112-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:31.113-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p2_0.id_pessoa,
+        case 
+            when p2_1.id_pessoa is not null 
+                then 1 
+            when p2_2.id_pessoa is not null 
+                then 2 
+        end,
+        p2_0.cpf,
+        p2_0.data_criacao,
+        p2_0.data_nascimento,
+        p2_0.email,
+        fp2_0.id_pessoa,
+        fp2_0.funcao_pessoa,
+        p2_0.nome,
+        p2_0.senha,
+        p2_0.status,
+        p2_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        p3_0.id_pessoa,
+        case 
+            when p3_1.id_pessoa is not null 
+                then 1 
+            when p3_2.id_pessoa is not null 
+                then 2 
+        end,
+        p3_0.cpf,
+        p3_0.data_criacao,
+        p3_0.data_nascimento,
+        p3_0.email,
+        fp3_0.id_pessoa,
+        fp3_0.funcao_pessoa,
+        p3_0.nome,
+        p3_0.senha,
+        p3_0.status,
+        p3_0.telefone,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0 
+    left join
+        categorialancamento cl1_0 
+            on cl1_0.id_categoria_lancamento=l1_0.idcategorialancamento 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    left join
+        conta c1_0 
+            on c1_0.id_conta=l1_0.idconta 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p2_0 
+            on p2_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p2_1 
+            on p2_0.id_pessoa=p2_1.id_pessoa 
+    left join
+        usuario p2_2 
+            on p2_0.id_pessoa=p2_2.id_pessoa 
+    left join
+        perfis fp2_0 
+            on p2_0.id_pessoa=fp2_0.id_pessoa 
+    left join
+        pessoa p3_0 
+            on p3_0.id_pessoa=l1_0.idpessoa 
+    left join
+        admin p3_1 
+            on p3_0.id_pessoa=p3_1.id_pessoa 
+    left join
+        usuario p3_2 
+            on p3_0.id_pessoa=p3_2.id_pessoa 
+    left join
+        perfis fp3_0 
+            on p3_0.id_pessoa=fp3_0.id_pessoa 
+    where
+        l1_0.id_lancamento=?
+2025-11-10T10:55:31.114-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T10:55:31.114-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:31.116-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T10:55:31.117-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:31.120-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T10:55:31.121-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T10:55:31.123-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T10:55:38.129-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:38.131-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:38.135-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p2_0.id_pessoa,
+        case 
+            when p2_1.id_pessoa is not null 
+                then 1 
+            when p2_2.id_pessoa is not null 
+                then 2 
+        end,
+        p2_0.cpf,
+        p2_0.data_criacao,
+        p2_0.data_nascimento,
+        p2_0.email,
+        fp2_0.id_pessoa,
+        fp2_0.funcao_pessoa,
+        p2_0.nome,
+        p2_0.senha,
+        p2_0.status,
+        p2_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        p3_0.id_pessoa,
+        case 
+            when p3_1.id_pessoa is not null 
+                then 1 
+            when p3_2.id_pessoa is not null 
+                then 2 
+        end,
+        p3_0.cpf,
+        p3_0.data_criacao,
+        p3_0.data_nascimento,
+        p3_0.email,
+        fp3_0.id_pessoa,
+        fp3_0.funcao_pessoa,
+        p3_0.nome,
+        p3_0.senha,
+        p3_0.status,
+        p3_0.telefone,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0 
+    left join
+        categorialancamento cl1_0 
+            on cl1_0.id_categoria_lancamento=l1_0.idcategorialancamento 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    left join
+        conta c1_0 
+            on c1_0.id_conta=l1_0.idconta 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p2_0 
+            on p2_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p2_1 
+            on p2_0.id_pessoa=p2_1.id_pessoa 
+    left join
+        usuario p2_2 
+            on p2_0.id_pessoa=p2_2.id_pessoa 
+    left join
+        perfis fp2_0 
+            on p2_0.id_pessoa=fp2_0.id_pessoa 
+    left join
+        pessoa p3_0 
+            on p3_0.id_pessoa=l1_0.idpessoa 
+    left join
+        admin p3_1 
+            on p3_0.id_pessoa=p3_1.id_pessoa 
+    left join
+        usuario p3_2 
+            on p3_0.id_pessoa=p3_2.id_pessoa 
+    left join
+        perfis fp3_0 
+            on p3_0.id_pessoa=fp3_0.id_pessoa 
+    where
+        l1_0.id_lancamento=?
+2025-11-10T10:55:38.143-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    update
+        lancamento 
+    set
+        idcategorialancamento=?,
+        idconta=?,
+        data_baixa=?,
+        data_lancamento=?,
+        descricao=?,
+        parcela=?,
+        idpessoa=?,
+        prazo_vencimento=?,
+        situacao=?,
+        tipo_lancamento=?,
+        valor=? 
+    where
+        id_lancamento=?
+2025-11-10T10:55:39.231-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:39.233-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:39.237-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:39.239-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:39.240-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:39.242-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:39.243-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:39.244-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:43.065-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T10:55:43.067-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T10:55:43.070-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T10:55:43.071-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:43.073-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T10:55:43.075-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:43.077-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T10:55:43.078-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:20:04.282-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:04.287-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:04.291-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:20:04.293-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:04.295-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:20:04.298-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:04.300-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:04.302-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:20:06.660-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:06.662-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:06.665-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-10] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0
+2025-11-10T11:20:08.592-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:08.593-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:08.597-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T11:20:08.598-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:08.599-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:20:08.602-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:08.603-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:08.604-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:20:12.944-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:12.945-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:12.948-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:20:12.950-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:12.953-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:20:12.955-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:12.956-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:20:12.958-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:20:19.368-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:19.370-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:19.373-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T11:20:19.374-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:19.376-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:20:19.378-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:19.379-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:20:19.380-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:20:28.340-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:20:28.341-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:20:28.345-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0
+2025-11-10T11:23:36.148-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:23:36.149-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:23:36.315-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:23:36.316-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:23:36.319-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:23:36.321-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:23:36.323-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:23:36.325-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:23:36.326-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:23:36.328-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:23:37.892-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:23:37.893-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:23:37.897-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0
+2025-11-10T11:24:06.326-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:06.328-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:06.341-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    insert 
+    into
+        conta
+        (agencia, idbanco, descricao, limite, numero, idpessoa, saldo, tipo_conta, id_conta) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-10T11:24:09.373-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:09.375-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:09.379-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T11:24:09.381-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:09.382-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:09.384-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:09.385-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:09.386-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:09.388-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:33.992-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:33.993-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:33.996-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:24:33.998-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:33.999-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:24:34.002-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:34.003-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:34.005-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:24:34.909-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:34.911-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:34.914-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:24:34.916-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:34.917-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:24:34.919-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:34.921-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:24:34.922-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:24:36.394-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:36.396-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:24:36.396-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:36.401-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:24:36.403-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        cl1_0.idpessoa 
+    from
+        categorialancamento cl1_0
+2025-11-10T11:24:36.405-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:36.406-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T11:24:36.407-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:36.409-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:36.410-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:36.413-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:36.415-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:24:36.416-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:24:36.418-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:25:18.986-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:25:18.987-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:25:18.991-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:18.993-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    update
+        conta 
+    set
+        agencia=?,
+        idbanco=?,
+        descricao=?,
+        limite=?,
+        numero=?,
+        idpessoa=?,
+        saldo=?,
+        tipo_conta=? 
+    where
+        id_conta=?
+2025-11-10T11:25:18.996-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    insert 
+    into
+        lancamento
+        (idcategorialancamento, idconta, data_baixa, data_lancamento, descricao, parcela, idpessoa, prazo_vencimento, situacao, tipo_lancamento, valor, id_lancamento) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2025-11-10T11:25:20.833-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:25:20.836-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:25:20.839-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:25:20.841-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:20.842-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:20.844-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:20.845-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:20.846-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:20.847-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:24.373-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:25:24.374-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:25:24.377-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:25:24.378-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:24.380-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:24.382-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:24.383-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:24.385-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:24.386-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-6] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:25.821-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:25:25.822-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:25:25.826-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        c1_0.idbanco,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        c1_0.idpessoa,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0
+2025-11-10T11:25:25.827-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:25:25.828-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:25:25.830-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:25:25.831-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status 
+    from
+        banco b1_0 
+    where
+        b1_0.id_banco=?
+2025-11-10T11:25:25.832-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:25:25.834-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        p1_0.id_pessoa=?
+2025-11-10T11:25:35.938-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        pessoa p1_0 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    where
+        p1_0.email=?
+2025-11-10T11:25:35.939-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa 
+    from
+        perfis fp1_0 
+    where
+        fp1_0.id_pessoa=?
+2025-11-10T11:25:35.942-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        l1_0.id_lancamento,
+        l1_0.idcategorialancamento,
+        l1_0.idconta,
+        l1_0.data_baixa,
+        l1_0.data_lancamento,
+        l1_0.descricao,
+        l1_0.parcela,
+        l1_0.idpessoa,
+        l1_0.prazo_vencimento,
+        l1_0.situacao,
+        l1_0.tipo_lancamento,
+        l1_0.valor 
+    from
+        lancamento l1_0
+2025-11-10T11:25:35.943-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:35.944-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:35.945-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:35.946-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        cl1_0.id_categoria_lancamento,
+        cl1_0.descricao,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone 
+    from
+        categorialancamento cl1_0 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=cl1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        cl1_0.id_categoria_lancamento=?
+2025-11-10T11:25:35.948-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?
+2025-11-10T11:25:35.949-03:00 DEBUG 15518 --- [financial-manager] [http-nio-8080-exec-5] org.hibernate.SQL                        : 
+    select
+        c1_0.id_conta,
+        c1_0.agencia,
+        b1_0.id_banco,
+        b1_0.razao_social,
+        b1_0.status,
+        c1_0.descricao,
+        c1_0.limite,
+        c1_0.numero,
+        p1_0.id_pessoa,
+        case 
+            when p1_1.id_pessoa is not null 
+                then 1 
+            when p1_2.id_pessoa is not null 
+                then 2 
+        end,
+        p1_0.cpf,
+        p1_0.data_criacao,
+        p1_0.data_nascimento,
+        p1_0.email,
+        fp1_0.id_pessoa,
+        fp1_0.funcao_pessoa,
+        p1_0.nome,
+        p1_0.senha,
+        p1_0.status,
+        p1_0.telefone,
+        c1_0.saldo,
+        c1_0.tipo_conta 
+    from
+        conta c1_0 
+    left join
+        banco b1_0 
+            on b1_0.id_banco=c1_0.idbanco 
+    left join
+        pessoa p1_0 
+            on p1_0.id_pessoa=c1_0.idpessoa 
+    left join
+        admin p1_1 
+            on p1_0.id_pessoa=p1_1.id_pessoa 
+    left join
+        usuario p1_2 
+            on p1_0.id_pessoa=p1_2.id_pessoa 
+    left join
+        perfis fp1_0 
+            on p1_0.id_pessoa=fp1_0.id_pessoa 
+    where
+        c1_0.id_conta=?

@@ -1,0 +1,219 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div>
+          <button class="btn btn-outline-secondary me-2" (click)="voltar()">
+            ← Voltar
+          </button>
+          <h2 class="mb-0">
+            {{ isEditando ? '✏️ Editar Conta' : '🏦 Nova Conta' }}
+          </h2>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary me-2" (click)="voltar()">
+            Cancelar
+          </button>
+          <button type="submit" form="formConta" class="btn btn-success" [disabled]="enviando">
+            <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isEditando ? '💾 Atualizar' : '✅ Criar' }} Conta
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando conta...</p>
+    </div>
+
+    <!-- Erro -->
+    <div *ngIf="erro && !carregando" class="alert alert-danger">
+      {{ erro }}
+    </div>
+
+    <!-- Formulário -->
+    <div *ngIf="!carregando">
+      <form id="formConta" (ngSubmit)="onSubmit()" #form="ngForm">
+        
+        <div class="row">
+          
+          <!-- Coluna Esquerda - Dados Básicos -->
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📋 Informações da Conta</h5>
+              </div>
+              <div class="card-body">
+                
+                <!-- Descrição -->
+                <div class="mb-3">
+                  <label for="descricao" class="form-label">🏷️ Descrição *</label>
+                  <input type="text" class="form-control" id="descricao"
+                         [(ngModel)]="conta.descricao" name="descricao"
+                         required placeholder="Ex: Conta Corrente Principal..."
+                         [class.is-invalid]="form.submitted && !conta.descricao">
+                  <div class="invalid-feedback">
+                    Por favor, informe uma descrição.
+                  </div>
+                </div>
+
+                <!-- Tipo de Conta -->
+                <div class="mb-3">
+                  <label for="tipoConta" class="form-label">💳 Tipo de Conta *</label>
+                  <select class="form-select" id="tipoConta"
+                          [(ngModel)]="conta.tipoConta" name="tipoConta" required>
+                    <option *ngFor="let tipo of tiposConta" [value]="tipo.valor">
+                      {{ tipo.texto }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Saldo e Limite -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saldo" class="form-label">💰 Saldo Inicial</label>
+                      <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" id="saldo"
+                               [(ngModel)]="conta.saldo" name="saldo"
+                               step="0.01" min="0">
+                      </div>
+                      <div class="form-text">
+                        Saldo atual da conta
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="limite" class="form-label">📊 Limite</label>
+                      <div class="input-group">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" class="form-control" id="limite"
+                               [(ngModel)]="conta.limite" name="limite"
+                               step="0.01" min="0">
+                      </div>
+                      <div class="form-text">
+                        Limite disponível (cartão/conta)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna Direita - Dados Bancários -->
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0">🏦 Dados Bancários</h5>
+              </div>
+              <div class="card-body">
+                
+                <!-- Banco -->
+                <div class="mb-3">
+                  <label for="idBanco" class="form-label">🏛️ Banco *</label>
+                  <select class="form-select" id="idBanco"
+                          [(ngModel)]="conta.idBanco" name="idBanco" required
+                          [disabled]="carregandoDados">
+                    <option value="0" disabled>Selecione um banco</option>
+                    <option *ngFor="let banco of bancos" [value]="banco.idBanco">
+                      {{ banco.razaoSocial }}
+                    </option>
+                  </select>
+                  <div *ngIf="carregandoDados" class="form-text">
+                    <small class="text-muted">🔄 Carregando bancos...</small>
+                  </div>
+                </div>
+
+                <!-- Agência e Conta -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="agencia" class="form-label">🏷️ Agência *</label>
+                      <input type="text" class="form-control" id="agencia"
+                             [(ngModel)]="conta.agencia" name="agencia"
+                             required placeholder="0000"
+                             [class.is-invalid]="form.submitted && !conta.agencia">
+                      <div class="invalid-feedback">
+                        Por favor, informe a agência.
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="numero" class="form-label">🔢 Número da Conta *</label>
+                      <input type="text" class="form-control" id="numero"
+                             [(ngModel)]="conta.numero" name="numero"
+                             required placeholder="00000-0"
+                             [class.is-invalid]="form.submitted && !conta.numero">
+                      <div class="invalid-feedback">
+                        Por favor, informe o número da conta.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Resumo -->
+            <div class="card">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0">📊 Resumo</h5>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="border-end">
+                      <div class="text-muted small">Saldo</div>
+                      <div class="h5" [ngClass]="conta.saldo >= 0 ? 'text-success' : 'text-danger'">
+                        {{ formatarValor(conta.saldo) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="text-muted small">Limite</div>
+                    <div class="h5 text-info">
+                      {{ formatarValor(conta.limite) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body text-center">
+                <button type="button" class="btn btn-outline-secondary me-3" (click)="voltar()">
+                  ❌ Cancelar
+                </button>
+                <button type="submit" class="btn btn-success btn-lg" [disabled]="enviando">
+                  <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ isEditando ? '💾 Atualizar Conta' : '✅ Criar Conta' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

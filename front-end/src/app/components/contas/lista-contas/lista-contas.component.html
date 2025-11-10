@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div>
+          <button class="btn btn-outline-secondary me-2" routerLink="/dashboard">
+            ← Voltar ao Dashboard
+          </button>
+          <h2 class="mb-0 d-inline">🏦 Contas Bancárias</h2>
+          <span class="badge bg-primary ms-2">{{ contas.length }} contas</span>
+        </div>
+        <button class="btn btn-success" routerLink="/contas/nova">
+          ➕ Nova Conta
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando contas...</p>
+    </div>
+
+    <!-- Erro -->
+    <div *ngIf="erro && !carregando" class="alert alert-danger">
+      {{ erro }}
+      <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarContas()">
+        🔄 Tentar Novamente
+      </button>
+    </div>
+
+    <!-- Lista de Contas -->
+    <div *ngIf="!carregando && !erro">
+      
+      <!-- Cards de Contas -->
+      <div class="row g-4">
+        <div *ngFor="let conta of contas" class="col-xl-4 col-lg-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">{{ conta.descricao }}</h5>
+              <span class="badge bg-info">{{ getTipoContaTexto(conta.tipoConta) }}</span>
+            </div>
+            
+            <div class="card-body">
+              <!-- Informações Bancárias -->
+              <div class="mb-3">
+                <div class="row small text-muted">
+                  <div class="col-6">
+                    <strong>Agência:</strong><br>
+                    {{ conta.agencia }}
+                  </div>
+                  <div class="col-6">
+                    <strong>Conta:</strong><br>
+                    {{ conta.numero }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Saldo -->
+              <div class="mb-3">
+                <label class="form-label mb-1">💰 Saldo Atual</label>
+                <h4 [ngClass]="getSaldoClasse(conta.saldo)" class="mb-0">
+                  {{ formatarValor(conta.saldo) }}
+                </h4>
+              </div>
+
+              <!-- Limite -->
+              <div *ngIf="conta.limite > 0" class="mb-3">
+                <label class="form-label mb-1">📊 Limite Disponível</label>
+                <div class="d-flex justify-content-between small mb-1">
+                  <span>Utilizado: {{ getLimiteUtilizado(conta) | number:'1.0-0' }}%</span>
+                  <span>Limite: {{ formatarValor(conta.limite) }}</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar" 
+                       [ngClass]="getLimiteClasse(conta)"
+                       [style.width.%]="getLimiteUtilizado(conta)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Banco -->
+              <div class="small text-muted">
+                <strong>Banco:</strong> {{ conta.razaoSocialBanco || 'Não informado' }}
+              </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="card-footer bg-transparent">
+              <div class="btn-group w-100">
+                <button class="btn btn-outline-primary btn-sm" 
+                        (click)="editarConta(conta.idConta)"
+                        title="Editar conta">
+                  ✏️ Editar
+                </button>
+                <button class="btn btn-outline-danger btn-sm" 
+                        (click)="deletarConta(conta)"
+                        title="Deletar conta">
+                  🗑️ Deletar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensagem sem contas -->
+      <div *ngIf="contas.length === 0" class="text-center py-5">
+        <div class="text-muted mb-3">🏦</div>
+        <h4 class="text-muted">Nenhuma conta cadastrada</h4>
+        <p class="text-muted mb-4">Comece cadastrando sua primeira conta bancária</p>
+        <button class="btn btn-success btn-lg" routerLink="/contas/nova">
+          ➕ Cadastrar Primeira Conta
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

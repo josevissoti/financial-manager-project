@@ -1,43 +1,51 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { 
-        path: '', 
-        redirectTo: '/dashboard', 
-        pathMatch: 'full' 
-    }, 
-    { 
-        path: 'login', 
-        component: LoginComponent 
-    },
-    {
-        path: 'dashboard',
-        component: DashboardComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'lancamentos',
-        loadComponent: () => import('./components/lancamentos/lista-lancamentos/lista-lancamentos.component')
-            .then(m => m.ListaLancamentosComponent),
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'lancamentos/novo',
-        loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
-            .then(m => m.FormLancamentoComponent),
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'lancamentos/editar/:id',
-        loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
-            .then(m => m.FormLancamentoComponent),
-        canActivate: [AuthGuard]
-    },
-    { 
-        path: '**',
-        redirectTo: '/dashboard' 
-    }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { 
+    path: 'dashboard', 
+    loadComponent: () => import('./components/dashboard/dashboard/dashboard.component')
+      .then(m => m.DashboardComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'lancamentos', 
+    loadComponent: () => import('./components/lancamentos/lista-lancamentos/lista-lancamentos.component')
+      .then(m => m.ListaLancamentosComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'lancamentos/novo', 
+    loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
+      .then(m => m.FormLancamentoComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'lancamentos/editar/:id', 
+    loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
+      .then(m => m.FormLancamentoComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'contas', 
+    loadComponent: () => import('./components/contas/lista-contas/lista-contas.component')
+      .then(m => m.ListaContasComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'contas/nova', 
+    loadComponent: () => import('./components/contas/form-conta/form-conta.component')
+      .then(m => m.FormContaComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'contas/editar/:id', 
+    loadComponent: () => import('./components/contas/form-conta/form-conta.component')
+      .then(m => m.FormContaComponent),
+    canActivate: [AuthGuard]
+  },
+  { path: '**', redirectTo: '/dashboard' }
 ];

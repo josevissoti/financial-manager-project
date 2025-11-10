@@ -56,11 +56,11 @@ export class FormLancamentoComponent implements OnInit {
     private contaService: ContaService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarDados();
-    
+
     const id = this.route.snapshot.params['id'];
     if (id) {
       this.isEditando = true;
@@ -77,7 +77,7 @@ export class FormLancamentoComponent implements OnInit {
       next: (categorias) => {
         this.categorias = categorias;
         console.log('✅ Categorias carregadas:', categorias);
-        
+
         if (!this.isEditando && categorias.length > 0) {
           this.lancamento.idCategoriaLancamento = categorias[0].idCategoriaLancamento;
         }
@@ -93,11 +93,11 @@ export class FormLancamentoComponent implements OnInit {
       next: (contas) => {
         this.contas = contas;
         console.log('✅ Contas carregadas:', contas);
-        
-        if (!this.isEditando && contas.length > 0) {
-          this.lancamento.idConta = contas[0].idConta;
+
+        if (!this.isEditando && contas.length > 0 && contas[0].idConta) {
+          this.lancamento.idConta = contas[0].idConta; // ✅ Verifica se idConta existe
         }
-        
+
         this.carregandoDados = false;
       },
       error: (error) => {
@@ -205,7 +205,7 @@ export class FormLancamentoComponent implements OnInit {
 
   private converterDataParaFormatoInput(dataString: string): string {
     if (!dataString) return '';
-    
+
     // Converte de "yyyy-MM-dd" para "dd/MM/yyyy"
     const partes = dataString.split('-');
     if (partes.length === 3) {
@@ -216,7 +216,7 @@ export class FormLancamentoComponent implements OnInit {
 
   private converterDataParaBackend(dataString: string): string {
     if (!dataString) return '';
-    
+
     // Converte de "dd/MM/yyyy" para "yyyy-MM-dd"
     const partes = dataString.split('/');
     if (partes.length === 3) {
@@ -228,7 +228,7 @@ export class FormLancamentoComponent implements OnInit {
   // Métodos para máscara e validação de datas - CORRIGIDO
   aplicarMascaraData(event: any, campo: string): void {
     let value = event.target.value.replace(/\D/g, '');
-    
+
     if (value.length <= 2) {
       value = value;
     } else if (value.length <= 4) {
@@ -236,7 +236,7 @@ export class FormLancamentoComponent implements OnInit {
     } else {
       value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4, 8);
     }
-    
+
     // ✅ Correção: Usar type assertion específico
     if (campo === 'dataLancamento') {
       this.lancamento.dataLancamento = value;
@@ -249,7 +249,7 @@ export class FormLancamentoComponent implements OnInit {
 
   validarData(campo: string): void {
     let data: string;
-    
+
     if (campo === 'dataLancamento') {
       data = this.lancamento.dataLancamento;
     } else if (campo === 'prazoVencimento') {
@@ -259,15 +259,15 @@ export class FormLancamentoComponent implements OnInit {
     } else {
       return;
     }
-    
+
     if (data && data.length === 10) {
       const partes = data.split('/');
       const dia = parseInt(partes[0], 10);
       const mes = parseInt(partes[1], 10) - 1;
       const ano = parseInt(partes[2], 10);
-      
+
       const dataObj = new Date(ano, mes, dia);
-      
+
       if (dataObj.getDate() !== dia || dataObj.getMonth() !== mes || dataObj.getFullYear() !== ano) {
         this.erro = `Data ${campo} inválida. Use o formato DD/MM/AAAA.`;
       } else {
@@ -282,10 +282,10 @@ export class FormLancamentoComponent implements OnInit {
       const dia = parseInt(partes[0], 10);
       const mes = parseInt(partes[1], 10) - 1;
       const ano = parseInt(partes[2], 10);
-      
+
       const dataLancamento = new Date(ano, mes, dia);
       dataLancamento.setDate(dataLancamento.getDate() + 30);
-      
+
       this.lancamento.prazoVencimento = this.formatarDataParaInput(dataLancamento);
     }
   }
