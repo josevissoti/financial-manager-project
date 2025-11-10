@@ -65,5 +65,29 @@ export const routes: Routes = [
       .then(m => m.FormCategoriaComponent),
     canActivate: [AuthGuard]
   },
+  { 
+    path: 'usuarios', 
+    loadComponent: () => import('./components/usuarios/lista-usuarios/lista-usuarios.component')
+      .then(m => m.ListaUsuariosComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'usuarios/novo', 
+    loadComponent: () => import('./components/usuarios/form-usuario/form-usuario.component')
+      .then(m => m.FormUsuarioComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'usuarios/editar/:id', 
+    loadComponent: () => import('./components/usuarios/form-usuario/form-usuario.component')
+      .then(m => m.FormUsuarioComponent),
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'perfil', 
+    loadComponent: () => import('./components/usuarios/perfil-usuario/perfil-usuario.component')
+      .then(m => m.PerfilUsuarioComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: '/dashboard' }
 ];

@@ -1,0 +1,234 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div>
+          <button class="btn btn-outline-secondary me-2" (click)="voltar()">
+            ← Voltar ao Dashboard
+          </button>
+          <h2 class="mb-0">👤 Meu Perfil</h2>
+        </div>
+        <div *ngIf="!editando">
+          <button class="btn btn-primary" (click)="iniciarEdicao()">
+            ✏️ Editar Perfil
+          </button>
+        </div>
+        <div *ngIf="editando">
+          <button type="button" class="btn btn-outline-secondary me-2" (click)="cancelarEdicao()">
+            ❌ Cancelar
+          </button>
+          <button type="button" class="btn btn-success" (click)="salvarPerfil()" [disabled]="salvando">
+            <span *ngIf="salvando" class="spinner-border spinner-border-sm me-2"></span>
+            💾 Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando perfil...</p>
+    </div>
+
+    <!-- Mensagens -->
+    <div *ngIf="erro" class="alert alert-danger">
+      {{ erro }}
+    </div>
+
+    <div *ngIf="sucesso" class="alert alert-success">
+      {{ sucesso }}
+    </div>
+
+    <!-- Perfil -->
+    <div *ngIf="!carregando && usuario.email" class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <!-- Card de Informações Pessoais -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">📋 Informações Pessoais</h5>
+            <span class="badge bg-light text-primary">{{ getStatusTexto() }}</span>
+          </div>
+          <div class="card-body">
+            
+            <!-- Modo Visualização -->
+            <div *ngIf="!editando" class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">Nome Completo</label>
+                <p class="fs-5">{{ usuario.nome || 'Não informado' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">Email</label>
+                <p class="fs-5">{{ usuario.email }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">CPF</label>
+                <p class="fs-5">{{ usuario.cpf || 'Não informado' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">Telefone</label>
+                <p class="fs-5">{{ usuario.telefone || 'Não informado' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">Data de Nascimento</label>
+                <p class="fs-5">
+                  {{ usuario.datanascimento || 'Não informado' }}
+                  <span *ngIf="usuario.datanascimento" class="badge bg-info ms-2">
+                    {{ calcularIdade() }} anos
+                  </span>
+                </p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label text-muted">Funções</label>
+                <p class="fs-5">{{ getFuncoesTexto() }}</p>
+              </div>
+            </div>
+
+            <!-- Modo Edição -->
+            <div *ngIf="editando" class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nome" class="form-label">Nome Completo *</label>
+                <input type="text" class="form-control" id="nome"
+                       [(ngModel)]="usuario.nome"
+                       placeholder="Seu nome completo">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" class="form-control" id="email"
+                       [(ngModel)]="usuario.email"
+                       placeholder="seu@email.com">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="cpf"
+                       [(ngModel)]="usuario.cpf"
+                       placeholder="000.000.000-00" readonly
+                       style="background-color: #f8f9fa;">
+                <div class="form-text">CPF não pode ser alterado.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="telefone"
+                       [(ngModel)]="usuario.telefone"
+                       (input)="aplicarMascaraTelefone($event)"
+                       placeholder="(00) 00000-0000"
+                       maxlength="15">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="datanascimento" class="form-label">Data de Nascimento</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="datanascimento"
+                         [(ngModel)]="usuario.datanascimento"
+                         (input)="aplicarMascaraData($event)"
+                         placeholder="DD/MM/AAAA"
+                         maxlength="10">
+                  <span class="input-group-text">
+                    {{ calcularIdade() }} anos
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Card de Segurança -->
+        <div class="card">
+          <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">🔐 Segurança</h5>
+          </div>
+          <div class="card-body">
+            
+            <!-- Modo Visualização -->
+            <div *ngIf="!editando" class="text-center py-3">
+              <p class="text-muted">Gerencie sua senha e configurações de segurança</p>
+              <button class="btn btn-outline-warning" (click)="iniciarEdicao(); alterarSenha = true">
+                🔑 Alterar Senha
+              </button>
+            </div>
+
+            <!-- Modo Edição - Alteração de Senha -->
+            <div *ngIf="editando">
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" 
+                       [(ngModel)]="alterarSenha"
+                       id="alterarSenhaToggle">
+                <label class="form-check-label" for="alterarSenhaToggle">
+                  <strong>Alterar Senha</strong>
+                </label>
+              </div>
+
+              <div *ngIf="alterarSenha" class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="novaSenha" class="form-label">Nova Senha *</label>
+                  <input type="password" class="form-control" id="novaSenha"
+                         [(ngModel)]="novaSenha"
+                         placeholder="Mínimo 6 caracteres"
+                         minlength="6">
+                  <div class="form-text">
+                    Use letras, números e caracteres especiais para maior segurança.
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="confirmarSenha" class="form-label">Confirmar Senha *</label>
+                  <input type="password" class="form-control" id="confirmarSenha"
+                         [(ngModel)]="confirmarSenha"
+                         placeholder="Digite a senha novamente">
+                </div>
+              </div>
+
+              <div *ngIf="!alterarSenha" class="alert alert-info">
+                <small>⚠️ Para alterar sua senha, ative a opção "Alterar Senha" acima.</small>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Informações do Sistema -->
+        <div class="card mt-4">
+          <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">⚙️ Informações do Sistema</h5>
+          </div>
+          <div class="card-body">
+            <div class="row text-center">
+              <div class="col-md-4 mb-3">
+                <div class="text-muted small">Membro desde</div>
+                <div class="fw-bold">{{ usuario.dataCriacao || 'Não informado' }}</div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="text-muted small">Status</div>
+                <span class="badge" [ngClass]="usuario.status === 1 ? 'bg-success' : 'bg-danger'">
+                  {{ getStatusTexto() }}
+                </span>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="text-muted small">Permissões</div>
+                <div class="fw-bold">{{ getFuncoesTexto() }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mensagem sem dados -->
+    <div *ngIf="!carregando && !usuario.email" class="text-center py-5">
+      <div class="text-muted mb-3">👤</div>
+      <h4 class="text-muted">Não foi possível carregar o perfil</h4>
+      <p class="text-muted mb-4">Tente fazer login novamente</p>
+      <button class="btn btn-primary" routerLink="/login">
+        🔄 Fazer Login Novamente
+      </button>
+    </div>
+
+  </div>
+</div>

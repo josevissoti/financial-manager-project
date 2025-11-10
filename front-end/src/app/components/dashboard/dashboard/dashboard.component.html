@@ -17,6 +17,14 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+            <li>
+              <a class="dropdown-item" routerLink="/perfil">
+                👤 Meu Perfil
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
             <li><a class="dropdown-item text-danger" (click)="logout()">🚪 Sair</a></li>
           </ul>
         </div>
@@ -139,6 +147,15 @@
                   <small class="text-muted">Visualize seus dados</small>
                 </button>
               </div>
+
+              <div class="col-lg-3 col-md-6">
+                <button class="btn btn-outline-warning btn-lg w-100 h-100 py-3" routerLink="/usuarios">
+                  <div class="fs-1">👥</div>
+                  <div class="fw-bold">Usuários</div>
+                  <small class="text-muted">Gerencie usuários</small>
+                </button>
+              </div>
+
             </div>
           </div>
         </div>

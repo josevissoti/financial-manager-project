@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError } from 'rxjs';
+import { Observable, tap, catchError, BehaviorSubject } from 'rxjs';
 import { CredenciaisDTO, TokenDTO } from '../models/auth-data.model';
 
 @Injectable({
@@ -8,8 +8,13 @@ import { CredenciaisDTO, TokenDTO } from '../models/auth-data.model';
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:8080/auth';
+  private usuarioLogadoSubject = new BehaviorSubject<any>(null);
+  public usuarioLogado$ = this.usuarioLogadoSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    // Carregar dados do usuário do localStorage ao inicializar
+    this.carregarUsuarioDoStorage();
+  }
 
   login(credenciais: CredenciaisDTO): Observable<TokenDTO> {
     console.log('🔐 Tentando login na URL:', `${this.API_URL}/login`);
@@ -19,8 +24,19 @@ export class AuthService {
       .pipe(
         tap(response => {
           console.log('✅ Login bem sucedido! Resposta:', response);
-          localStorage.setItem('token', response.token);
-          console.log('🔑 Token salvo no localStorage');
+          
+          // ✅ Remove "Bearer " se o backend já incluir
+          let token = response.token;
+          if (token.startsWith('Bearer ')) {
+            token = token.substring(7);
+            console.log('🔑 Token limpo (removido Bearer)');
+          }
+          
+          localStorage.setItem('token', token);
+          console.log('🔑 Token salvo no localStorage:', token.substring(0, 20) + '...');
+          
+          // Decodificar token e salvar dados do usuário
+          this.salvarDadosUsuarioDoToken(token);
         }),
         catchError(error => {
           console.error('❌ ERRO no login:', error);
@@ -36,6 +52,8 @@ export class AuthService {
   logout(): void {
     console.log('🚪 Fazendo logout...');
     localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    this.usuarioLogadoSubject.next(null);
   }
 
   getToken(): string | null {
@@ -69,6 +87,11 @@ export class AuthService {
   }
 
   getUserInfo(): any {
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (usuarioStorage) {
+      return JSON.parse(usuarioStorage);
+    }
+    
     const token = this.getToken();
     if (token) {
       try {
@@ -99,6 +122,42 @@ export class AuthService {
       }
     } else {
       console.log('🔍 DEBUG: Nenhum token encontrado');
+    }
+  }
+
+  // Novo método para obter dados completos do usuário logado
+  getUsuarioLogado(): any {
+    return this.usuarioLogadoSubject.value;
+  }
+
+  // Método para atualizar dados do usuário
+  atualizarUsuario(usuario: any): void {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    this.usuarioLogadoSubject.next(usuario);
+  }
+
+  // Métodos privados
+  private salvarDadosUsuarioDoToken(token: string): void {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const usuario = {
+        email: payload.sub,
+        nome: payload.name || payload.sub.split('@')[0],
+        // Adicione outros campos que podem estar no token
+      };
+      
+      localStorage.setItem('usuario', JSON.stringify(usuario));
+      this.usuarioLogadoSubject.next(usuario);
+      console.log('👤 Dados do usuário salvos:', usuario);
+    } catch (error) {
+      console.error('❌ Erro ao salvar dados do usuário:', error);
+    }
+  }
+
+  private carregarUsuarioDoStorage(): void {
+    const usuarioStorage = localStorage.getItem('usuario');
+    if (usuarioStorage) {
+      this.usuarioLogadoSubject.next(JSON.parse(usuarioStorage));
     }
   }
 }

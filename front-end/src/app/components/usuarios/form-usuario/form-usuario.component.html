@@ -1,0 +1,250 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div>
+          <button class="btn btn-outline-secondary me-2" (click)="voltar()">
+            ← Voltar
+          </button>
+          <h2 class="mb-0">
+            {{ isEditando ? '✏️ Editar Usuário' : '👤 Novo Usuário' }}
+          </h2>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-primary me-2" (click)="voltar()">
+            Cancelar
+          </button>
+          <button type="submit" form="formUsuario" class="btn btn-success" [disabled]="enviando">
+            <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isEditando ? '💾 Atualizar' : '✅ Criar' }} Usuário
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando usuário...</p>
+    </div>
+
+    <!-- Erro -->
+    <div *ngIf="erro && !carregando" class="alert alert-danger">
+      {{ erro }}
+    </div>
+
+    <!-- Formulário -->
+    <div *ngIf="!carregando">
+      <form id="formUsuario" (ngSubmit)="onSubmit()" #form="ngForm">
+        
+        <div class="row">
+          
+          <!-- Coluna Esquerda - Dados Pessoais -->
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">👤 Dados Pessoais</h5>
+              </div>
+              <div class="card-body">
+                
+                <!-- Nome -->
+                <div class="mb-3">
+                  <label for="nome" class="form-label">📝 Nome Completo *</label>
+                  <input type="text" class="form-control" id="nome"
+                         [(ngModel)]="usuario.nome" name="nome"
+                         required placeholder="Ex: João Silva Santos"
+                         [class.is-invalid]="form.submitted && !usuario.nome">
+                  <div class="invalid-feedback">
+                    Por favor, informe o nome completo.
+                  </div>
+                </div>
+
+                <!-- CPF -->
+                <div class="mb-3">
+                  <label for="cpf" class="form-label">🔢 CPF *</label>
+                  <input type="text" class="form-control" id="cpf"
+                         [(ngModel)]="usuario.cpf" name="cpf"
+                         required placeholder="000.000.000-00"
+                         (input)="aplicarMascaraCPF($event)"
+                         maxlength="14"
+                         [class.is-invalid]="form.submitted && !usuario.cpf">
+                  <div class="invalid-feedback">
+                    Por favor, informe um CPF válido.
+                  </div>
+                </div>
+
+                <!-- Data de Nascimento -->
+                <div class="mb-3">
+                  <label for="datanascimento" class="form-label">🎂 Data de Nascimento *</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="datanascimento"
+                           [(ngModel)]="usuario.datanascimento" name="datanascimento"
+                           required placeholder="DD/MM/AAAA"
+                           (input)="aplicarMascaraData($event)"
+                           maxlength="10"
+                           [class.is-invalid]="form.submitted && !usuario.datanascimento">
+                    <span class="input-group-text">
+                      {{ calcularIdade() }} anos
+                    </span>
+                  </div>
+                  <div class="invalid-feedback">
+                    Por favor, informe uma data de nascimento válida.
+                  </div>
+                </div>
+
+                <!-- Telefone -->
+                <div class="mb-3">
+                  <label for="telefone" class="form-label">📞 Telefone *</label>
+                  <input type="text" class="form-control" id="telefone"
+                         [(ngModel)]="usuario.telefone" name="telefone"
+                         required placeholder="(00) 00000-0000"
+                         (input)="aplicarMascaraTelefone($event)"
+                         maxlength="15"
+                         [class.is-invalid]="form.submitted && !usuario.telefone">
+                  <div class="invalid-feedback">
+                    Por favor, informe um telefone válido.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Coluna Direita - Dados de Acesso -->
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0">🔐 Dados de Acesso</h5>
+              </div>
+              <div class="card-body">
+                
+                <!-- Email -->
+                <div class="mb-3">
+                  <label for="email" class="form-label">📧 Email *</label>
+                  <input type="email" class="form-control" id="email"
+                         [(ngModel)]="usuario.email" name="email"
+                         required placeholder="usuario@exemplo.com"
+                         [class.is-invalid]="form.submitted && !usuario.email">
+                  <div class="invalid-feedback">
+                    Por favor, informe um email válido.
+                  </div>
+                </div>
+
+                <!-- Senha -->
+                <div *ngIf="!isEditando" class="mb-3">
+                  <label for="senha" class="form-label">🔑 Senha *</label>
+                  <input type="password" class="form-control" id="senha"
+                         [(ngModel)]="usuario.senha" name="senha"
+                         required placeholder="Mínimo 6 caracteres"
+                         minlength="6"
+                         [class.is-invalid]="form.submitted && (!usuario.senha || usuario.senha.length < 6)">
+                  <div class="invalid-feedback">
+                    A senha deve ter pelo menos 6 caracteres.
+                  </div>
+                  <div class="form-text">
+                    Para segurança, use letras, números e caracteres especiais.
+                  </div>
+                </div>
+
+                <!-- Confirmar Senha -->
+                <div *ngIf="!isEditando" class="mb-3">
+                  <label for="confirmarSenha" class="form-label">🔑 Confirmar Senha *</label>
+                  <input type="password" class="form-control" id="confirmarSenha"
+                         [(ngModel)]="confirmarSenha" name="confirmarSenha"
+                         required placeholder="Digite a senha novamente"
+                         [class.is-invalid]="form.submitted && usuario.senha !== confirmarSenha">
+                  <div class="invalid-feedback">
+                    As senhas não coincidem.
+                  </div>
+                </div>
+
+                <!-- Campo de senha para edição (opcional) -->
+                <div *ngIf="isEditando" class="mb-3">
+                  <label for="senha" class="form-label">🔑 Nova Senha</label>
+                  <input type="password" class="form-control" id="senha"
+                         [(ngModel)]="usuario.senha" name="senha"
+                         placeholder="Deixe em branco para manter a senha atual"
+                         minlength="6">
+                  <div class="form-text">
+                    Preencha apenas se desejar alterar a senha.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header bg-success text-white">
+                <h5 class="mb-0">⚙️ Configurações</h5>
+              </div>
+              <div class="card-body">
+                
+                <!-- Status -->
+                <div class="mb-3">
+                  <label for="status" class="form-label">🎯 Status *</label>
+                  <select class="form-select" id="status"
+                          [(ngModel)]="usuario.status" name="status" required>
+                    <option *ngFor="let status of statusOptions" [value]="status.valor">
+                      {{ status.texto }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Funções -->
+                <div class="mb-3">
+                  <label class="form-label">👥 Funções *</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" 
+                           [checked]="isFuncaoSelecionada(0)"
+                           (change)="toggleFuncao(0)"
+                           id="funcaoUsuario">
+                    <label class="form-check-label" for="funcaoUsuario">
+                      👤 Usuário
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" 
+                           [checked]="isFuncaoSelecionada(1)"
+                           (change)="toggleFuncao(1)"
+                           id="funcaoAdmin">
+                    <label class="form-check-label" for="funcaoAdmin">
+                      👑 Administrador
+                    </label>
+                  </div>
+                  <div class="form-text">
+                    Selecione as funções que este usuário terá no sistema.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body text-center">
+                <button type="button" class="btn btn-outline-secondary me-3" (click)="voltar()">
+                  ❌ Cancelar
+                </button>
+                <button type="submit" class="btn btn-success btn-lg" [disabled]="enviando">
+                  <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
+                  {{ isEditando ? '💾 Atualizar Usuário' : '✅ Criar Usuário' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
