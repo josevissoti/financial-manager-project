@@ -1,0 +1,123 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-light border-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div>
+          <button class="btn btn-outline-secondary me-2" routerLink="/dashboard">
+            ← Voltar ao Dashboard
+          </button>
+          <h2 class="mb-0 d-inline">🏷️ Categorias de Lançamento</h2>
+          <span class="badge bg-primary ms-2">{{ categorias.length }} categorias</span>
+        </div>
+        <button class="btn btn-success" routerLink="/categorias/nova">
+          ➕ Nova Categoria
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
+      <p class="mt-2 text-muted">Carregando categorias...</p>
+    </div>
+
+    <!-- Erro -->
+    <div *ngIf="erro && !carregando" class="alert alert-danger">
+      {{ erro }}
+      <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarCategorias()">
+        🔄 Tentar Novamente
+      </button>
+    </div>
+
+    <!-- Lista de Categorias -->
+    <div *ngIf="!carregando && !erro">
+      
+      <!-- Cards de Categorias -->
+      <div class="row g-4">
+        <div *ngFor="let categoria of categorias" class="col-xl-4 col-lg-6">
+          <div class="card h-100 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">{{ categoria.descricao }}</h5>
+              <span class="badge bg-info">Categoria</span>
+            </div>
+            
+            <div class="card-body">
+              <!-- Informações da Categoria -->
+              <div class="mb-3">
+                <div class="row small text-muted">
+                  <div class="col-12">
+                    <strong>Descrição:</strong><br>
+                    {{ categoria.descricao }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estatísticas -->
+              <div class="mb-3">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="border-end">
+                      <div class="text-muted small">Lançamentos</div>
+                      <div class="h5 text-primary">
+                        {{ getQuantidadeLancamentos(categoria) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="text-muted small">Status</div>
+                    <div class="h5 text-success">
+                      ✅ Ativa
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Usuário -->
+              <div class="small text-muted">
+                <strong>Criada por:</strong> {{ categoria.nome || 'Usuário' }}
+              </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="card-footer bg-transparent">
+              <div class="btn-group w-100">
+                <button class="btn btn-outline-primary btn-sm" 
+                        (click)="editarCategoria(categoria.idCategoriaLancamento)"
+                        title="Editar categoria">
+                  ✏️ Editar
+                </button>
+                <button class="btn btn-outline-danger btn-sm" 
+                        (click)="deletarCategoria(categoria)"
+                        [disabled]="getQuantidadeLancamentos(categoria) > 0"
+                        title="Deletar categoria">
+                  🗑️ Deletar
+                </button>
+              </div>
+              <div *ngIf="getQuantidadeLancamentos(categoria) > 0" class="text-center mt-2">
+                <small class="text-warning">
+                  ⚠️ Não pode ser deletada ({{ getQuantidadeLancamentos(categoria) }} lançamentos)
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensagem sem categorias -->
+      <div *ngIf="categorias.length === 0" class="text-center py-5">
+        <div class="text-muted mb-3">🏷️</div>
+        <h4 class="text-muted">Nenhuma categoria cadastrada</h4>
+        <p class="text-muted mb-4">Comece cadastrando sua primeira categoria</p>
+        <button class="btn btn-success btn-lg" routerLink="/categorias/nova">
+          ➕ Cadastrar Primeira Categoria
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

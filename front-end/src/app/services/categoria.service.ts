@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Categoria {
-  idCategoriaLancamento: number;
+  idCategoriaLancamento?: number;  // ✅ OPCIONAL para criação
   descricao: string;
   idPessoa: number;
   nome?: string;

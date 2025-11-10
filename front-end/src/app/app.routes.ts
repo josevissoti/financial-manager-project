@@ -5,46 +5,64 @@ import { AuthGuard } from './guards/auth.guard';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { 
-    path: 'dashboard', 
+  {
+    path: 'dashboard',
     loadComponent: () => import('./components/dashboard/dashboard/dashboard.component')
       .then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'lancamentos', 
+  {
+    path: 'lancamentos',
     loadComponent: () => import('./components/lancamentos/lista-lancamentos/lista-lancamentos.component')
       .then(m => m.ListaLancamentosComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'lancamentos/novo', 
+  {
+    path: 'lancamentos/novo',
     loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
       .then(m => m.FormLancamentoComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'lancamentos/editar/:id', 
+  {
+    path: 'lancamentos/editar/:id',
     loadComponent: () => import('./components/lancamentos/form-lancamento/form-lancamento.component')
       .then(m => m.FormLancamentoComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'contas', 
+  {
+    path: 'contas',
     loadComponent: () => import('./components/contas/lista-contas/lista-contas.component')
       .then(m => m.ListaContasComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'contas/nova', 
+  {
+    path: 'contas/nova',
     loadComponent: () => import('./components/contas/form-conta/form-conta.component')
       .then(m => m.FormContaComponent),
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'contas/editar/:id', 
+  {
+    path: 'contas/editar/:id',
     loadComponent: () => import('./components/contas/form-conta/form-conta.component')
       .then(m => m.FormContaComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'categorias',
+    loadComponent: () => import('./components/categorias/lista-categorias/lista-categorias.component')
+      .then(m => m.ListaCategoriasComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'categorias/nova',
+    loadComponent: () => import('./components/categorias/form-categoria/form-categoria.component')
+      .then(m => m.FormCategoriaComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'categorias/editar/:id',
+    loadComponent: () => import('./components/categorias/form-categoria/form-categoria.component')
+      .then(m => m.FormCategoriaComponent),
     canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '/dashboard' }
