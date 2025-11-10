@@ -1,0 +1,143 @@
+<div class="form-container">
+  <h2>{{ isEditando ? 'Editar Lançamento' : 'Novo Lançamento' }}</h2>
+
+  <!-- Indicador de Carregamento -->
+  <div *ngIf="carregandoDados" class="alert alert-info">
+    <div class="spinner-border spinner-border-sm me-2"></div>
+    🔄 Carregando categorias e contas do backend...
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="erro" class="alert alert-error">
+    {{ erro }}
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #lancamentoForm="ngForm">
+
+    <!-- Informações Básicas -->
+    <fieldset class="form-section">
+      <legend>Informações Básicas</legend>
+
+      <div class="form-group">
+        <label for="descricao">Descrição *</label>
+        <input type="text" id="descricao" name="descricao" [(ngModel)]="lancamento.descricao" required
+          class="form-control" placeholder="Ex: Pagamento conta de luz">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="valor">Valor *</label>
+          <input type="number" id="valor" name="valor" [(ngModel)]="lancamento.valor" required min="0.01" step="0.01"
+            class="form-control" placeholder="0,00">
+        </div>
+
+        <div class="form-group">
+          <label for="parcela">Parcela</label>
+          <input type="number" id="parcela" name="parcela" [(ngModel)]="lancamento.parcela" min="1" class="form-control"
+            placeholder="1">
+          <small>Número da parcela atual (ex: 1 para primeira parcela)</small>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Datas e Prazos -->
+    <fieldset class="form-section">
+      <legend>Datas e Prazos (Use DD/MM/AAAA)</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dataLancamento">Data do Lançamento *</label>
+          <input type="text" id="dataLancamento" name="dataLancamento" [(ngModel)]="lancamento.dataLancamento" required
+            class="form-control" placeholder="DD/MM/AAAA" (blur)="validarData('dataLancamento')"
+            (input)="aplicarMascaraData($event, 'dataLancamento')" maxlength="10">
+        </div>
+
+        <div class="form-group">
+          <label for="prazoVencimento">Prazo de Vencimento *</label>
+          <input type="text" id="prazoVencimento" name="prazoVencimento" [(ngModel)]="lancamento.prazoVencimento"
+            required class="form-control" placeholder="DD/MM/AAAA" (blur)="validarData('prazoVencimento')"
+            (input)="aplicarMascaraData($event, 'prazoVencimento')" maxlength="10">
+          <button type="button" class="btn-calcular" (click)="calcularVencimento()" title="Calcular 30 dias após lançamento">
+            +30 dias
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="dataBaixa">Data de Baixa</label>
+          <input type="text" id="dataBaixa" name="dataBaixa" [(ngModel)]="lancamento.dataBaixa" class="form-control"
+            placeholder="DD/MM/AAAA" (blur)="validarData('dataBaixa')" (input)="aplicarMascaraData($event, 'dataBaixa')"
+            maxlength="10">
+          <small>Data em que o lançamento foi quitado (opcional)</small>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Classificação -->
+    <fieldset class="form-section">
+      <legend>Classificação</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tipoLancamento">Tipo de Lançamento *</label>
+          <select id="tipoLancamento" name="tipoLancamento" [(ngModel)]="lancamento.tipoLancamento" required
+            class="form-control">
+            <option *ngFor="let tipo of tiposLancamento" [value]="tipo.valor">
+              {{ tipo.texto }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="situacao">Situação *</label>
+          <select id="situacao" name="situacao" [(ngModel)]="lancamento.situacao" required class="form-control">
+            <option *ngFor="let situacao of situacoes" [value]="situacao.valor">
+              {{ situacao.texto }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Categoria -->
+      <div class="form-group">
+        <label for="idCategoriaLancamento">Categoria *</label>
+        <select id="idCategoriaLancamento" name="idCategoriaLancamento" [(ngModel)]="lancamento.idCategoriaLancamento"
+          required class="form-control" [disabled]="carregandoDados">
+          <option value="0" disabled>Selecione uma categoria</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria.idCategoriaLancamento">
+            {{ categoria.descricao }}
+          </option>
+        </select>
+        <div *ngIf="carregandoDados" class="form-text">
+          <small class="text-muted">🔄 Carregando categorias...</small>
+        </div>
+      </div>
+
+      <!-- Conta -->
+      <div class="form-group">
+        <label for="idConta">Conta *</label>
+        <select id="idConta" name="idConta" [(ngModel)]="lancamento.idConta" required class="form-control"
+          [disabled]="carregandoDados">
+          <option value="0" disabled>Selecione uma conta</option>
+          <option *ngFor="let conta of contas" [value]="conta.idConta">
+            {{ conta.descricao }} (Ag: {{ conta.agencia }} C/C: {{ conta.numero }})
+          </option>
+        </select>
+        <div *ngIf="carregandoDados" class="form-text">
+          <small class="text-muted">🔄 Carregando contas...</small>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Botões -->
+    <div class="form-actions">
+      <button type="button" (click)="voltar()" class="btn btn-secondary">
+        Cancelar
+      </button>
+
+      <button type="submit" [disabled]="enviando || !lancamentoForm.form.valid" class="btn btn-primary">
+        <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
+        {{ enviando ? 'Salvando...' : (isEditando ? 'Atualizar' : 'Criar') }}
+      </button>
+    </div>
+  </form>
+</div>

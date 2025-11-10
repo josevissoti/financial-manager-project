@@ -21,12 +21,11 @@ public class JWTUtils {
 
     public String generateToken(String username) {
         Key key = Keys.hmacShaKeyFor(secret.getBytes());
-        String tokenGerado = Jwts.builder()
+        return Jwts.builder() // ✅ REMOVIDO: "Bearer " +
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
-        return "Bearer " + tokenGerado;
     }
 
     public boolean isTokenValid(String token) {
@@ -58,5 +57,4 @@ public class JWTUtils {
             return null;
         }
     }
-
 }

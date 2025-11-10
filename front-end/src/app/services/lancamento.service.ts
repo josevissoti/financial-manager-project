@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -11,7 +11,7 @@ export interface Lancamento {
   parcela: number;
   dataLancamento: string;
   prazoVencimento: string;
-  dataBaixa?: string;
+  dataBaixa?: string | null;
   tipoLancamento: number; // 0=Débito, 1=Crédito
   situacao: number; // 0=Pendente, 1=Baixado, 2=Atrasado
   idPessoa: number;
@@ -65,11 +65,38 @@ export class LancamentoService {
   ) { }
 
   /**
+   * Criar headers com o token de autenticação
+   */
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    
+    console.log('🔐 Service - Token disponível:', !!token);
+    if (token) {
+      console.log('🔐 Service - Token:', token.substring(0, 20) + '...');
+    }
+    
+    if (token) {
+      return new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      });
+    }
+    
+    console.warn('⚠️  Service - Nenhum token encontrado!');
+    return new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  }
+
+  /**
    * Buscar todos os lançamentos
    */
   findAll(): Observable<LancamentoDTO[]> {
     console.log('📋 Buscando todos os lançamentos...');
-    return this.http.get<LancamentoDTO[]>(this.API_URL);
+    const headers = this.getHeaders();
+    console.log('🔐 Headers sendo enviados:', headers);
+    
+    return this.http.get<LancamentoDTO[]>(this.API_URL, { headers });
   }
 
   /**
@@ -77,7 +104,7 @@ export class LancamentoService {
    */
   findById(id: number): Observable<LancamentoDTO> {
     console.log(`🔍 Buscando lançamento ID: ${id}`);
-    return this.http.get<LancamentoDTO>(`${this.API_URL}/${id}`);
+    return this.http.get<LancamentoDTO>(`${this.API_URL}/${id}`, { headers: this.getHeaders() });
   }
 
   /**
@@ -110,7 +137,10 @@ export class LancamentoService {
       params = params.append('idConta', filtros.idConta.toString());
     }
 
-    return this.http.get<LancamentoDTO[]>(`${this.API_URL}/filtros`, { params });
+    return this.http.get<LancamentoDTO[]>(`${this.API_URL}/filtros`, { 
+      params, 
+      headers: this.getHeaders() 
+    });
   }
 
   /**
@@ -118,7 +148,12 @@ export class LancamentoService {
    */
   create(lancamento: Lancamento): Observable<Lancamento> {
     console.log('➕ Criando novo lançamento:', lancamento);
-    return this.http.post<Lancamento>(this.API_URL, lancamento);
+    const headers = this.getHeaders();
+    
+    console.log('🔐 CREATE - Headers:', headers);
+    console.log('🔐 CREATE - URL:', this.API_URL);
+    
+    return this.http.post<Lancamento>(this.API_URL, lancamento, { headers });
   }
 
   /**
@@ -126,7 +161,7 @@ export class LancamentoService {
    */
   update(id: number, lancamento: Lancamento): Observable<Lancamento> {
     console.log(`✏️ Atualizando lançamento ID: ${id}`, lancamento);
-    return this.http.put<Lancamento>(`${this.API_URL}/${id}`, lancamento);
+    return this.http.put<Lancamento>(`${this.API_URL}/${id}`, lancamento, { headers: this.getHeaders() });
   }
 
   /**
@@ -134,7 +169,7 @@ export class LancamentoService {
    */
   delete(id: number): Observable<void> {
     console.log(`🗑️ Deletando lançamento ID: ${id}`);
-    return this.http.delete<void>(`${this.API_URL}/${id}`);
+    return this.http.delete<void>(`${this.API_URL}/${id}`, { headers: this.getHeaders() });
   }
 
   /**
@@ -146,7 +181,10 @@ export class LancamentoService {
       .set('dataInicio', dataInicio)
       .set('dataFim', dataFim);
 
-    return this.http.get<LancamentoDTO[]>(`${this.API_URL}/periodo`, { params });
+    return this.http.get<LancamentoDTO[]>(`${this.API_URL}/periodo`, { 
+      params, 
+      headers: this.getHeaders() 
+    });
   }
 
   /**
@@ -154,7 +192,7 @@ export class LancamentoService {
    */
   getResumo(): Observable<any> {
     console.log('📊 Buscando resumo financeiro...');
-    return this.http.get<any>(`${this.API_URL}/resumo`);
+    return this.http.get<any>(`${this.API_URL}/resumo`, { headers: this.getHeaders() });
   }
 
   /**

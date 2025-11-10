@@ -141,8 +141,8 @@
                 <td class="text-center">
                   <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-primary" 
-                            (click)="editarLancamento(lancamento.idLancamento)"
-                            title="Editar">
+                        [routerLink]="['/lancamentos/editar', lancamento.idLancamento]"
+                        title="Editar">
                       ✏️
                     </button>
                     <button class="btn btn-outline-danger" 

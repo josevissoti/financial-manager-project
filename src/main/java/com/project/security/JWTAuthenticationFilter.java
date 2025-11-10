@@ -25,14 +25,26 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         String token = getTokenFromRequest(request);
+
+        // ✅ ADICIONE DEBUG AQUI
+        System.out.println("🔐 JWT Filter - URL: " + request.getRequestURI());
+        System.out.println("🔐 JWT Filter - Token recebido: " + (token != null ? token.substring(0, Math.min(20, token.length())) + "..." : "NULL"));
+        System.out.println("🔐 JWT Filter - Header Authorization: " + request.getHeader("Authorization"));
+
         if (token != null && JWTUtils.isTokenValid(token)) {
             String username = JWTUtils.getUsername(token);
+            System.out.println("🔐 JWT Filter - Usuário autenticado: " + username);
+
             var userDetails = userDetailsService.loadUserByUsername(username);
             var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(auth);
+        } else {
+            System.out.println("🔐 JWT Filter - Token inválido ou ausente");
         }
+
         filterChain.doFilter(request, response);
     }
 
@@ -43,5 +55,4 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
         return null;
     }
-
 }
