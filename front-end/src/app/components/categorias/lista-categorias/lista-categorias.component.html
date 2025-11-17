@@ -1,122 +1,185 @@
-<div class="container-fluid">
-  <!-- Header -->
-  <nav class="navbar navbar-light bg-light border-bottom">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center w-100">
-        <div>
-          <button class="btn btn-outline-secondary me-2" routerLink="/dashboard">
-            ← Voltar ao Dashboard
-          </button>
-          <h2 class="mb-0 d-inline">🏷️ Categorias de Lançamento</h2>
-          <span class="badge bg-primary ms-2">{{ categorias.length }} categorias</span>
+<div class="page-container">
+  <!-- Header Padrão -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-main">
+        <h1 class="page-title">
+          🏷️ Categorias de Lançamento
+          <span class="badge-count">{{ categoriasFiltradas.length }}</span>
+        </h1>
+        <nav class="breadcrumb">
+          <a routerLink="/dashboard">Dashboard</a> / 
+          <span>Categorias</span>
+        </nav>
+      </div>
+      <button class="btn btn-primary" routerLink="/categorias/nova">
+        <span class="btn-icon">➕</span>
+        Nova Categoria
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <!-- Loading State -->
+    <div *ngIf="carregando" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando categorias...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="erro && !carregando" class="alert alert-error">
+      <div class="alert-content">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-text">
+          <strong>Erro ao carregar categorias</strong>
+          <p>{{ erro }}</p>
         </div>
-        <button class="btn btn-success" routerLink="/categorias/nova">
-          ➕ Nova Categoria
-        </button>
       </div>
-    </div>
-  </nav>
-
-  <div class="container mt-4">
-    
-    <!-- Loading -->
-    <div *ngIf="carregando" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-      <p class="mt-2 text-muted">Carregando categorias...</p>
-    </div>
-
-    <!-- Erro -->
-    <div *ngIf="erro && !carregando" class="alert alert-danger">
-      {{ erro }}
-      <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarCategorias()">
+      <button class="btn btn-outline" (click)="carregarCategorias()">
         🔄 Tentar Novamente
       </button>
     </div>
 
-    <!-- Lista de Categorias -->
-    <div *ngIf="!carregando && !erro">
-      
-      <!-- Cards de Categorias -->
-      <div class="row g-4">
-        <div *ngFor="let categoria of categorias" class="col-xl-4 col-lg-6">
-          <div class="card h-100 shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">{{ categoria.descricao }}</h5>
-              <span class="badge bg-info">Categoria</span>
-            </div>
-            
-            <div class="card-body">
-              <!-- Informações da Categoria -->
-              <div class="mb-3">
-                <div class="row small text-muted">
-                  <div class="col-12">
-                    <strong>Descrição:</strong><br>
-                    {{ categoria.descricao }}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Estatísticas -->
-              <div class="mb-3">
-                <div class="row text-center">
-                  <div class="col-6">
-                    <div class="border-end">
-                      <div class="text-muted small">Lançamentos</div>
-                      <div class="h5 text-primary">
-                        {{ getQuantidadeLancamentos(categoria) }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="text-muted small">Status</div>
-                    <div class="h5 text-success">
-                      ✅ Ativa
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Usuário -->
-              <div class="small text-muted">
-                <strong>Criada por:</strong> {{ categoria.nome || 'Usuário' }}
-              </div>
-            </div>
-
-            <!-- Ações -->
-            <div class="card-footer bg-transparent">
-              <div class="btn-group w-100">
-                <button class="btn btn-outline-primary btn-sm" 
-                        (click)="editarCategoria(categoria.idCategoriaLancamento)"
-                        title="Editar categoria">
-                  ✏️ Editar
-                </button>
-                <button class="btn btn-outline-danger btn-sm" 
-                        (click)="deletarCategoria(categoria)"
-                        [disabled]="getQuantidadeLancamentos(categoria) > 0"
-                        title="Deletar categoria">
-                  🗑️ Deletar
-                </button>
-              </div>
-              <div *ngIf="getQuantidadeLancamentos(categoria) > 0" class="text-center mt-2">
-                <small class="text-warning">
-                  ⚠️ Não pode ser deletada ({{ getQuantidadeLancamentos(categoria) }} lançamentos)
-                </small>
-              </div>
-            </div>
-          </div>
+    <!-- Filtros e Busca -->
+    <div *ngIf="!carregando && !erro" class="filters-section">
+      <div class="filters-card">
+        <div class="search-box">
+          <input type="text" 
+                 [(ngModel)]="termoBusca" 
+                 (input)="filtrarCategorias()"
+                 placeholder="🔍 Buscar por nome da categoria..."
+                 class="search-input">
+        </div>
+        <div class="filter-options">
+          <select [(ngModel)]="filtroStatus" (change)="filtrarCategorias()" class="filter-select">
+            <option value="">Todos os status</option>
+            <option value="ativa">Ativas</option>
+            <option value="inativa">Inativas</option>
+          </select>
+          <select [(ngModel)]="filtroLancamentos" (change)="filtrarCategorias()" class="filter-select">
+            <option value="">Todos os tipos</option>
+            <option value="com-lancamentos">Com lançamentos</option>
+            <option value="sem-lancamentos">Sem lançamentos</option>
+          </select>
         </div>
       </div>
 
-      <!-- Mensagem sem categorias -->
-      <div *ngIf="categorias.length === 0" class="text-center py-5">
-        <div class="text-muted mb-3">🏷️</div>
-        <h4 class="text-muted">Nenhuma categoria cadastrada</h4>
-        <p class="text-muted mb-4">Comece cadastrando sua primeira categoria</p>
-        <button class="btn btn-success btn-lg" routerLink="/categorias/nova">
+      <div class="results-info">
+        <span class="results-count">
+          {{ categoriasFiltradas.length }} de {{ categorias.length }} categorias
+        </span>
+        <button *ngIf="termoBusca || filtroStatus || filtroLancamentos" 
+                class="btn btn-text" 
+                (click)="limparFiltros()">
+          🗑️ Limpar Filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Categorias -->
+    <div *ngIf="!carregando && !erro" class="categories-grid">
+      
+      <!-- Empty State -->
+      <div *ngIf="categoriasFiltradas.length === 0" class="empty-state">
+        <div class="empty-icon">🏷️</div>
+        <h3>Nenhuma categoria encontrada</h3>
+        <p *ngIf="termoBusca || filtroStatus || filtroLancamentos">
+          Tente ajustar os filtros ou 
+          <button class="btn-link" (click)="limparFiltros()">limpar a busca</button>
+        </p>
+        <p *ngIf="!termoBusca && !filtroStatus && !filtroLancamentos">
+          Comece cadastrando sua primeira categoria
+        </p>
+        <button class="btn btn-primary" routerLink="/categorias/nova">
           ➕ Cadastrar Primeira Categoria
         </button>
+      </div>
+
+      <!-- Cards de Categorias -->
+      <div *ngFor="let categoria of categoriasFiltradas" class="category-card">
+        <div class="category-header">
+          <div class="category-info">
+            <h3 class="category-name">{{ categoria.descricao }}</h3>
+            <div class="category-meta">
+              <span class="category-type">Categoria</span>
+              <span class="category-status" [ngClass]="getStatusClasse(categoria)">
+                {{ getStatusTexto(categoria) }}
+              </span>
+            </div>
+          </div>
+          <div class="category-actions">
+            <button class="btn-icon" 
+                    (click)="editarCategoria(categoria.idCategoriaLancamento)" 
+                    title="Editar categoria">
+              ✏️
+            </button>
+            <button class="btn-icon danger" 
+                    (click)="deletarCategoria(categoria)"
+                    [disabled]="getQuantidadeLancamentos(categoria) > 0"
+                    title="Deletar categoria">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <div class="category-body">
+          <!-- Descrição -->
+          <div class="description-section">
+            <p class="category-description">{{ categoria.descricao }}</p>
+          </div>
+
+          <!-- Estatísticas -->
+          <div class="stats-section">
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-value">{{ getQuantidadeLancamentos(categoria) }}</div>
+                <div class="stat-label">Lançamentos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" [ngClass]="getStatusClasse(categoria)">
+                  {{ getStatusIcon(categoria) }}
+                </div>
+                <div class="stat-label">Status</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Informações do Criador -->
+          <div class="creator-info">
+            <div class="creator-avatar">
+              {{ getIniciais(categoria.nome) }}
+            </div>
+            <div class="creator-details">
+              <span class="creator-name">{{ categoria.nome || 'Usuário' }}</span>
+              <span class="creator-role">Criador</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ações e Status -->
+        <div class="category-footer">
+          <div class="footer-actions">
+            <button class="btn-quick" 
+                    (click)="verLancamentos(categoria)"
+                    [disabled]="getQuantidadeLancamentos(categoria) === 0"
+                    title="Ver lançamentos">
+              📊 Lançamentos
+            </button>
+            <button class="btn-quick" 
+                    (click)="editarCategoria(categoria.idCategoriaLancamento)"
+                    title="Editar categoria">
+              ⚙️ Editar
+            </button>
+          </div>
+          
+          <!-- Mensagem de Proteção -->
+          <div *ngIf="getQuantidadeLancamentos(categoria) > 0" class="protection-warning">
+            <span class="warning-icon">⚠️</span>
+            <span class="warning-text">
+              Categoria protegida ({{ getQuantidadeLancamentos(categoria) }} lançamentos vinculados)
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

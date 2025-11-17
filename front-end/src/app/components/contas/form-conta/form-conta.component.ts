@@ -20,9 +20,8 @@ export class FormContaComponent implements OnInit {
     agencia: '',
     numero: '',
     tipoConta: 0,
-    idPessoa: 1, // ID do usuário logado
+    idPessoa: 1,
     idBanco: 0
-    // ✅ idConta é opcional, não precisa inicializar
   };
 
   isEditando: boolean = false;
@@ -31,10 +30,8 @@ export class FormContaComponent implements OnInit {
   enviando: boolean = false;
   erro: string = '';
 
-  // Dados do backend
   bancos: Banco[] = [];
 
-  // Opções para os selects
   tiposConta = [
     { valor: 0, texto: '💳 Conta Corrente' },
     { valor: 1, texto: '📈 Conta Investimento' },
@@ -123,7 +120,7 @@ export class FormContaComponent implements OnInit {
         next: (response) => {
           console.log('✅ Conta atualizada:', response);
           this.enviando = false;
-          alert('Conta atualizada com sucesso!');
+          this.mostrarSucesso('Conta atualizada com sucesso!');
           this.router.navigate(['/contas']);
         },
         error: (error) => {
@@ -137,7 +134,7 @@ export class FormContaComponent implements OnInit {
         next: (response) => {
           console.log('✅ Conta criada:', response);
           this.enviando = false;
-          alert('Conta criada com sucesso!');
+          this.mostrarSucesso('Conta criada com sucesso!');
           this.router.navigate(['/contas']);
         },
         error: (error) => {
@@ -155,5 +152,79 @@ export class FormContaComponent implements OnInit {
 
   formatarValor(valor: number): string {
     return this.contaService.formatarValor(valor);
+  }
+
+  getTipoContaTexto(tipo: number): string {
+    const tipoEncontrado = this.tiposConta.find(t => t.valor === tipo);
+    return tipoEncontrado ? tipoEncontrado.texto.replace(/[^\w\s]/g, '') : 'Desconhecido';
+  }
+
+  getBancoNome(idBanco: number): string {
+    const banco = this.bancos.find(b => b.idBanco === idBanco);
+    return banco ? banco.razaoSocial : '';
+  }
+
+  getSaldoClasse(saldo: number): string {
+    return saldo >= 0 ? 'positive' : 'negative';
+  }
+
+  getLimiteStatusClasse(): string {
+    if (this.conta.limite <= 0) return 'status-info';
+    
+    const utilizacao = (this.conta.saldo / this.conta.limite) * 100;
+    
+    if (this.conta.tipoConta === 2) {
+      // Cartão de crédito - saldo negativo é uso do limite
+      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.9) {
+        return 'status-danger';
+      }
+      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.7) {
+        return 'status-warning';
+      }
+      return 'status-success';
+    }
+    
+    // Outras contas - saldo positivo é bom
+    if (this.conta.saldo >= this.conta.limite * 0.7) {
+      return 'status-success';
+    }
+    if (this.conta.saldo >= this.conta.limite * 0.4) {
+      return 'status-info';
+    }
+    return 'status-secondary';
+  }
+
+  getLimiteStatusTexto(): string {
+    if (this.conta.limite <= 0) return 'Sem limite definido';
+    
+    const utilizacao = (this.conta.saldo / this.conta.limite) * 100;
+    
+    if (this.conta.tipoConta === 2) {
+      // Cartão de crédito
+      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.9) {
+        return '⚠️ Limite quase esgotado';
+      }
+      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.7) {
+        return '🔶 Uso elevado do limite';
+      }
+      if (this.conta.saldo < 0) {
+        return '✅ Limite sob controle';
+      }
+      return '🟢 Sem utilização do limite';
+    }
+    
+    // Outras contas
+    if (this.conta.saldo >= this.conta.limite * 0.7) {
+      return '🎉 Meta quase atingida!';
+    }
+    if (this.conta.saldo >= this.conta.limite * 0.4) {
+      return '📈 Boa evolução';
+    }
+    return '🌱 Começando bem';
+  }
+
+  private mostrarSucesso(mensagem: string): void {
+    // Poderia ser um toast notification
+    console.log('✅ ' + mensagem);
   }
 }

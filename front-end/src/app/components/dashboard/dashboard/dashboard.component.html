@@ -1,239 +1,216 @@
-<div class="container-fluid p-0">
+<div class="dashboard-container">
   <!-- Header -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-    <div class="container">
-      <a class="navbar-brand fw-bold" routerLink="/dashboard">
-        💰 Financial Manager
-      </a>
-
-      <div class="navbar-nav ms-auto d-flex align-items-center">
-        <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            👤 {{ userName }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><span class="dropdown-item-text small text-muted">{{ userEmail }}</span></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/perfil">
-                👤 Meu Perfil
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item text-danger" (click)="logout()">🚪 Sair</a></li>
-          </ul>
-        </div>
+  <header class="dashboard-header">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <div class="brand-logo">💰</div>
+        <span class="brand-text">Financial Manager</span>
       </div>
-    </div>
-  </nav>
-
-  <!-- Conteúdo Principal -->
-  <div class="container mt-4">
-
-    <!-- Loading State -->
-    <div *ngIf="carregando" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-      <p class="mt-2 text-muted">Carregando dados financeiros...</p>
-    </div>
-
-    <!-- Cards de Métricas -->
-    <div *ngIf="!carregando" class="row g-3 mb-4">
-      <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm"
-          [ngClass]="{'bg-success text-white': saldoTotal >= 0, 'bg-danger text-white': saldoTotal < 0}">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-1">Saldo Total</h6>
-                <h3 class="mb-0">{{ formatarValor(saldoTotal) }}</h3>
-                <small class="opacity-75">Saldo Disponível</small>
-              </div>
-              <div class="display-6">{{ saldoTotal >= 0 ? '💰' : '💸' }}</div>
+      
+      <div class="navbar-user">
+        <div class="user-dropdown">
+          <button class="user-trigger" (click)="toggleUserDropdown()">
+            <span class="user-avatar">👤</span>
+            <span class="user-name">{{ userName }}</span>
+            <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen">▼</span>
+          </button>
+          <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+            <div class="user-info">
+              <div class="user-email">{{ userEmail }}</div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-info text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-1">Receitas</h6>
-                <h3 class="mb-0">{{ formatarValor(receitasMes) }}</h3>
-                <small class="opacity-75">Total de Entradas</small>
-              </div>
-              <div class="display-6">📈</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-warning text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-1">Despesas</h6>
-                <h3 class="mb-0">{{ formatarValor(despesasMes) }}</h3>
-                <small class="opacity-75">Total de Saídas</small>
-              </div>
-              <div class="display-6">📉</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-secondary text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-1">Pendentes</h6>
-                <h3 class="mb-0">{{ lancamentosPendentes }}</h3>
-                <small class="opacity-75">Lançamentos</small>
-              </div>
-              <div class="display-6">⏳</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Menu de Navegação Rápida -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-white border-0">
-            <h5 class="mb-0">📋 Menu Rápido</h5>
-          </div>
-          <div class="card-body">
-            <div class="row g-3 text-center">
-              <div class="col-lg-3 col-md-6">
-                <button class="btn btn-outline-primary btn-lg w-100 h-100 py-3" routerLink="/lancamentos">
-                  <div class="fs-1">💸</div>
-                  <div class="fw-bold">Lançamentos</div>
-                  <small class="text-muted">{{ totalLancamentos }} cadastrados</small>
-                </button>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <button class="btn btn-outline-secondary btn-lg w-100 h-100 py-3" routerLink="/contas">
-                  <div class="fs-1">🏦</div>
-                  <div class="fw-bold">Contas</div>
-                  <small class="text-muted">Suas contas bancárias</small>
-                </button>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <button class="btn btn-outline-success btn-lg w-100 h-100 py-3" routerLink="/categorias">
-                  <div class="fs-1">🏷️</div>
-                  <div class="fw-bold">Categorias</div>
-                  <small class="text-muted">Organize por categorias</small>
-                </button>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <button class="btn btn-outline-info btn-lg w-100 h-100 py-3" routerLink="/relatorios">
-                  <div class="fs-1">📊</div>
-                  <div class="fw-bold">Relatórios</div>
-                  <small class="text-muted">Visualize seus dados</small>
-                </button>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <button class="btn btn-outline-warning btn-lg w-100 h-100 py-3" routerLink="/usuarios">
-                  <div class="fs-1">👥</div>
-                  <div class="fw-bold">Usuários</div>
-                  <small class="text-muted">Gerencie usuários</small>
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ações Rápidas e Últimos Lançamentos -->
-    <div class="row g-4">
-      <!-- Ações Rápidas -->
-      <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">⚡ Ações Rápidas</h5>
-          </div>
-          <div class="card-body">
-            <div class="d-grid gap-2">
-              <button class="btn btn-success btn-lg" routerLink="/lancamentos/novo">
-                ➕ Novo Lançamento
-              </button>
-              <button class="btn btn-outline-primary" routerLink="/contas/nova">
-                🏦 Nova Conta
-              </button>
-              <button class="btn btn-outline-secondary" routerLink="/categorias/nova">
-                🏷️ Nova Categoria
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Últimos Lançamentos -->
-      <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">🕒 Últimos Lançamentos</h5>
-            <button *ngIf="ultimosLancamentos.length > 0" class="btn btn-primary btn-sm" routerLink="/lancamentos">
-              Ver Todos ({{ totalLancamentos }})
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/perfil" (click)="closeUserDropdown()">
+              <span class="item-icon">👤</span>
+              Meu Perfil
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-item" (click)="logout(); closeUserDropdown()">
+              <span class="item-icon">🚪</span>
+              Sair
             </button>
           </div>
-          <div class="card-body">
-            <!-- Quando há lançamentos -->
-            <div *ngIf="ultimosLancamentos.length > 0; else semLancamentos">
-              <div *ngFor="let lancamento of ultimosLancamentos"
-                class="border-bottom pb-2 mb-2 last:border-0 last:pb-0 last:mb-0">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div class="flex-grow-1">
-                    <div class="d-flex align-items-center mb-1">
-                      <span class="me-2">{{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}</span>
-                      <strong [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
-                        {{ getTipoLancamentoTexto(lancamento.tipoLancamento) }}
-                      </strong>
-                      <span class="badge ms-2" [ngClass]="getSituacaoClasse(lancamento.situacao)">
-                        {{ getSituacaoTexto(lancamento.situacao) }}
-                      </span>
-                    </div>
-                    <div class="small text-muted">{{ lancamento.descricao }}</div>
-                    <div class="small">
-                      <strong>{{ formatarValor(lancamento.valor) }}</strong>
-                      <span class="text-muted ms-2">• {{ lancamento.dataLancamento }}</span>
-                    </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container-fluid">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb-nav">
+        <span class="breadcrumb-item active">📊 Dashboard</span>
+      </nav>
+
+      <!-- Loading State -->
+      <div *ngIf="carregando" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Carregando dados financeiros...</p>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div *ngIf="!carregando" class="metrics-grid">
+        <!-- Saldo Total -->
+        <div class="metric-card" [class.positive]="saldoTotal >= 0" [class.negative]="saldoTotal < 0">
+          <div class="metric-icon">💰</div>
+          <div class="metric-content">
+            <div class="metric-value">{{ formatarValor(saldoTotal) }}</div>
+            <div class="metric-label">Saldo Total</div>
+            <div class="metric-trend" [class.positive]="saldoTotal >= 0" [class.negative]="saldoTotal < 0">
+              {{ saldoTotal >= 0 ? 'Positivo' : 'Negativo' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Receitas -->
+        <div class="metric-card success">
+          <div class="metric-icon">📈</div>
+          <div class="metric-content">
+            <div class="metric-value">{{ formatarValor(receitasMes) }}</div>
+            <div class="metric-label">Receitas</div>
+            <div class="metric-trend positive">Total de Entradas</div>
+          </div>
+        </div>
+
+        <!-- Despesas -->
+        <div class="metric-card warning">
+          <div class="metric-icon">📉</div>
+          <div class="metric-content">
+            <div class="metric-value">{{ formatarValor(despesasMes) }}</div>
+            <div class="metric-label">Despesas</div>
+            <div class="metric-trend">Total de Saídas</div>
+          </div>
+        </div>
+
+        <!-- Pendentes -->
+        <div class="metric-card info">
+          <div class="metric-icon">⏳</div>
+          <div class="metric-content">
+            <div class="metric-value">{{ lancamentosPendentes }}</div>
+            <div class="metric-label">Pendentes</div>
+            <div class="metric-trend">Lançamentos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div *ngIf="!carregando" class="section">
+        <div class="section-header">
+          <h2>🚀 Acesso Rápido</h2>
+          <p>Navegue rapidamente pelas funcionalidades do sistema</p>
+        </div>
+        
+        <div class="quick-actions-grid">
+          <a class="action-card" routerLink="/lancamentos">
+            <div class="action-icon">💸</div>
+            <div class="action-content">
+              <h3>Lançamentos</h3>
+              <p>{{ totalLancamentos }} cadastrados</p>
+            </div>
+            <div class="action-arrow">→</div>
+          </a>
+
+          <a class="action-card" routerLink="/contas">
+            <div class="action-icon">🏦</div>
+            <div class="action-content">
+              <h3>Contas</h3>
+              <p>Suas contas bancárias</p>
+            </div>
+            <div class="action-arrow">→</div>
+          </a>
+
+          <a class="action-card" routerLink="/categorias">
+            <div class="action-icon">🏷️</div>
+            <div class="action-content">
+              <h3>Categorias</h3>
+              <p>Organize por categorias</p>
+            </div>
+            <div class="action-arrow">→</div>
+          </a>
+
+          <a class="action-card" routerLink="/relatorios">
+            <div class="action-icon">📊</div>
+            <div class="action-content">
+              <h3>Relatórios</h3>
+              <p>Visualize seus dados</p>
+            </div>
+            <div class="action-arrow">→</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div *ngIf="!carregando" class="content-grid">
+        <!-- Quick Actions Panel -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <h3>⚡ Ações Rápidas</h3>
+            <p>Crie novos registros rapidamente</p>
+          </div>
+          <div class="panel-content">
+            <button class="action-button primary" routerLink="/lancamentos/novo">
+              <span class="button-icon">➕</span>
+              Novo Lançamento
+            </button>
+            <button class="action-button secondary" routerLink="/contas/nova">
+              <span class="button-icon">🏦</span>
+              Nova Conta
+            </button>
+            <button class="action-button secondary" routerLink="/categorias/nova">
+              <span class="button-icon">🏷️</span>
+              Nova Categoria
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="content-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h3>🕒 Últimos Lançamentos</h3>
+              <span class="panel-badge">{{ totalLancamentos }}</span>
+            </div>
+            <a *ngIf="ultimosLancamentos.length > 0" class="panel-link" routerLink="/lancamentos">
+              Ver Todos
+            </a>
+          </div>
+          <div class="panel-content">
+            <div *ngIf="ultimosLancamentos.length > 0; else emptyState" class="transactions-list">
+              <div *ngFor="let lancamento of ultimosLancamentos" class="transaction-item">
+                <div class="transaction-icon" [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
+                  {{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}
+                </div>
+                <div class="transaction-details">
+                  <div class="transaction-header">
+                    <span class="transaction-description">{{ lancamento.descricao }}</span>
+                    <span class="transaction-amount" [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
+                      {{ formatarValor(lancamento.valor) }}
+                    </span>
+                  </div>
+                  <div class="transaction-meta">
+                    <span class="transaction-type">{{ getTipoLancamentoTexto(lancamento.tipoLancamento) }}</span>
+                    <span class="transaction-badge" [ngClass]="getSituacaoClasse(lancamento.situacao)">
+                      {{ getSituacaoTexto(lancamento.situacao) }}
+                    </span>
+                    <span class="transaction-date">{{ lancamento.dataLancamento }}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Quando não há lançamentos -->
-            <ng-template #semLancamentos>
-              <div class="text-center py-4">
-                <div class="text-muted mb-2">📭</div>
-                <p class="text-muted mb-2">Nenhum lançamento cadastrado ainda</p>
-                <a routerLink="/lancamentos/novo" class="btn btn-outline-success btn-sm">
-                  Cadastrar Primeiro Lançamento
-                </a>
+            <ng-template #emptyState>
+              <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h4>Nenhum lançamento</h4>
+                <p>Comece cadastrando seu primeiro lançamento</p>
+                <button class="action-button primary" routerLink="/lancamentos/novo">
+                  ➕ Novo Lançamento
+                </button>
               </div>
             </ng-template>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>

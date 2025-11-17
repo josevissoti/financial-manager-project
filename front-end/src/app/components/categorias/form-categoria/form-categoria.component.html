@@ -1,96 +1,252 @@
-<div class="container-fluid">
-  <!-- Header -->
-  <nav class="navbar navbar-light bg-light border-bottom">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center w-100">
-        <div>
-          <button class="btn btn-outline-secondary me-2" (click)="voltar()">
-            ← Voltar
-          </button>
-          <h2 class="mb-0">
-            {{ isEditando ? '✏️ Editar Categoria' : '🏷️ Nova Categoria' }}
-          </h2>
-        </div>
-        <div>
-          <button type="button" class="btn btn-outline-primary me-2" (click)="voltar()">
-            Cancelar
-          </button>
-          <button type="submit" form="formCategoria" class="btn btn-success" [disabled]="enviando">
-            <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEditando ? '💾 Atualizar' : '✅ Criar' }} Categoria
-          </button>
-        </div>
+<div class="page-container">
+  <!-- Header Padrão -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-main">
+        <h1 class="page-title">
+          {{ isEditando ? '✏️ Editar Categoria' : '🏷️ Nova Categoria' }}
+        </h1>
+        <nav class="breadcrumb">
+          <a routerLink="/dashboard">Dashboard</a> / 
+          <a routerLink="/categorias">Categorias</a> / 
+          <span>{{ isEditando ? 'Editar' : 'Nova' }}</span>
+        </nav>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="container mt-4">
-    
-    <!-- Loading -->
-    <div *ngIf="carregando" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-      <p class="mt-2 text-muted">Carregando categoria...</p>
+  <div class="page-content">
+    <!-- Loading State -->
+    <div *ngIf="carregando" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando dados da categoria...</p>
     </div>
 
-    <!-- Erro -->
-    <div *ngIf="erro && !carregando" class="alert alert-danger">
-      {{ erro }}
+    <!-- Error State -->
+    <div *ngIf="erro && !carregando" class="alert alert-error">
+      <div class="alert-content">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-text">
+          <strong>Erro ao carregar dados</strong>
+          <p>{{ erro }}</p>
+        </div>
+      </div>
     </div>
 
     <!-- Formulário -->
-    <div *ngIf="!carregando">
-      <form id="formCategoria" (ngSubmit)="onSubmit()" #form="ngForm">
+    <div *ngIf="!carregando" class="form-container">
+      <form (ngSubmit)="onSubmit()" #form="ngForm" class="categoria-form">
         
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <div class="card">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">📋 Informações da Categoria</h5>
+        <div class="form-layout">
+          
+          <!-- Coluna Principal -->
+          <div class="form-main">
+            
+            <!-- Card: Informações da Categoria -->
+            <div class="form-card">
+              <div class="card-header">
+                <h3>📋 Informações da Categoria</h3>
               </div>
               <div class="card-body">
                 
                 <!-- Descrição -->
-                <div class="mb-3">
-                  <label for="descricao" class="form-label">🏷️ Descrição da Categoria *</label>
-                  <input type="text" class="form-control" id="descricao"
-                         [(ngModel)]="categoria.descricao" name="descricao"
-                         required placeholder="Ex: Alimentação, Transporte, Lazer..."
-                         [class.is-invalid]="form.submitted && !categoria.descricao">
-                  <div class="invalid-feedback">
-                    Por favor, informe uma descrição para a categoria.
+                <div class="form-group">
+                  <label for="descricao" class="form-label">
+                    Descrição da Categoria <span class="required">*</span>
+                  </label>
+                  <input type="text" id="descricao" name="descricao"
+                         [(ngModel)]="categoria.descricao" required
+                         class="form-control"
+                         placeholder="Ex: Alimentação, Transporte, Lazer, Saúde..."
+                         [class.invalid]="form.submitted && !categoria.descricao"
+                         maxlength="50">
+                  <div class="form-hint">
+                    Use nomes descritivos para organizar seus lançamentos financeiros
                   </div>
-                  <div class="form-text">
-                    Use nomes descritivos para organizar seus lançamentos financeiros.
+                  <div class="char-counter">
+                    {{ categoria.descricao.length || 0 }}/50 caracteres
                   </div>
                 </div>
 
-                <!-- Dicas -->
-                <div class="alert alert-info">
-                  <h6>💡 Dicas para categorias:</h6>
-                  <ul class="mb-0">
-                    <li>Use categorias amplas como "Alimentação", "Transporte", "Moradia"</li>
-                    <li>Evite categorias muito específicas</li>
-                    <li>Mantenha uma lista organizada para melhor controle</li>
-                  </ul>
+                <!-- Cor da Categoria (Opcional - Feature Futura) -->
+                <div class="form-group">
+                  <label class="form-label">
+                    🎨 Cor da Categoria <span class="optional">(Opcional)</span>
+                  </label>
+                  <div class="color-preview">
+                    <div class="color-options">
+                      <div *ngFor="let color of coresCategoria" 
+                           class="color-option"
+                           [class.selected]="corSelecionada === color.value"
+                           [style.background]="color.value"
+                           (click)="selecionarCor(color.value)"
+                           [title]="color.nome">
+                      </div>
+                    </div>
+                    <div class="selected-color" *ngIf="corSelecionada">
+                      Cor selecionada: 
+                      <span class="color-sample" [style.background]="corSelecionada"></span>
+                      <span class="color-name">{{ getNomeCor(corSelecionada) }}</span>
+                    </div>
+                  </div>
+                  <div class="form-hint">
+                    A cor ajuda a identificar visualmente a categoria nos relatórios
+                  </div>
+                </div>
+
+                <!-- Ícone da Categoria (Opcional - Feature Futura) -->
+                <div class="form-group">
+                  <label class="form-label">
+                    🔤 Ícone da Categoria <span class="optional">(Opcional)</span>
+                  </label>
+                  <div class="icon-options">
+                    <div *ngFor="let icon of iconesCategoria" 
+                         class="icon-option"
+                         [class.selected]="iconeSelecionado === icon.value"
+                         (click)="selecionarIcone(icon.value)"
+                         [title]="icon.nome">
+                         {{ icon.value }}
+                    </div>
+                  </div>
+                  <div class="form-hint">
+                    Escolha um ícone que represente bem esta categoria
+                  </div>
                 </div>
 
               </div>
             </div>
 
-            <!-- Botões de Ação -->
-            <div class="card mt-4">
-              <div class="card-body text-center">
-                <button type="button" class="btn btn-outline-secondary me-3" (click)="voltar()">
-                  ❌ Cancelar
-                </button>
-                <button type="submit" class="btn btn-success btn-lg" [disabled]="enviando">
-                  <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
-                  {{ isEditando ? '💾 Atualizar Categoria' : '✅ Criar Categoria' }}
-                </button>
+            <!-- Card: Dicas e Sugestões -->
+            <div class="form-card tips-card">
+              <div class="card-header">
+                <h3>💡 Dicas para Categorias</h3>
+              </div>
+              <div class="card-body">
+                <div class="tips-list">
+                  <div class="tip-item">
+                    <span class="tip-icon">📊</span>
+                    <div class="tip-content">
+                      <strong>Categorias amplas</strong>
+                      <p>Use categorias gerais como "Alimentação", "Transporte", "Moradia" em vez de categorias muito específicas</p>
+                    </div>
+                  </div>
+                  <div class="tip-item">
+                    <span class="tip-icon">🎯</span>
+                    <div class="tip-content">
+                      <strong>Objetivo claro</strong>
+                      <p>Cada categoria deve ter um propósito claro para facilitar a análise dos gastos</p>
+                    </div>
+                  </div>
+                  <div class="tip-item">
+                    <span class="tip-icon">📝</span>
+                    <div class="tip-content">
+                      <strong>Organização consistente</strong>
+                      <p>Mantenha uma lista organizada e evite criar categorias redundantes</p>
+                    </div>
+                  </div>
+                  <div class="tip-item">
+                    <span class="tip-icon">💰</span>
+                    <div class="tip-content">
+                      <strong>Controle financeiro</strong>
+                      <p>Categorias bem definidas ajudam no controle e planejamento financeiro</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+
+          </div>
+
+          <!-- Sidebar: Preview e Ações -->
+          <div class="form-sidebar">
+            
+            <!-- Card: Preview -->
+            <div class="form-card preview-card">
+              <div class="card-header">
+                <h3>👁️ Pré-visualização</h3>
+              </div>
+              <div class="card-body">
+                <div class="preview-content">
+                  
+                  <!-- Preview da Categoria -->
+                  <div class="category-preview">
+                    <div class="preview-header">
+                      <span class="preview-icon" *ngIf="iconeSelecionado">{{ iconeSelecionado }}</span>
+                      <span class="preview-name">{{ categoria.descricao || 'Nome da Categoria' }}</span>
+                    </div>
+                    <div class="preview-stats">
+                      <div class="stat">
+                        <span class="stat-label">Lançamentos</span>
+                        <span class="stat-value">0</span>
+                      </div>
+                      <div class="stat">
+                        <span class="stat-label">Status</span>
+                        <span class="stat-value status-active">Ativa</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Informações Adicionais -->
+                  <div class="preview-info">
+                    <div class="info-item">
+                      <span class="info-label">Tipo:</span>
+                      <span class="info-value">Categoria de Lançamento</span>
+                    </div>
+                    <div class="info-item">
+                      <span class="info-label">Criador:</span>
+                      <span class="info-value">Você</span>
+                    </div>
+                    <div class="info-item" *ngIf="corSelecionada">
+                      <span class="info-label">Cor:</span>
+                      <span class="info-value">
+                        <span class="color-badge" [style.background]="corSelecionada"></span>
+                        {{ getNomeCor(corSelecionada) }}
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Card: Ações Rápidas -->
+            <div class="form-card actions-card">
+              <div class="card-header">
+                <h3>⚡ Ações Rápidas</h3>
+              </div>
+              <div class="card-body">
+                <div class="quick-actions">
+                  <button type="button" class="btn-quick" (click)="voltar()">
+                    ↩️ Voltar para Lista
+                  </button>
+                  <button type="button" class="btn-quick" (click)="limparFormulario()" *ngIf="!isEditando">
+                    🗑️ Limpar Campos
+                  </button>
+                  <button type="button" class="btn-quick" (click)="sugerirCategoria()">
+                    💡 Sugerir Categoria
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Ações do Formulário -->
+        <div class="form-actions">
+          <button type="button" (click)="voltar()" class="btn btn-secondary">
+            ↩️ Cancelar
+          </button>
+          
+          <div class="action-buttons">
+            <button type="button" (click)="salvarERepetir()" class="btn btn-outline" *ngIf="!isEditando">
+              💾 Salvar e Criar Outra
+            </button>
+            <button type="submit" [disabled]="enviando || !form.valid" 
+                    class="btn btn-primary">
+              <span *ngIf="enviando" class="spinner"></span>
+              {{ enviando ? '⏳ Salvando...' : (isEditando ? '💾 Atualizar Categoria' : '✅ Criar Categoria') }}
+            </button>
           </div>
         </div>
 

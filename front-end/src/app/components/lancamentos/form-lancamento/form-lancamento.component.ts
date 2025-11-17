@@ -33,19 +33,21 @@ export class FormLancamentoComponent implements OnInit {
   carregandoDados: boolean = false;
   enviando: boolean = false;
   erro: string = '';
+  totalParcelas: number = 1;
+  showPreview: boolean = false;
 
   categorias: Categoria[] = [];
   contas: Conta[] = [];
 
   tiposLancamento = [
-    { valor: 0, texto: '📤 Débito (Saída)' },
-    { valor: 1, texto: '📥 Crédito (Entrada)' }
+    { valor: 0, texto: '📤 Débito (Saída)', cor: 'debito' },
+    { valor: 1, texto: '📥 Crédito (Entrada)', cor: 'credito' }
   ];
 
   situacoes = [
-    { valor: 0, texto: '⏳ Pendente' },
-    { valor: 1, texto: '✅ Baixado' },
-    { valor: 2, texto: '❌ Atrasado' }
+    { valor: 0, texto: '⏳ Pendente', cor: 'warning' },
+    { valor: 1, texto: '✅ Baixado', cor: 'success' },
+    { valor: 2, texto: '❌ Atrasado', cor: 'error' }
   ];
 
   constructor(
@@ -140,6 +142,7 @@ export class FormLancamentoComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
+    // Validações básicas
     if (!this.lancamento.descricao || !this.lancamento.valor || this.lancamento.valor <= 0) {
       this.erro = 'Por favor, preencha todos os campos obrigatórios corretamente.';
       this.enviando = false;
@@ -148,6 +151,25 @@ export class FormLancamentoComponent implements OnInit {
 
     if (this.lancamento.idCategoriaLancamento === 0 || this.lancamento.idConta === 0) {
       this.erro = 'Por favor, selecione uma categoria e uma conta.';
+      this.enviando = false;
+      return;
+    }
+
+    // Validação de datas
+    if (!this.isDataValida(this.lancamento.dataLancamento)) {
+      this.erro = 'Data de lançamento inválida. Use o formato DD/MM/AAAA.';
+      this.enviando = false;
+      return;
+    }
+
+    if (!this.isDataValida(this.lancamento.prazoVencimento)) {
+      this.erro = 'Data de vencimento inválida. Use o formato DD/MM/AAAA.';
+      this.enviando = false;
+      return;
+    }
+
+    if (this.lancamento.dataBaixa && !this.isDataValida(this.lancamento.dataBaixa)) {
+      this.erro = 'Data de baixa inválida. Use o formato DD/MM/AAAA.';
       this.enviando = false;
       return;
     }
@@ -194,6 +216,45 @@ export class FormLancamentoComponent implements OnInit {
     }
   }
 
+  definirDataAtual(campo: string): void {
+    const dataAtual = this.formatarDataParaInput(new Date());
+    if (campo === 'dataLancamento') {
+      this.lancamento.dataLancamento = dataAtual;
+    } else if (campo === 'dataBaixa') {
+      this.lancamento.dataBaixa = dataAtual;
+    }
+  }
+
+  calcularVencimento(dias: number): void {
+    if (this.lancamento.dataLancamento && this.isDataValida(this.lancamento.dataLancamento)) {
+      const data = this.converterDataStringParaDate(this.lancamento.dataLancamento);
+      data.setDate(data.getDate() + dias);
+      this.lancamento.prazoVencimento = this.formatarDataParaInput(data);
+    }
+  }
+
+  isDataValida(dataString: string): boolean {
+    if (!dataString || dataString.length !== 10) return false;
+    
+    const partes = dataString.split('/');
+    if (partes.length !== 3) return false;
+    
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10) - 1;
+    const ano = parseInt(partes[2], 10);
+    
+    if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return false;
+    
+    const data = new Date(ano, mes, dia);
+    return data.getDate() === dia && 
+           data.getMonth() === mes && 
+           data.getFullYear() === ano;
+  }
+
+  togglePreview(): void {
+    this.showPreview = !this.showPreview;
+  }
+
   private formatarDataParaInput(data: Date): string {
     const dia = data.getDate().toString().padStart(2, '0');
     const mes = (data.getMonth() + 1).toString().padStart(2, '0');
@@ -219,6 +280,14 @@ export class FormLancamentoComponent implements OnInit {
       return `${partes[2]}-${partes[1]}-${partes[0]}`;
     }
     return dataString;
+  }
+
+  private converterDataStringParaDate(dataString: string): Date {
+    const partes = dataString.split('/');
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10) - 1;
+    const ano = parseInt(partes[2], 10);
+    return new Date(ano, mes, dia);
   }
 
   aplicarMascaraData(event: any, campo: string): void {
@@ -255,32 +324,11 @@ export class FormLancamentoComponent implements OnInit {
     }
     
     if (data && data.length === 10) {
-      const partes = data.split('/');
-      const dia = parseInt(partes[0], 10);
-      const mes = parseInt(partes[1], 10) - 1;
-      const ano = parseInt(partes[2], 10);
-      
-      const dataObj = new Date(ano, mes, dia);
-      
-      if (dataObj.getDate() !== dia || dataObj.getMonth() !== mes || dataObj.getFullYear() !== ano) {
+      if (!this.isDataValida(data)) {
         this.erro = `Data ${campo} inválida. Use o formato DD/MM/AAAA.`;
       } else {
         this.erro = '';
       }
-    }
-  }
-
-  calcularVencimento(): void {
-    if (this.lancamento.dataLancamento && this.lancamento.dataLancamento.length === 10) {
-      const partes = this.lancamento.dataLancamento.split('/');
-      const dia = parseInt(partes[0], 10);
-      const mes = parseInt(partes[1], 10) - 1;
-      const ano = parseInt(partes[2], 10);
-      
-      const dataLancamento = new Date(ano, mes, dia);
-      dataLancamento.setDate(dataLancamento.getDate() + 30);
-      
-      this.lancamento.prazoVencimento = this.formatarDataParaInput(dataLancamento);
     }
   }
 

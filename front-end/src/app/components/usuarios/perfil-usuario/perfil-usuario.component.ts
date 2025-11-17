@@ -30,7 +30,7 @@ export class PerfilUsuarioComponent implements OnInit {
     private authService: AuthService,
     private usuarioService: UsuarioService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarPerfil();
@@ -38,24 +38,31 @@ export class PerfilUsuarioComponent implements OnInit {
 
   carregarPerfil(): void {
     this.carregando = true;
-    
+    this.erro = '';
+
     // Primeiro tenta carregar do AuthService
     const usuarioLogado = this.authService.getUsuarioLogado();
-    
+
     if (usuarioLogado && usuarioLogado.email) {
       // Busca dados completos do usuário pelo email
       this.usuarioService.findByEmail(usuarioLogado.email).subscribe({
         next: (usuarioCompleto) => {
-          this.usuario = { ...usuarioCompleto };
-          this.usuarioOriginal = { ...usuarioCompleto };
+          this.usuario = {
+            ...usuarioCompleto,
+            datanascimento: this.converterDataParaInput(usuarioCompleto.datanascimento)
+          };
+          this.usuarioOriginal = { ...this.usuario };
           this.carregando = false;
           console.log('✅ Perfil carregado:', this.usuario);
         },
         error: (error) => {
           console.error('❌ Erro ao carregar perfil completo:', error);
           // Se não conseguir carregar dados completos, usa os básicos
-          this.usuario = { ...usuarioLogado };
-          this.usuarioOriginal = { ...usuarioLogado };
+          this.usuario = {
+            ...usuarioLogado,
+            datanascimento: this.converterDataParaInput(usuarioLogado.datanascimento)
+          };
+          this.usuarioOriginal = { ...this.usuario };
           this.carregando = false;
         }
       });
@@ -93,7 +100,7 @@ export class PerfilUsuarioComponent implements OnInit {
     }
 
     // Preparar dados para envio
-    const dadosAtualizacao: Usuario = {
+    const dadosAtualizacao: any = {
       nome: this.usuario.nome,
       cpf: this.usuario.cpf,
       datanascimento: this.converterDataParaBackend(this.usuario.datanascimento),
@@ -118,10 +125,10 @@ export class PerfilUsuarioComponent implements OnInit {
           this.alterarSenha = false;
           this.novaSenha = '';
           this.confirmarSenha = '';
-          
+
           // Atualiza no AuthService
           this.authService.atualizarUsuario(response);
-          
+
           this.sucesso = 'Perfil atualizado com sucesso!';
           this.carregarPerfil(); // Recarrega os dados
         },
@@ -136,8 +143,13 @@ export class PerfilUsuarioComponent implements OnInit {
 
   validarDados(): boolean {
     // Validações básicas
-    if (!this.usuario.nome || !this.usuario.email) {
-      this.erro = 'Nome e email são obrigatórios.';
+    if (!this.usuario.nome?.trim()) {
+      this.erro = 'Nome é obrigatório.';
+      return false;
+    }
+
+    if (!this.usuario.email?.trim()) {
+      this.erro = 'Email é obrigatório.';
       return false;
     }
 
@@ -164,10 +176,10 @@ export class PerfilUsuarioComponent implements OnInit {
     return true;
   }
 
-  // Métodos para máscaras
+  // Métodos para máscaras e formatação
   aplicarMascaraTelefone(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
-    
+
     if (value.length <= 2) {
       value = '(' + value;
     } else if (value.length <= 6) {
@@ -177,13 +189,13 @@ export class PerfilUsuarioComponent implements OnInit {
     } else {
       value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 7) + '-' + value.substring(7, 11);
     }
-    
+
     this.usuario.telefone = value;
   }
 
   aplicarMascaraData(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
-    
+
     if (value.length <= 2) {
       value = value;
     } else if (value.length <= 4) {
@@ -191,14 +203,43 @@ export class PerfilUsuarioComponent implements OnInit {
     } else {
       value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4, 8);
     }
-    
+
     this.usuario.datanascimento = value;
+  }
+
+  formatarCPF(cpf: string): string {
+    if (!cpf) return '';
+
+    // Aplica máscara de CPF: 000.000.000-00
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  }
+
+  formatarTelefone(telefone: string): string {
+    if (!telefone) return '';
+    return telefone; // Já está formatado pela máscara
+  }
+
+  formatarData(data: string): string {
+    if (!data) return '';
+
+    // Se a data já está no formato dd/MM/yyyy, retorna como está
+    if (data.includes('/')) {
+      return data;
+    }
+
+    // Se está no formato yyyy-MM-dd, converte para dd/MM/yyyy
+    const partes = data.split('-');
+    if (partes.length === 3) {
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    return data;
   }
 
   // Métodos auxiliares
   private converterDataParaBackend(dataString: string): string {
     if (!dataString) return '';
-    
+
     // Converte de "dd/MM/yyyy" para "yyyy-MM-dd"
     const partes = dataString.split('/');
     if (partes.length === 3) {
@@ -209,7 +250,7 @@ export class PerfilUsuarioComponent implements OnInit {
 
   private converterDataParaInput(dataString: string): string {
     if (!dataString) return '';
-    
+
     // Converte de "yyyy-MM-dd" para "dd/MM/yyyy"
     const partes = dataString.split('-');
     if (partes.length === 3) {
@@ -220,25 +261,47 @@ export class PerfilUsuarioComponent implements OnInit {
 
   calcularIdade(): number {
     if (!this.usuario.datanascimento) return 0;
-    
+
     try {
-      const partes = this.usuario.datanascimento.split('/');
-      const nascimento = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+      let dataNascimento: Date;
+
+      if (this.usuario.datanascimento.includes('/')) {
+        const partes = this.usuario.datanascimento.split('/');
+        dataNascimento = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+      } else {
+        dataNascimento = new Date(this.usuario.datanascimento);
+      }
+
       const hoje = new Date();
-      let idade = hoje.getFullYear() - nascimento.getFullYear();
-      
+      let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+
       const mesAtual = hoje.getMonth();
-      const mesNascimento = nascimento.getMonth();
-      
-      if (mesAtual < mesNascimento || 
-          (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+      const mesNascimento = dataNascimento.getMonth();
+
+      if (mesAtual < mesNascimento ||
+        (mesAtual === mesNascimento && hoje.getDate() < dataNascimento.getDate())) {
         idade--;
       }
-      
+
       return idade;
     } catch (error) {
       return 0;
     }
+  }
+
+  getIniciais(): string {
+    if (!this.usuario.nome) return 'U';
+
+    return this.usuario.nome
+      .split(' ')
+      .map((part: string) => part.charAt(0))
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
+
+  getStatusClasse(): string {
+    return this.usuario.status === 1 ? 'status-active' : 'status-inactive';
   }
 
   getStatusTexto(): string {
@@ -247,12 +310,25 @@ export class PerfilUsuarioComponent implements OnInit {
 
   getFuncoesTexto(): string {
     if (!this.usuario.funcaoPessoa) return 'Usuário';
-    
+
     const textos: string[] = [];
     if (this.usuario.funcaoPessoa.includes(0)) textos.push('Usuário');
     if (this.usuario.funcaoPessoa.includes(1)) textos.push('Administrador');
-    
+
     return textos.join(', ') || 'Nenhuma';
+  }
+
+  // Métodos para ações
+  exportarDados(): void {
+    console.log('📤 Exportando dados do usuário...');
+    // Implementar lógica de exportação
+    alert('Funcionalidade de exportação em desenvolvimento');
+  }
+
+  baixarRelatorio(): void {
+    console.log('📊 Gerando relatório PDF...');
+    // Implementar geração de relatório
+    alert('Funcionalidade de relatório em desenvolvimento');
   }
 
   voltar(): void {

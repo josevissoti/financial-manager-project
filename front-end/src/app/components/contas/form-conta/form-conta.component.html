@@ -1,75 +1,77 @@
-<div class="container-fluid">
-  <!-- Header -->
-  <nav class="navbar navbar-light bg-light border-bottom">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center w-100">
-        <div>
-          <button class="btn btn-outline-secondary me-2" (click)="voltar()">
-            ← Voltar
-          </button>
-          <h2 class="mb-0">
-            {{ isEditando ? '✏️ Editar Conta' : '🏦 Nova Conta' }}
-          </h2>
-        </div>
-        <div>
-          <button type="button" class="btn btn-outline-primary me-2" (click)="voltar()">
-            Cancelar
-          </button>
-          <button type="submit" form="formConta" class="btn btn-success" [disabled]="enviando">
-            <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEditando ? '💾 Atualizar' : '✅ Criar' }} Conta
-          </button>
-        </div>
+<div class="page-container">
+  <!-- Header Padrão -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-main">
+        <h1 class="page-title">
+          {{ isEditando ? '✏️ Editar Conta' : '🏦 Nova Conta' }}
+        </h1>
+        <nav class="breadcrumb">
+          <a routerLink="/dashboard">Dashboard</a> / 
+          <a routerLink="/contas">Contas</a> / 
+          <span>{{ isEditando ? 'Editar' : 'Nova' }}</span>
+        </nav>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="container mt-4">
-    
-    <!-- Loading -->
-    <div *ngIf="carregando" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-      <p class="mt-2 text-muted">Carregando conta...</p>
+  <div class="page-content">
+    <!-- Loading State -->
+    <div *ngIf="carregando" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando dados da conta...</p>
     </div>
 
-    <!-- Erro -->
-    <div *ngIf="erro && !carregando" class="alert alert-danger">
-      {{ erro }}
+    <!-- Error State -->
+    <div *ngIf="erro && !carregando" class="alert alert-error">
+      <div class="alert-content">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-text">
+          <strong>Erro ao carregar dados</strong>
+          <p>{{ erro }}</p>
+        </div>
+      </div>
     </div>
 
     <!-- Formulário -->
-    <div *ngIf="!carregando">
-      <form id="formConta" (ngSubmit)="onSubmit()" #form="ngForm">
+    <div *ngIf="!carregando" class="form-container">
+      <form (ngSubmit)="onSubmit()" #form="ngForm" class="conta-form">
         
-        <div class="row">
+        <!-- Layout em Grid -->
+        <div class="form-grid">
           
-          <!-- Coluna Esquerda - Dados Básicos -->
-          <div class="col-lg-6">
-            <div class="card mb-4">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">📋 Informações da Conta</h5>
+          <!-- Coluna Esquerda - Informações da Conta -->
+          <div class="form-column">
+            
+            <!-- Card: Informações da Conta -->
+            <div class="form-card">
+              <div class="card-header">
+                <h3>📋 Informações da Conta</h3>
               </div>
               <div class="card-body">
                 
                 <!-- Descrição -->
-                <div class="mb-3">
-                  <label for="descricao" class="form-label">🏷️ Descrição *</label>
-                  <input type="text" class="form-control" id="descricao"
-                         [(ngModel)]="conta.descricao" name="descricao"
-                         required placeholder="Ex: Conta Corrente Principal..."
-                         [class.is-invalid]="form.submitted && !conta.descricao">
-                  <div class="invalid-feedback">
-                    Por favor, informe uma descrição.
-                  </div>
+                <div class="form-group">
+                  <label for="descricao" class="form-label">
+                    Descrição <span class="required">*</span>
+                  </label>
+                  <input type="text" id="descricao" name="descricao"
+                         [(ngModel)]="conta.descricao" required
+                         class="form-control"
+                         placeholder="Ex: Conta Corrente Principal, Cartão Nubank..."
+                         [class.invalid]="form.submitted && !conta.descricao">
+                  <div class="form-hint">Use um nome que ajude a identificar facilmente esta conta</div>
                 </div>
 
                 <!-- Tipo de Conta -->
-                <div class="mb-3">
-                  <label for="tipoConta" class="form-label">💳 Tipo de Conta *</label>
-                  <select class="form-select" id="tipoConta"
-                          [(ngModel)]="conta.tipoConta" name="tipoConta" required>
+                <div class="form-group">
+                  <label for="tipoConta" class="form-label">
+                    Tipo de Conta <span class="required">*</span>
+                  </label>
+                  <select id="tipoConta" name="tipoConta"
+                          [(ngModel)]="conta.tipoConta" required
+                          class="form-control select-with-icon">
+                    <option [ngValue]="null" disabled>Selecione o tipo de conta</option>
                     <option *ngFor="let tipo of tiposConta" [value]="tipo.valor">
                       {{ tipo.texto }}
                     </option>
@@ -77,140 +79,172 @@
                 </div>
 
                 <!-- Saldo e Limite -->
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="saldo" class="form-label">💰 Saldo Inicial</label>
-                      <div class="input-group">
-                        <span class="input-group-text">R$</span>
-                        <input type="number" class="form-control" id="saldo"
-                               [(ngModel)]="conta.saldo" name="saldo"
-                               step="0.01" min="0">
-                      </div>
-                      <div class="form-text">
-                        Saldo atual da conta
-                      </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="saldo" class="form-label">Saldo Inicial</label>
+                    <div class="input-with-symbol">
+                      <span class="input-symbol">R$</span>
+                      <input type="number" id="saldo" name="saldo"
+                             [(ngModel)]="conta.saldo" 
+                             step="0.01" min="0"
+                             class="form-control" 
+                             placeholder="0,00">
                     </div>
+                    <div class="form-hint">Saldo atual da conta</div>
                   </div>
                   
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="limite" class="form-label">📊 Limite</label>
-                      <div class="input-group">
-                        <span class="input-group-text">R$</span>
-                        <input type="number" class="form-control" id="limite"
-                               [(ngModel)]="conta.limite" name="limite"
-                               step="0.01" min="0">
-                      </div>
-                      <div class="form-text">
-                        Limite disponível (cartão/conta)
-                      </div>
+                  <div class="form-group">
+                    <label for="limite" class="form-label">Limite Disponível</label>
+                    <div class="input-with-symbol">
+                      <span class="input-symbol">R$</span>
+                      <input type="number" id="limite" name="limite"
+                             [(ngModel)]="conta.limite"
+                             step="0.01" min="0"
+                             class="form-control" 
+                             placeholder="0,00">
                     </div>
+                    <div class="form-hint">Limite para cartão de crédito ou cheque especial</div>
                   </div>
                 </div>
 
               </div>
             </div>
+
           </div>
 
-          <!-- Coluna Direita - Dados Bancários -->
-          <div class="col-lg-6">
-            <div class="card mb-4">
-              <div class="card-header bg-info text-white">
-                <h5 class="mb-0">🏦 Dados Bancários</h5>
+          <!-- Coluna Direita - Dados Bancários e Resumo -->
+          <div class="form-column">
+            
+            <!-- Card: Dados Bancários -->
+            <div class="form-card">
+              <div class="card-header">
+                <h3>🏦 Dados Bancários</h3>
               </div>
               <div class="card-body">
                 
                 <!-- Banco -->
-                <div class="mb-3">
-                  <label for="idBanco" class="form-label">🏛️ Banco *</label>
-                  <select class="form-select" id="idBanco"
-                          [(ngModel)]="conta.idBanco" name="idBanco" required
-                          [disabled]="carregandoDados">
-                    <option value="0" disabled>Selecione um banco</option>
+                <div class="form-group">
+                  <label for="idBanco" class="form-label">
+                    Banco <span class="required">*</span>
+                  </label>
+                  <select id="idBanco" name="idBanco"
+                          [(ngModel)]="conta.idBanco" required
+                          class="form-control"
+                          [disabled]="carregandoDados"
+                          [class.invalid]="form.submitted && (!conta.idBanco || conta.idBanco === 0)">
+                    <option [value]="0" disabled>Selecione um banco</option>
                     <option *ngFor="let banco of bancos" [value]="banco.idBanco">
-                      {{ banco.razaoSocial }}
+                      🏛️ {{ banco.razaoSocial }}
                     </option>
                   </select>
-                  <div *ngIf="carregandoDados" class="form-text">
-                    <small class="text-muted">🔄 Carregando bancos...</small>
+                  <div *ngIf="carregandoDados" class="form-loading">
+                    <small>🔄 Carregando bancos...</small>
                   </div>
                 </div>
 
-                <!-- Agência e Conta -->
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="agencia" class="form-label">🏷️ Agência *</label>
-                      <input type="text" class="form-control" id="agencia"
-                             [(ngModel)]="conta.agencia" name="agencia"
-                             required placeholder="0000"
-                             [class.is-invalid]="form.submitted && !conta.agencia">
-                      <div class="invalid-feedback">
-                        Por favor, informe a agência.
-                      </div>
-                    </div>
+                <!-- Agência e Número da Conta -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="agencia" class="form-label">
+                      Agência <span class="required">*</span>
+                    </label>
+                    <input type="text" id="agencia" name="agencia"
+                           [(ngModel)]="conta.agencia" required
+                           class="form-control"
+                           placeholder="0000"
+                           maxlength="10"
+                           [class.invalid]="form.submitted && !conta.agencia">
                   </div>
                   
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="numero" class="form-label">🔢 Número da Conta *</label>
-                      <input type="text" class="form-control" id="numero"
-                             [(ngModel)]="conta.numero" name="numero"
-                             required placeholder="00000-0"
-                             [class.is-invalid]="form.submitted && !conta.numero">
-                      <div class="invalid-feedback">
-                        Por favor, informe o número da conta.
-                      </div>
-                    </div>
+                  <div class="form-group">
+                    <label for="numero" class="form-label">
+                      Número da Conta <span class="required">*</span>
+                    </label>
+                    <input type="text" id="numero" name="numero"
+                           [(ngModel)]="conta.numero" required
+                           class="form-control"
+                           placeholder="00000-0"
+                           maxlength="20"
+                           [class.invalid]="form.submitted && !conta.numero">
                   </div>
                 </div>
 
               </div>
             </div>
 
-            <!-- Resumo -->
-            <div class="card">
-              <div class="card-header bg-success text-white">
-                <h5 class="mb-0">📊 Resumo</h5>
+            <!-- Card: Resumo -->
+            <div class="form-card preview-card">
+              <div class="card-header">
+                <h3>📊 Resumo</h3>
               </div>
               <div class="card-body">
-                <div class="row text-center">
-                  <div class="col-6">
-                    <div class="border-end">
-                      <div class="text-muted small">Saldo</div>
-                      <div class="h5" [ngClass]="conta.saldo >= 0 ? 'text-success' : 'text-danger'">
-                        {{ formatarValor(conta.saldo) }}
-                      </div>
-                    </div>
+                <div class="preview-content">
+                  
+                  <!-- Tipo de Conta -->
+                  <div class="preview-item">
+                    <span class="preview-label">Tipo:</span>
+                    <span class="preview-value">
+                      {{ getTipoContaTexto(conta.tipoConta) }}
+                    </span>
                   </div>
-                  <div class="col-6">
-                    <div class="text-muted small">Limite</div>
-                    <div class="h5 text-info">
+
+                  <!-- Banco -->
+                  <div class="preview-item">
+                    <span class="preview-label">Banco:</span>
+                    <span class="preview-value">
+                      {{ getBancoNome(conta.idBanco) || '—' }}
+                    </span>
+                  </div>
+
+                  <!-- Agência/Conta -->
+                  <div class="preview-item">
+                    <span class="preview-label">Agência/Conta:</span>
+                    <span class="preview-value">
+                      {{ conta.agencia || '—' }} / {{ conta.numero || '—' }}
+                    </span>
+                  </div>
+
+                  <!-- Saldo -->
+                  <div class="preview-item highlight">
+                    <span class="preview-label">Saldo:</span>
+                    <span class="preview-value" [ngClass]="getSaldoClasse(conta.saldo)">
+                      {{ formatarValor(conta.saldo) }}
+                    </span>
+                  </div>
+
+                  <!-- Limite -->
+                  <div *ngIf="conta.limite > 0" class="preview-item">
+                    <span class="preview-label">Limite:</span>
+                    <span class="preview-value text-info">
                       {{ formatarValor(conta.limite) }}
+                    </span>
+                  </div>
+
+                  <!-- Status do Limite -->
+                  <div *ngIf="conta.limite > 0" class="preview-status">
+                    <div class="status-indicator" [ngClass]="getLimiteStatusClasse()">
+                      {{ getLimiteStatusTexto() }}
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        <!-- Botões de Ação -->
-        <div class="row mt-4">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body text-center">
-                <button type="button" class="btn btn-outline-secondary me-3" (click)="voltar()">
-                  ❌ Cancelar
-                </button>
-                <button type="submit" class="btn btn-success btn-lg" [disabled]="enviando">
-                  <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
-                  {{ isEditando ? '💾 Atualizar Conta' : '✅ Criar Conta' }}
-                </button>
-              </div>
-            </div>
-          </div>
+        <!-- Ações do Formulário -->
+        <div class="form-actions">
+          <button type="button" (click)="voltar()" class="btn btn-secondary">
+            ↩️ Cancelar
+          </button>
+          
+          <button type="submit" [disabled]="enviando || !form.valid" 
+                  class="btn btn-primary">
+            <span *ngIf="enviando" class="spinner"></span>
+            {{ enviando ? '⏳ Salvando...' : (isEditando ? '💾 Atualizar Conta' : '✅ Criar Conta') }}
+          </button>
         </div>
 
       </form>

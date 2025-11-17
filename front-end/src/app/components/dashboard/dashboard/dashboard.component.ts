@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -21,6 +21,9 @@ export class DashboardComponent implements OnInit {
   lancamentosPendentes: number = 0;
   ultimosLancamentos: LancamentoDTO[] = [];
   carregando: boolean = true;
+  
+  // Controle do dropdown do usuário
+  isUserDropdownOpen: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -98,6 +101,25 @@ export class DashboardComponent implements OnInit {
       totalLancamentos: this.totalLancamentos,
       pendentes: this.lancamentosPendentes
     });
+  }
+
+  // Métodos para controle do dropdown
+  toggleUserDropdown(): void {
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+
+  closeUserDropdown(): void {
+    this.isUserDropdownOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdown = document.querySelector('.user-dropdown');
+    
+    if (dropdown && !dropdown.contains(target)) {
+      this.closeUserDropdown();
+    }
   }
 
   logout(): void {

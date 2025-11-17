@@ -1,31 +1,580 @@
-.card {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  border: 1px solid #e9ecef;
+.page-container {
+  min-height: 100vh;
+  background: #f8fafc;
 }
 
-.card:hover {
+/* Header */
+.page-header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.5rem 2rem;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.header-main {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge-count {
+  background: #2563eb;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Conteúdo Principal */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Filtros */
+.filters-section {
+  margin-bottom: 2rem;
+}
+
+.filters-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-box {
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.filter-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.filter-select {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: white;
+}
+
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5rem;
+}
+
+.results-count {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Grid de Contas */
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Card de Conta */
+.account-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.account-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.progress {
-  background-color: #e9ecef;
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.badge {
-  font-size: 0.75em;
+.account-info {
+  flex: 1;
 }
 
-.btn-group .btn {
-  border-radius: 0;
+.account-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
 }
 
-.btn-group .btn:first-child {
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+.account-type {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.btn-group .btn:last-child {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+.type-0 { background: #dbeafe; color: #1e40af; }
+.type-1 { background: #dcfce7; color: #166534; }
+.type-2 { background: #fef3c7; color: #92400e; }
+.type-3 { background: #f3e8ff; color: #7c3aed; }
+
+.account-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.btn-icon:hover {
+  background: #f8fafc;
+}
+
+.btn-icon.danger:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* Corpo do Card */
+.account-body {
+  padding: 1rem 1.5rem;
+}
+
+.bank-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  display: block;
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Seção de Saldo */
+.balance-section {
+  margin-bottom: 1.5rem;
+}
+
+.balance-main {
+  text-align: center;
+}
+
+.balance-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.balance-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.balance-value.positive {
+  color: #059669;
+}
+
+.balance-value.negative {
+  color: #dc2626;
+}
+
+/* Seção de Limite */
+.limit-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.limit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.limit-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.limit-percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.progress-container {
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar.success .progress-fill { background: #10b981; }
+.progress-bar.warning .progress-fill { background: #f59e0b; }
+.progress-bar.danger .progress-fill { background: #ef4444; }
+.progress-bar.info .progress-fill { background: #3b82f6; }
+.progress-bar.secondary .progress-fill { background: #6b7280; }
+
+.limit-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.limit-status {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.status-success { background: #d1fae5; color: #065f46; }
+.status-warning { background: #fef3c7; color: #92400e; }
+.status-danger { background: #fee2e2; color: #991b1b; }
+.status-info { background: #dbeafe; color: #1e40af; }
+.status-secondary { background: #f3f4f6; color: #374151; }
+
+/* Footer do Card */
+.account-footer {
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-quick {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.btn-quick:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Estados */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #e2e8f0;
+  border-top: 2px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.alert-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+}
+
+.alert-text {
+  flex: 1;
+}
+
+.alert-text strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.alert-text p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  color: #374151;
+}
+
+.empty-state p {
+  margin: 0 0 1.5rem 0;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.btn-link:hover {
+  color: #1d4ed8;
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #64748b;
+  padding: 0.5rem 0.75rem;
+}
+
+.btn-text:hover {
+  color: #374151;
+  background: #f3f4f6;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .page-content {
+    padding: 1rem;
+  }
+  
+  .accounts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-options {
+    flex-direction: column;
+  }
+  
+  .bank-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-actions {
+    flex-direction: column;
+  }
+  
+  .alert {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .alert-content {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .account-actions {
+    justify-content: center;
+  }
 }

@@ -1,57 +1,94 @@
-<div class="container-fluid vh-100 bg-light">
-  <div class="row h-100 justify-content-center align-items-center">
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body p-5">
-          <h2 class="card-title text-center mb-4">
-            💰 Financial Manager
-          </h2>
-          
-          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input 
-                type="email" 
-                class="form-control" 
-                id="email"
-                [(ngModel)]="credenciais.username" 
-                name="username"
-                required
-                placeholder="seu@email.com">
-            </div>
-            
-            <div class="mb-4">
-              <label for="password" class="form-label">Senha</label>
-              <input 
-                type="password" 
-                class="form-control" 
-                id="password"
-                [(ngModel)]="credenciais.password" 
-                name="password"
-                required
-                placeholder="Sua senha">
-            </div>
+<div class="login-container">
+  <div class="login-background"></div>
+  
+  <div class="login-content">
+    <!-- Logo Section -->
+    <div class="brand-section">
+      <div class="brand-logo">
+        <div class="logo-icon">💰</div>
+        <h1 class="brand-name">Financial Manager</h1>
+      </div>
+      <p class="brand-tagline">Controle financeiro simplificado</p>
+    </div>
 
-            <div *ngIf="error" class="alert alert-danger">
-              {{ error }}
-            </div>
-            
-            <button 
-              type="submit" 
-              class="btn btn-primary w-100 py-2"
-              [disabled]="loading">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-              {{ loading ? 'Entrando...' : 'Entrar' }}
-            </button>
-          </form>
-          
-          <div class="text-center mt-3">
-            <small class="text-muted">
-              Use: carlos@gmail.com / carlos123
-            </small>
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <h2 class="card-title">Acessar Sistema</h2>
+        <p class="card-subtitle">Entre com suas credenciais</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <span class="label-icon">📧</span>
+            Email
+          </label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email"
+            [(ngModel)]="credenciais.username" 
+            name="username"
+            required
+            placeholder="seu@email.com">
+        </div>
+        
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">
+            <span class="label-icon">🔒</span>
+            Senha
+          </label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password"
+            [(ngModel)]="credenciais.password" 
+            name="password"
+            required
+            placeholder="Sua senha">
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="error" class="alert alert-danger error-message">
+          <span class="error-icon">⚠️</span>
+          {{ error }}
+        </div>
+        
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="btn btn-primary login-button"
+          [disabled]="loading || !loginForm.form.valid">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          {{ loading ? 'Entrando...' : 'Entrar' }}
+        </button>
+      </form>
+
+      <!-- Demo Credentials -->
+      <div class="demo-section">
+        <div class="demo-header">
+          <span class="demo-icon">👤</span>
+          <span class="demo-title">Credenciais de Teste</span>
+        </div>
+        <div class="demo-credentials">
+          <div class="credential-item">
+            <strong>Email:</strong> carlos@gmail.com
+          </div>
+          <div class="credential-item">
+            <strong>Senha:</strong> carlos123
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p class="footer-text">
+        Sistema Finance Manager v1.0
+      </p>
     </div>
   </div>
 </div>

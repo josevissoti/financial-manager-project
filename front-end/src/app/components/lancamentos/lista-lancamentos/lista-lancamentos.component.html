@@ -1,215 +1,233 @@
-<div class="container-fluid">
+<div class="lancamentos-container">
   <!-- Header -->
-  <nav class="navbar navbar-light bg-light border-bottom">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center w-100">
-        <div>
-          <button class="btn btn-outline-secondary me-2" routerLink="/dashboard">
-            ← Voltar ao Dashboard
-          </button>
-          <h2 class="mb-0 d-inline">💰 Lançamentos</h2>
-          <span class="badge bg-primary ms-2">{{ lancamentos.length }} lançamentos</span>
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="back-button" routerLink="/dashboard">
+          <span class="back-icon">←</span>
+          Voltar ao Dashboard
+        </button>
+        <div class="page-title">
+          <h1>💸 Lançamentos</h1>
+          <span class="badge">{{ lancamentos.length }} lançamentos</span>
         </div>
-        <button class="btn btn-success" routerLink="/lancamentos/novo">
-          ➕ Novo Lançamento
+      </div>
+      <div class="header-actions">
+        <button class="btn-primary" routerLink="/lancamentos/novo">
+          <span class="btn-icon">➕</span>
+          Novo Lançamento
         </button>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <div class="container mt-4">
-    
-    <!-- Loading -->
-    <div *ngIf="carregando" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-      <p class="mt-2 text-muted">Carregando lançamentos...</p>
+  <main class="page-content">
+    <!-- Loading State -->
+    <div *ngIf="carregando" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando lançamentos...</p>
     </div>
 
-    <!-- Erro -->
-    <div *ngIf="erro && !carregando" class="alert alert-danger">
-      {{ erro }}
-      <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarLancamentos()">
-        🔄 Tentar Novamente
-      </button>
+    <!-- Error State -->
+    <div *ngIf="erro && !carregando" class="error-state">
+      <div class="error-icon">⚠️</div>
+      <div class="error-content">
+        <h3>Erro ao carregar lançamentos</h3>
+        <p>{{ erro }}</p>
+        <button class="btn-secondary" (click)="carregarLancamentos()">
+          🔄 Tentar Novamente
+        </button>
+      </div>
     </div>
 
-    <!-- Filtros -->
-    <div *ngIf="!carregando && !erro && lancamentos.length > 0" class="card mb-4">
-      <div class="card-header">
-        <h5 class="mb-0">🔍 Filtros</h5>
+    <!-- Filters -->
+    <div *ngIf="!carregando && !erro && lancamentos.length > 0" class="filters-section">
+      <div class="filters-header">
+        <h3>🔍 Filtros</h3>
+        <p>Filtre os lançamentos conforme sua necessidade</p>
       </div>
-      <div class="card-body">
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label for="filtroDescricao" class="form-label">Buscar por descrição</label>
-            <input type="text" id="filtroDescricao" class="form-control" 
-                   [(ngModel)]="filtroDescricao" 
-                   (input)="aplicarFiltros()"
-                   placeholder="Digite para buscar...">
-          </div>
-          <div class="col-md-4">
-            <label for="filtroTipo" class="form-label">Filtrar por tipo</label>
-            <select id="filtroTipo" class="form-select" 
-                    [(ngModel)]="filtroTipo" 
-                    (change)="aplicarFiltros()">
-              <option value="todos">Todos os tipos</option>
-              <option value="0">📤 Débito</option>
-              <option value="1">📥 Crédito</option>
-            </select>
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-outline-secondary w-100" (click)="limparFiltros()">
-              🗑️ Limpar
-            </button>
-          </div>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="filtroDescricao" class="filter-label">
+            <span class="label-icon">🔎</span>
+            Buscar por descrição
+          </label>
+          <input 
+            type="text" 
+            id="filtroDescricao" 
+            class="filter-input"
+            [(ngModel)]="filtroDescricao" 
+            (input)="aplicarFiltros()"
+            placeholder="Digite para buscar...">
+        </div>
+
+        <div class="filter-group">
+          <label for="filtroTipo" class="filter-label">
+            <span class="label-icon">📊</span>
+            Filtrar por tipo
+          </label>
+          <select 
+            id="filtroTipo" 
+            class="filter-select"
+            [(ngModel)]="filtroTipo" 
+            (change)="aplicarFiltros()">
+            <option value="todos">Todos os tipos</option>
+            <option value="0">📤 Débito</option>
+            <option value="1">📥 Crédito</option>
+          </select>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-outline" (click)="limparFiltros()">
+            <span class="btn-icon">🗑️</span>
+            Limpar Filtros
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Lista de Lançamentos -->
-    <div *ngIf="!carregando && !erro">
-      
-      <!-- Contador de resultados -->
-      <div *ngIf="lancamentosFiltrados.length !== lancamentos.length" class="alert alert-info mb-3">
-        🔍 Mostrando {{ lancamentosFiltrados.length }} de {{ lancamentos.length }} lançamentos
+    <!-- Results Counter -->
+    <div *ngIf="!carregando && !erro && lancamentosFiltrados.length !== lancamentos.length" class="results-counter">
+      <div class="counter-icon">🔍</div>
+      <div class="counter-text">
+        Mostrando <strong>{{ lancamentosFiltrados.length }}</strong> de 
+        <strong>{{ lancamentos.length }}</strong> lançamentos
+      </div>
+    </div>
+
+    <!-- Lançamentos List -->
+    <div *ngIf="!carregando && !erro" class="content-section">
+      <!-- Empty State -->
+      <div *ngIf="lancamentos.length === 0" class="empty-state">
+        <div class="empty-icon">💸</div>
+        <div class="empty-content">
+          <h3>Nenhum lançamento cadastrado</h3>
+          <p>Comece organizando suas finanças cadastrando o primeiro lançamento</p>
+          <button class="btn-primary" routerLink="/lancamentos/novo">
+            ➕ Cadastrar Primeiro Lançamento
+          </button>
+        </div>
       </div>
 
-      <!-- Tabela de Lançamentos -->
-      <div class="card">
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover table-striped">
-              <thead class="table-dark">
-                <tr>
-                  <th>Descrição</th>
-                  <th>Valor</th>
-                  <th>Tipo</th>
-                  <th>Situação</th>
-                  <th>Vencimento</th>
-                  <th>Categoria</th>
-                  <th>Conta</th>
-                  <th width="120">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let lancamento of lancamentosFiltrados; trackBy: trackByLancamentoId"
-                    [ngClass]="{
-                      'table-warning': lancamento.situacao === 0,
-                      'table-success': lancamento.situacao === 1,
-                      'table-danger': lancamento.situacao === 2
-                    }">
-                  
-                  <!-- Descrição -->
-                  <td>
-                    <div class="fw-bold">{{ lancamento.descricao }}</div>
-                    <small class="text-muted" *ngIf="lancamento.parcela > 1">
-                      Parcela {{ lancamento.parcela }}
-                    </small>
-                    <div class="text-muted small">
-                      Lançado: {{ formatarData(lancamento.dataLancamento) }}
-                    </div>
-                    <div class="text-muted small" *ngIf="lancamento.dataBaixa">
-                      Baixa: {{ formatarData(lancamento.dataBaixa) }}
-                    </div>
-                  </td>
-                  
-                  <!-- Valor -->
-                  <td>
-                    <span class="fw-bold" [ngClass]="getTipoClasse(lancamento.tipoLancamento)">
-                      {{ formatarValor(lancamento.valor) }}
-                    </span>
-                  </td>
-                  
-                  <!-- Tipo -->
-                  <td>
-                    <span class="badge" 
-                          [ngClass]="{
-                            'bg-danger': lancamento.tipoLancamento === 0,
-                            'bg-success': lancamento.tipoLancamento === 1
-                          }">
-                      {{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}
-                      {{ getTipoLancamentoTexto(lancamento.tipoLancamento) }}
-                    </span>
-                  </td>
-                  
-                  <!-- Situação -->
-                  <td>
-                    <span class="badge"
-                          [ngClass]="{
-                            'bg-warning': lancamento.situacao === 0,
-                            'bg-success': lancamento.situacao === 1,
-                            'bg-danger': lancamento.situacao === 2
-                          }">
-                      {{ getSituacaoTexto(lancamento.situacao) }}
-                    </span>
-                  </td>
-                  
-                  <!-- Vencimento -->
-                  <td>
-                    <span [ngClass]="{
-                      'text-danger': lancamento.situacao === 2,
-                      'fw-bold': lancamento.situacao === 0
-                    }">
-                      {{ formatarData(lancamento.prazoVencimento) }}
-                    </span>
-                  </td>
-                  
-                  <!-- Categoria -->
-                  <td>
-                    <span class="text-muted">{{ lancamento.idCategoriaLancamento || 'N/A' }}</span>
-                  </td>
-                  
-                  <!-- Conta -->
-                  <td>
-                    <span class="text-muted">{{ lancamento.idConta || 'N/A' }}</span>
-                  </td>
-                  
-                  <!-- Ações -->
-                  <td>
-                    <div class="btn-group-vertical btn-group-sm">
-                      <button class="btn btn-outline-primary" 
-                              (click)="editarLancamento(lancamento)"
-                              title="Editar lançamento">
-                        ✏️ Editar
-                      </button>
-                      <button class="btn btn-outline-danger" 
-                              (click)="deletarLancamento(lancamento)"
-                              title="Deletar lançamento">
-                        🗑️ Deletar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Mensagem sem resultados -->
-          <div *ngIf="lancamentosFiltrados.length === 0 && lancamentos.length > 0" class="text-center py-5">
-            <div class="text-muted mb-3">🔍</div>
-            <h4 class="text-muted">Nenhum lançamento encontrado</h4>
-            <p class="text-muted mb-4">Tente ajustar os filtros da busca</p>
-            <button class="btn btn-primary me-2" (click)="limparFiltros()">
+      <!-- No Results State -->
+      <div *ngIf="lancamentosFiltrados.length === 0 && lancamentos.length > 0" class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-content">
+          <h3>Nenhum lançamento encontrado</h3>
+          <p>Tente ajustar os filtros da busca para encontrar o que procura</p>
+          <div class="empty-actions">
+            <button class="btn-outline" (click)="limparFiltros()">
               🗑️ Limpar Filtros
             </button>
-            <button class="btn btn-success" routerLink="/lancamentos/novo">
+            <button class="btn-primary" routerLink="/lancamentos/novo">
               ➕ Novo Lançamento
             </button>
           </div>
+        </div>
+      </div>
 
-          <!-- Mensagem sem lançamentos -->
-          <div *ngIf="lancamentos.length === 0" class="text-center py-5">
-            <div class="text-muted mb-3">💰</div>
-            <h4 class="text-muted">Nenhum lançamento cadastrado</h4>
-            <p class="text-muted mb-4">Comece cadastrando seu primeiro lançamento</p>
-            <button class="btn btn-success btn-lg" routerLink="/lancamentos/novo">
-              ➕ Cadastrar Primeiro Lançamento
-            </button>
-          </div>
+      <!-- Lançamentos Table -->
+      <div *ngIf="lancamentosFiltrados.length > 0" class="table-container">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="descricao-col">Descrição</th>
+                <th class="valor-col">Valor</th>
+                <th class="tipo-col">Tipo</th>
+                <th class="situacao-col">Situação</th>
+                <th class="vencimento-col">Vencimento</th>
+                <th class="categoria-col">Categoria</th>
+                <th class="conta-col">Conta</th>
+                <th class="acoes-col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lancamento of lancamentosFiltrados; trackBy: trackByLancamentoId" 
+                  class="table-row">
+                
+                <!-- Descrição -->
+                <td class="descricao-cell">
+                  <div class="descricao-content">
+                    <div class="descricao-title">{{ lancamento.descricao }}</div>
+                    <div class="descricao-meta">
+                      <span *ngIf="lancamento.parcela > 1" class="parcela-badge">
+                        Parcela {{ lancamento.parcela }}
+                      </span>
+                      <span class="data-info">
+                        Lançado: {{ formatarData(lancamento.dataLancamento) }}
+                      </span>
+                      <span *ngIf="lancamento.dataBaixa" class="data-info">
+                        Baixa: {{ formatarData(lancamento.dataBaixa) }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Valor -->
+                <td class="valor-cell">
+                  <span class="valor-amount" [ngClass]="getTipoClasse(lancamento.tipoLancamento)">
+                    {{ formatarValor(lancamento.valor) }}
+                  </span>
+                </td>
+                
+                <!-- Tipo -->
+                <td class="tipo-cell">
+                  <span class="status-badge" [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
+                    <span class="badge-icon">{{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}</span>
+                    {{ getTipoLancamentoTexto(lancamento.tipoLancamento) }}
+                  </span>
+                </td>
+                
+                <!-- Situação -->
+                <td class="situacao-cell">
+                  <span class="status-badge" [ngClass]="getSituacaoClasse(lancamento.situacao)">
+                    {{ getSituacaoTexto(lancamento.situacao) }}
+                  </span>
+                </td>
+                
+                <!-- Vencimento -->
+                <td class="vencimento-cell">
+                  <span class="vencimento-date" [ngClass]="{
+                    'atrasado': lancamento.situacao === 2,
+                    'pendente': lancamento.situacao === 0
+                  }">
+                    {{ formatarData(lancamento.prazoVencimento) }}
+                  </span>
+                </td>
+                
+                <!-- Categoria -->
+                <td class="categoria-cell">
+                  <span class="categoria-text">{{ lancamento.idCategoriaLancamento || 'N/A' }}</span>
+                </td>
+                
+                <!-- Conta -->
+                <td class="conta-cell">
+                  <span class="conta-text">{{ lancamento.idConta || 'N/A' }}</span>
+                </td>
+                
+                <!-- Ações -->
+                <td class="acoes-cell">
+                  <div class="actions-group">
+                    <button class="action-btn edit-btn" 
+                            (click)="editarLancamento(lancamento)"
+                            title="Editar lançamento">
+                      <span class="action-icon">✏️</span>
+                      Editar
+                    </button>
+                    <button class="action-btn delete-btn" 
+                            (click)="deletarLancamento(lancamento)"
+                            title="Deletar lançamento">
+                      <span class="action-icon">🗑️</span>
+                      Deletar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>

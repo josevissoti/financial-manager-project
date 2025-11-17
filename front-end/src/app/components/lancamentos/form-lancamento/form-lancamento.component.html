@@ -1,143 +1,277 @@
-<div class="form-container">
-  <h2>{{ isEditando ? 'Editar Lançamento' : 'Novo Lançamento' }}</h2>
-
-  <!-- Indicador de Carregamento -->
-  <div *ngIf="carregandoDados" class="alert alert-info">
-    <div class="spinner-border spinner-border-sm me-2"></div>
-    🔄 Carregando categorias e contas do backend...
-  </div>
-
-  <!-- Mensagem de erro -->
-  <div *ngIf="erro" class="alert alert-error">
-    {{ erro }}
-  </div>
-
-  <form (ngSubmit)="onSubmit()" #lancamentoForm="ngForm">
-
-    <!-- Informações Básicas -->
-    <fieldset class="form-section">
-      <legend>Informações Básicas</legend>
-
-      <div class="form-group">
-        <label for="descricao">Descrição *</label>
-        <input type="text" id="descricao" name="descricao" [(ngModel)]="lancamento.descricao" required
-          class="form-control" placeholder="Ex: Pagamento conta de luz">
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="valor">Valor *</label>
-          <input type="number" id="valor" name="valor" [(ngModel)]="lancamento.valor" required min="0.01" step="0.01"
-            class="form-control" placeholder="0,00">
-        </div>
-
-        <div class="form-group">
-          <label for="parcela">Parcela</label>
-          <input type="number" id="parcela" name="parcela" [(ngModel)]="lancamento.parcela" min="1" class="form-control"
-            placeholder="1">
-          <small>Número da parcela atual (ex: 1 para primeira parcela)</small>
-        </div>
-      </div>
-    </fieldset>
-
-    <!-- Datas e Prazos -->
-    <fieldset class="form-section">
-      <legend>Datas e Prazos (Use DD/MM/AAAA)</legend>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="dataLancamento">Data do Lançamento *</label>
-          <input type="text" id="dataLancamento" name="dataLancamento" [(ngModel)]="lancamento.dataLancamento" required
-            class="form-control" placeholder="DD/MM/AAAA" (blur)="validarData('dataLancamento')"
-            (input)="aplicarMascaraData($event, 'dataLancamento')" maxlength="10">
-        </div>
-
-        <div class="form-group">
-          <label for="prazoVencimento">Prazo de Vencimento *</label>
-          <input type="text" id="prazoVencimento" name="prazoVencimento" [(ngModel)]="lancamento.prazoVencimento"
-            required class="form-control" placeholder="DD/MM/AAAA" (blur)="validarData('prazoVencimento')"
-            (input)="aplicarMascaraData($event, 'prazoVencimento')" maxlength="10">
-          <button type="button" class="btn-calcular" (click)="calcularVencimento()" title="Calcular 30 dias após lançamento">
-            +30 dias
-          </button>
-        </div>
-
-        <div class="form-group">
-          <label for="dataBaixa">Data de Baixa</label>
-          <input type="text" id="dataBaixa" name="dataBaixa" [(ngModel)]="lancamento.dataBaixa" class="form-control"
-            placeholder="DD/MM/AAAA" (blur)="validarData('dataBaixa')" (input)="aplicarMascaraData($event, 'dataBaixa')"
-            maxlength="10">
-          <small>Data em que o lançamento foi quitado (opcional)</small>
-        </div>
-      </div>
-    </fieldset>
-
-    <!-- Classificação -->
-    <fieldset class="form-section">
-      <legend>Classificação</legend>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="tipoLancamento">Tipo de Lançamento *</label>
-          <select id="tipoLancamento" name="tipoLancamento" [(ngModel)]="lancamento.tipoLancamento" required
-            class="form-control">
-            <option *ngFor="let tipo of tiposLancamento" [value]="tipo.valor">
-              {{ tipo.texto }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="situacao">Situação *</label>
-          <select id="situacao" name="situacao" [(ngModel)]="lancamento.situacao" required class="form-control">
-            <option *ngFor="let situacao of situacoes" [value]="situacao.valor">
-              {{ situacao.texto }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Categoria -->
-      <div class="form-group">
-        <label for="idCategoriaLancamento">Categoria *</label>
-        <select id="idCategoriaLancamento" name="idCategoriaLancamento" [(ngModel)]="lancamento.idCategoriaLancamento"
-          required class="form-control" [disabled]="carregandoDados">
-          <option value="0" disabled>Selecione uma categoria</option>
-          <option *ngFor="let categoria of categorias" [value]="categoria.idCategoriaLancamento">
-            {{ categoria.descricao }}
-          </option>
-        </select>
-        <div *ngIf="carregandoDados" class="form-text">
-          <small class="text-muted">🔄 Carregando categorias...</small>
-        </div>
-      </div>
-
-      <!-- Conta -->
-      <div class="form-group">
-        <label for="idConta">Conta *</label>
-        <select id="idConta" name="idConta" [(ngModel)]="lancamento.idConta" required class="form-control"
-          [disabled]="carregandoDados">
-          <option value="0" disabled>Selecione uma conta</option>
-          <option *ngFor="let conta of contas" [value]="conta.idConta">
-            {{ conta.descricao }} (Ag: {{ conta.agencia }} C/C: {{ conta.numero }})
-          </option>
-        </select>
-        <div *ngIf="carregandoDados" class="form-text">
-          <small class="text-muted">🔄 Carregando contas...</small>
-        </div>
-      </div>
-    </fieldset>
-
-    <!-- Botões -->
-    <div class="form-actions">
-      <button type="button" (click)="voltar()" class="btn btn-secondary">
-        Cancelar
-      </button>
-
-      <button type="submit" [disabled]="enviando || !lancamentoForm.form.valid" class="btn btn-primary">
-        <span *ngIf="enviando" class="spinner-border spinner-border-sm me-2"></span>
-        {{ enviando ? 'Salvando...' : (isEditando ? 'Atualizar' : 'Criar') }}
-      </button>
+<!-- form-lancamento.component.html -->
+<div class="page-container">
+  <!-- Header Padrão -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        {{ isEditando ? '✏️ Editar Lançamento' : '➕ Novo Lançamento' }}
+      </h1>
+      <nav class="breadcrumb">
+        <a routerLink="/dashboard">Dashboard</a> /
+        <a routerLink="/lancamentos">Lançamentos</a> /
+        <span>{{ isEditando ? 'Editar' : 'Novo' }}</span>
+      </nav>
     </div>
-  </form>
+  </header>
+
+  <div class="form-container">
+    <!-- Indicador de Carregamento -->
+    <div *ngIf="carregandoDados" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>🔄 Carregando categorias e contas...</p>
+    </div>
+
+    <!-- Mensagem de Erro -->
+    <div *ngIf="erro" class="alert alert-error">
+      <span class="alert-icon">⚠️</span>
+      <span>{{ erro }}</span>
+      <button class="alert-close" (click)="erro = ''">×</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #lancamentoForm="ngForm" class="lancamento-form">
+      
+      <!-- Card: Informações Básicas -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>📋 Informações Básicas</h3>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="descricao" class="form-label">
+              Descrição <span class="required">*</span>
+            </label>
+            <input type="text" id="descricao" name="descricao" 
+                   [(ngModel)]="lancamento.descricao" required
+                   class="form-control" 
+                   placeholder="Ex: Pagamento conta de luz, Recebimento cliente..."
+                   [class.invalid]="lancamentoForm.submitted && !lancamento.descricao">
+            <div class="form-hint">Descreva claramente a natureza do lançamento</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="valor" class="form-label">
+                Valor <span class="required">*</span>
+              </label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">R$</span>
+                <input type="number" id="valor" name="valor" 
+                       [(ngModel)]="lancamento.valor" required min="0.01" step="0.01"
+                       class="form-control" 
+                       placeholder="0,00"
+                       [class.invalid]="lancamentoForm.submitted && (!lancamento.valor || lancamento.valor <= 0)">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="parcela" class="form-label">Parcela</label>
+              <div class="input-with-prefix">
+                <input type="number" id="parcela" name="parcela" 
+                       [(ngModel)]="lancamento.parcela" min="1" 
+                       class="form-control" placeholder="1">
+                <div class="input-prefix">de</div>
+                <input type="number" [(ngModel)]="totalParcelas" min="1" 
+                       class="form-control" placeholder="1" name="totalParcelas">
+              </div>
+              <div class="form-hint">Número da parcela atual e total de parcelas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Datas e Prazos -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>📅 Datas e Prazos</h3>
+          <small class="date-format-hint">Formato: DD/MM/AAAA</small>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dataLancamento" class="form-label">
+                Data do Lançamento <span class="required">*</span>
+              </label>
+              <div class="date-input-wrapper">
+                <input type="text" id="dataLancamento" name="dataLancamento" 
+                       [(ngModel)]="lancamento.dataLancamento" required
+                       class="form-control date-input" 
+                       placeholder="DD/MM/AAAA" 
+                       (blur)="validarData('dataLancamento')"
+                       (input)="aplicarMascaraData($event, 'dataLancamento')"
+                       maxlength="10"
+                       [class.invalid]="lancamentoForm.submitted && (!lancamento.dataLancamento || !isDataValida(lancamento.dataLancamento))">
+                <button type="button" class="btn-today" (click)="definirDataAtual('dataLancamento')">
+                  Hoje
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="prazoVencimento" class="form-label">
+                Vencimento <span class="required">*</span>
+              </label>
+              <div class="date-input-wrapper">
+                <input type="text" id="prazoVencimento" name="prazoVencimento" 
+                       [(ngModel)]="lancamento.prazoVencimento" required
+                       class="form-control date-input" 
+                       placeholder="DD/MM/AAAA" 
+                       (blur)="validarData('prazoVencimento')"
+                       (input)="aplicarMascaraData($event, 'prazoVencimento')"
+                       maxlength="10"
+                       [class.invalid]="lancamentoForm.submitted && (!lancamento.prazoVencimento || !isDataValida(lancamento.prazoVencimento))">
+                <div class="date-actions">
+                  <button type="button" class="btn-date-action" 
+                          (click)="calcularVencimento(30)" title="30 dias">
+                    +30d
+                  </button>
+                  <button type="button" class="btn-date-action" 
+                          (click)="calcularVencimento(15)" title="15 dias">
+                    +15d
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="dataBaixa" class="form-label">Data de Baixa</label>
+              <div class="date-input-wrapper">
+                <input type="text" id="dataBaixa" name="dataBaixa" 
+                       [(ngModel)]="lancamento.dataBaixa" 
+                       class="form-control date-input"
+                       placeholder="DD/MM/AAAA" 
+                       (blur)="validarData('dataBaixa')"
+                       (input)="aplicarMascaraData($event, 'dataBaixa')"
+                       maxlength="10"
+                       [class.invalid]="lancamento.dataBaixa && !isDataValida(lancamento.dataBaixa)">
+                <button type="button" class="btn-today" (click)="definirDataAtual('dataBaixa')">
+                  Hoje
+                </button>
+              </div>
+              <div class="form-hint">Data em que o lançamento foi quitado (opcional)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Classificação -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>🏷️ Classificação</h3>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tipoLancamento" class="form-label">
+                Tipo de Lançamento <span class="required">*</span>
+              </label>
+              <select id="tipoLancamento" name="tipoLancamento" 
+                      [(ngModel)]="lancamento.tipoLancamento" required
+                      class="form-control select-with-icon"
+                      [class.invalid]="lancamentoForm.submitted && lancamento.tipoLancamento === null">
+                <option [ngValue]="null" disabled>Selecione o tipo</option>
+                <option *ngFor="let tipo of tiposLancamento" [value]="tipo.valor">
+                  {{ tipo.texto }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="situacao" class="form-label">
+                Situação <span class="required">*</span>
+              </label>
+              <select id="situacao" name="situacao" 
+                      [(ngModel)]="lancamento.situacao" required
+                      class="form-control select-with-icon"
+                      [class.invalid]="lancamentoForm.submitted && lancamento.situacao === null">
+                <option [ngValue]="null" disabled>Selecione a situação</option>
+                <option *ngFor="let situacao of situacoes" [value]="situacao.valor">
+                  {{ situacao.texto }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="idCategoriaLancamento" class="form-label">
+                Categoria <span class="required">*</span>
+              </label>
+              <select id="idCategoriaLancamento" name="idCategoriaLancamento" 
+                      [(ngModel)]="lancamento.idCategoriaLancamento" required
+                      class="form-control" 
+                      [disabled]="carregandoDados"
+                      [class.invalid]="lancamentoForm.submitted && (!lancamento.idCategoriaLancamento || lancamento.idCategoriaLancamento === 0)">
+                <option [value]="0" disabled>Selecione uma categoria</option>
+                <option *ngFor="let categoria of categorias" [value]="categoria.idCategoriaLancamento">
+                  📊 {{ categoria.descricao }}
+                </option>
+              </select>
+              <div *ngIf="carregandoDados" class="form-loading">
+                <small>🔄 Carregando categorias...</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="idConta" class="form-label">
+                Conta <span class="required">*</span>
+              </label>
+              <select id="idConta" name="idConta" 
+                      [(ngModel)]="lancamento.idConta" required
+                      class="form-control" 
+                      [disabled]="carregandoDados"
+                      [class.invalid]="lancamentoForm.submitted && (!lancamento.idConta || lancamento.idConta === 0)">
+                <option [value]="0" disabled>Selecione uma conta</option>
+                <option *ngFor="let conta of contas" [value]="conta.idConta">
+                  🏦 {{ conta.descricao }} (Ag: {{ conta.agencia }} C/C: {{ conta.numero }})
+                </option>
+              </select>
+              <div *ngIf="carregandoDados" class="form-loading">
+                <small>🔄 Carregando contas...</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Rápido -->
+      <div *ngIf="showPreview" class="form-card preview-card">
+        <div class="card-header">
+          <h3>👁️ Pré-visualização</h3>
+        </div>
+        <div class="card-body">
+          <div class="preview-content">
+            <div class="preview-item">
+              <strong>Descrição:</strong> {{ lancamento.descricao || '-' }}
+            </div>
+            <div class="preview-item">
+              <strong>Valor:</strong> 
+              <span [class]="'valor-' + (lancamento.tipoLancamento === 1 ? 'credito' : 'debito')">
+                R$ {{ (lancamento.valor || 0) | number:'1.2-2' }}
+              </span>
+            </div>
+            <div class="preview-item">
+              <strong>Vencimento:</strong> {{ lancamento.prazoVencimento || '-' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações do Formulário -->
+      <div class="form-actions">
+        <button type="button" (click)="voltar()" class="btn btn-secondary">
+          ↩️ Cancelar
+        </button>
+        
+        <button type="button" (click)="togglePreview()" class="btn btn-outline">
+          {{ showPreview ? '👁️‍🗨️ Ocultar Preview' : '👁️ Ver Preview' }}
+        </button>
+
+        <button type="submit" [disabled]="enviando || !lancamentoForm.valid" 
+                class="btn btn-primary">
+          <span *ngIf="enviando" class="spinner"></span>
+          {{ enviando ? '⏳ Salvando...' : (isEditando ? '💾 Atualizar' : '✅ Criar Lançamento') }}
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
