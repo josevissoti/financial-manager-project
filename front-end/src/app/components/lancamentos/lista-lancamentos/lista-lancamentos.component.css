@@ -1,16 +1,52 @@
 .table-responsive {
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
 }
 
 .badge {
   font-size: 0.75em;
+  padding: 0.4em 0.6em;
 }
 
-.btn-group-sm .btn {
-  padding: 0.25rem 0.5rem;
+.btn-group-vertical .btn {
+  border-radius: 4px;
+  margin-bottom: 2px;
 }
 
-/* Melhorar a visualização da tabela */
-.table-hover tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.075);
+/* Cores para as linhas da tabela */
+.table-warning {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.table-success {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.table-danger {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Cores para os badges */
+.bg-danger { background-color: #dc3545 !important; }
+.bg-success { background-color: #198754 !important; }
+.bg-warning { 
+  background-color: #ffc107 !important; 
+  color: #000 !important; 
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .btn-group-vertical .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }

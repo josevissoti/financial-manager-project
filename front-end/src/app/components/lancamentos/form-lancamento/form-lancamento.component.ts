@@ -34,11 +34,9 @@ export class FormLancamentoComponent implements OnInit {
   enviando: boolean = false;
   erro: string = '';
 
-  // Dados reais do backend
   categorias: Categoria[] = [];
   contas: Conta[] = [];
 
-  // Opções para os selects
   tiposLancamento = [
     { valor: 0, texto: '📤 Débito (Saída)' },
     { valor: 1, texto: '📥 Crédito (Entrada)' }
@@ -72,13 +70,11 @@ export class FormLancamentoComponent implements OnInit {
     this.carregandoDados = true;
     console.log('🔄 Carregando categorias e contas do backend...');
 
-    // Carregar categorias
     this.categoriaService.findAll().subscribe({
       next: (categorias) => {
         this.categorias = categorias;
         console.log('✅ Categorias carregadas:', categorias);
         
-        // ✅ CORREÇÃO: Verifica se idCategoriaLancamento existe
         if (!this.isEditando && categorias.length > 0 && categorias[0].idCategoriaLancamento) {
           this.lancamento.idCategoriaLancamento = categorias[0].idCategoriaLancamento;
         }
@@ -89,13 +85,11 @@ export class FormLancamentoComponent implements OnInit {
       }
     });
 
-    // Carregar contas
     this.contaService.findAll().subscribe({
       next: (contas) => {
         this.contas = contas;
         console.log('✅ Contas carregadas:', contas);
         
-        // ✅ CORREÇÃO: Verifica se idConta existe
         if (!this.isEditando && contas.length > 0 && contas[0].idConta) {
           this.lancamento.idConta = contas[0].idConta;
         }
@@ -114,8 +108,10 @@ export class FormLancamentoComponent implements OnInit {
     this.carregando = true;
     this.lancamentoService.findById(id).subscribe({
       next: (lancamentoDTO: LancamentoDTO) => {
+        console.log('📥 Dados recebidos do backend:', lancamentoDTO);
+        
         this.lancamento = {
-          idLancamento: lancamentoDTO.idLancamento,
+          idLancamento: lancamentoDTO.idLancamento || undefined,
           descricao: lancamentoDTO.descricao,
           valor: lancamentoDTO.valor,
           parcela: lancamentoDTO.parcela,
@@ -128,6 +124,7 @@ export class FormLancamentoComponent implements OnInit {
           idCategoriaLancamento: lancamentoDTO.idCategoriaLancamento,
           idConta: lancamentoDTO.idConta
         };
+        
         this.carregando = false;
         console.log('✅ Lançamento carregado para edição:', this.lancamento);
       },
@@ -143,7 +140,6 @@ export class FormLancamentoComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    // Validações básicas
     if (!this.lancamento.descricao || !this.lancamento.valor || this.lancamento.valor <= 0) {
       this.erro = 'Por favor, preencha todos os campos obrigatórios corretamente.';
       this.enviando = false;
@@ -156,12 +152,11 @@ export class FormLancamentoComponent implements OnInit {
       return;
     }
 
-    // Converter datas para o formato do backend (yyyy-MM-dd)
     const lancamentoParaEnviar: Lancamento = {
       ...this.lancamento,
       dataLancamento: this.converterDataParaBackend(this.lancamento.dataLancamento),
       prazoVencimento: this.converterDataParaBackend(this.lancamento.prazoVencimento),
-      dataBaixa: this.lancamento.dataBaixa ? this.converterDataParaBackend(this.lancamento.dataBaixa) : null
+      dataBaixa: this.lancamento.dataBaixa ? this.converterDataParaBackend(this.lancamento.dataBaixa) : undefined
     };
 
     console.log('📤 Enviando lançamento:', lancamentoParaEnviar);
@@ -181,7 +176,9 @@ export class FormLancamentoComponent implements OnInit {
         }
       });
     } else {
-      this.lancamentoService.create(lancamentoParaEnviar).subscribe({
+      const { idLancamento, ...lancamentoParaCriar } = lancamentoParaEnviar;
+      
+      this.lancamentoService.create(lancamentoParaCriar).subscribe({
         next: (response) => {
           console.log('✅ Lançamento criado:', response);
           this.enviando = false;
@@ -197,7 +194,6 @@ export class FormLancamentoComponent implements OnInit {
     }
   }
 
-  // Métodos para manipulação de datas
   private formatarDataParaInput(data: Date): string {
     const dia = data.getDate().toString().padStart(2, '0');
     const mes = (data.getMonth() + 1).toString().padStart(2, '0');
@@ -208,7 +204,6 @@ export class FormLancamentoComponent implements OnInit {
   private converterDataParaFormatoInput(dataString: string): string {
     if (!dataString) return '';
     
-    // Converte de "yyyy-MM-dd" para "dd/MM/yyyy"
     const partes = dataString.split('-');
     if (partes.length === 3) {
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
@@ -219,7 +214,6 @@ export class FormLancamentoComponent implements OnInit {
   private converterDataParaBackend(dataString: string): string {
     if (!dataString) return '';
     
-    // Converte de "dd/MM/yyyy" para "yyyy-MM-dd"
     const partes = dataString.split('/');
     if (partes.length === 3) {
       return `${partes[2]}-${partes[1]}-${partes[0]}`;
@@ -227,7 +221,6 @@ export class FormLancamentoComponent implements OnInit {
     return dataString;
   }
 
-  // Métodos para máscara e validação de datas
   aplicarMascaraData(event: any, campo: string): void {
     let value = event.target.value.replace(/\D/g, '');
     
@@ -239,7 +232,6 @@ export class FormLancamentoComponent implements OnInit {
       value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4, 8);
     }
     
-    // ✅ Correção: Atribuição direta por campo
     if (campo === 'dataLancamento') {
       this.lancamento.dataLancamento = value;
     } else if (campo === 'prazoVencimento') {
@@ -294,5 +286,24 @@ export class FormLancamentoComponent implements OnInit {
 
   voltar(): void {
     this.router.navigate(['/lancamentos']);
+  }
+
+  getTipoLancamentoTexto(valor: number): string {
+    const tipo = this.tiposLancamento.find(t => t.valor === valor);
+    return tipo ? tipo.texto : 'Desconhecido';
+  }
+
+  getSituacaoTexto(valor: number): string {
+    const situacao = this.situacoes.find(s => s.valor === valor);
+    return situacao ? situacao.texto : 'Desconhecida';
+  }
+
+  verificarBinding(): void {
+    console.log('🔍 Verificando binding:', {
+      tipoLancamento: this.lancamento.tipoLancamento,
+      situacao: this.lancamento.situacao,
+      idCategoria: this.lancamento.idCategoriaLancamento,
+      idConta: this.lancamento.idConta
+    });
   }
 }

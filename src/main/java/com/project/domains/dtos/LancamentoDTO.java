@@ -32,7 +32,7 @@ public class LancamentoDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataBaixa;
 
-    private int tipoLancamneto;
+    private int tipoLancamento;
     private int situacao;
 
     @NotNull(message = "O campo pessoa é requerido")
@@ -62,7 +62,7 @@ public class LancamentoDTO {
         this.dataLancamento = lancamento.getDataLancamento();
         this.prazoVencimento = lancamento.getPrazoVencimento();
         this.dataBaixa = lancamento.getDataBaixa();
-        this.tipoLancamneto = lancamento.getTipoLancamento().getId();
+        this.tipoLancamento = lancamento.getTipoLancamento().getId();
         this.situacao = lancamento.getSituacao().getId();
         this.idPessoa = lancamento.getPessoa().getIdPessoa();
         this.nome = lancamento.getPessoa().getNome();
@@ -133,12 +133,12 @@ public class LancamentoDTO {
         this.dataBaixa = dataBaixa;
     }
 
-    public int getTipoLancamneto() {
-        return tipoLancamneto;
+    public int getTipoLancamento() {
+        return tipoLancamento;
     }
 
-    public void setTipoLancamneto(int tipoLancamneto) {
-        this.tipoLancamneto = tipoLancamneto;
+    public void setTipoLancamento(int tipoLancamento) {
+        this.tipoLancamento = tipoLancamento;
     }
 
     public int getSituacao() {

@@ -18,7 +18,7 @@
   </nav>
 
   <div class="container mt-4">
-    
+
     <!-- Loading -->
     <div *ngIf="carregando" class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -37,7 +37,7 @@
 
     <!-- Lista de Contas -->
     <div *ngIf="!carregando && !erro">
-      
+
       <!-- Cards de Contas -->
       <div class="row g-4">
         <div *ngFor="let conta of contas" class="col-xl-4 col-lg-6">
@@ -46,7 +46,7 @@
               <h5 class="mb-0">{{ conta.descricao }}</h5>
               <span class="badge bg-info">{{ getTipoContaTexto(conta.tipoConta) }}</span>
             </div>
-            
+
             <div class="card-body">
               <!-- Informações Bancárias -->
               <div class="mb-3">
@@ -72,17 +72,22 @@
 
               <!-- Limite -->
               <div *ngIf="conta.limite > 0" class="mb-3">
-                <label class="form-label mb-1">📊 Limite Disponível</label>
+                <label class="form-label mb-1">📊 {{ getLimiteTexto(conta) }}</label>
                 <div class="d-flex justify-content-between small mb-1">
-                  <span>Utilizado: {{ getLimiteUtilizado(conta) | number:'1.0-0' }}%</span>
-                  <span>Limite: {{ formatarValor(conta.limite) }}</span>
+                  <span>
+                    {{ conta.tipoConta === 2 || (conta.tipoConta === 0 && conta.saldo < 0) ? 'Utilizado: '
+                      : 'Atingido: ' }} {{ getLimiteUtilizado(conta) | number:'1.0-0' }}% </span>
+                      <span>Limite: {{ formatarValor(conta.limite) }}</span>
                 </div>
                 <div class="progress" style="height: 8px;">
-                  <div class="progress-bar" 
-                       [ngClass]="getLimiteClasse(conta)"
-                       [style.width.%]="getLimiteUtilizado(conta)">
+                  <div class="progress-bar" [ngClass]="getLimiteClasse(conta)"
+                    [style.width.%]="getLimiteUtilizado(conta)"
+                    [title]="getLimiteUtilizado(conta) | number:'1.1-1' + '%'">
                   </div>
                 </div>
+                <small class="text-muted">
+                  {{ getLimiteDetalhe(conta) }}
+                </small>
               </div>
 
               <!-- Banco -->
@@ -94,14 +99,11 @@
             <!-- Ações -->
             <div class="card-footer bg-transparent">
               <div class="btn-group w-100">
-                <button class="btn btn-outline-primary btn-sm" 
-                        (click)="editarConta(conta.idConta)"
-                        title="Editar conta">
+                <button class="btn btn-outline-primary btn-sm" (click)="editarConta(conta.idConta)"
+                  title="Editar conta">
                   ✏️ Editar
                 </button>
-                <button class="btn btn-outline-danger btn-sm" 
-                        (click)="deletarConta(conta)"
-                        title="Deletar conta">
+                <button class="btn btn-outline-danger btn-sm" (click)="deletarConta(conta)" title="Deletar conta">
                   🗑️ Deletar
                 </button>
               </div>

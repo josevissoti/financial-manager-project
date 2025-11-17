@@ -1,24 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { LancamentoService, LancamentoDTO } from '../../../services/lancamento.service';
+import { FormsModule } from '@angular/forms'; // ✅ ADICIONAR FormsModule
+import { LancamentoService, Lancamento } from '../../../services/lancamento.service';
 
 @Component({
   selector: 'app-lista-lancamentos',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule], // ✅ ADICIONAR FormsModule
   templateUrl: './lista-lancamentos.component.html',
   styleUrls: ['./lista-lancamentos.component.css']
 })
 export class ListaLancamentosComponent implements OnInit {
-  lancamentos: LancamentoDTO[] = [];
+  lancamentos: Lancamento[] = [];
+  lancamentosFiltrados: Lancamento[] = []; // ✅ ADICIONAR array filtrado
   carregando: boolean = true;
   erro: string = '';
 
-  // Filtros simples
+  // ✅ ADICIONAR propriedades de filtro
   filtroDescricao: string = '';
-  filtroTipo: string = '';
+  filtroTipo: string = 'todos';
 
   constructor(
     private lancamentoService: LancamentoService,
@@ -36,6 +37,7 @@ export class ListaLancamentosComponent implements OnInit {
     this.lancamentoService.findAll().subscribe({
       next: (lancamentos) => {
         this.lancamentos = lancamentos;
+        this.lancamentosFiltrados = lancamentos; // ✅ INICIALIZAR filtrados
         this.carregando = false;
         console.log(`✅ ${lancamentos.length} lançamentos carregados`);
       },
@@ -47,74 +49,120 @@ export class ListaLancamentosComponent implements OnInit {
     });
   }
 
-  // Método para filtrar lançamentos
-  get lancamentosFiltrados(): LancamentoDTO[] {
-    let resultado = this.lancamentos;
-
-    if (this.filtroDescricao) {
-      resultado = resultado.filter(l => 
-        l.descricao.toLowerCase().includes(this.filtroDescricao.toLowerCase())
-      );
-    }
-
-    if (this.filtroTipo) {
-      const tipo = parseInt(this.filtroTipo);
-      resultado = resultado.filter(l => l.tipoLancamento === tipo);
-    }
-
-    // Ordenar por data mais recente primeiro
-    return resultado.sort((a, b) => 
-      new Date(b.dataLancamento).getTime() - new Date(a.dataLancamento).getTime()
-    );
+  // ✅ ADICIONAR método para aplicar filtros
+  aplicarFiltros(): void {
+    this.lancamentosFiltrados = this.lancamentos.filter(lancamento => {
+      const descricaoMatch = lancamento.descricao.toLowerCase().includes(this.filtroDescricao.toLowerCase());
+      
+      let tipoMatch = true;
+      if (this.filtroTipo !== 'todos') {
+        tipoMatch = lancamento.tipoLancamento === Number(this.filtroTipo);
+      }
+      
+      return descricaoMatch && tipoMatch;
+    });
   }
 
+  // ✅ ADICIONAR método para limpar filtros
   limparFiltros(): void {
     this.filtroDescricao = '';
-    this.filtroTipo = '';
+    this.filtroTipo = 'todos';
+    this.lancamentosFiltrados = this.lancamentos;
   }
 
-  editarLancamento(id: number): void {
-    // Por enquanto vamos apenas mostrar um alerta
-    alert(`Editar lançamento ${id} - Funcionalidade em desenvolvimento`);
+  editarLancamento(lancamento: Lancamento): void {
+    if (lancamento.idLancamento) {
+      this.router.navigate(['/lancamentos/editar', lancamento.idLancamento]);
+    } else {
+      console.error('❌ ID do lançamento é undefined para edição');
+      alert('Erro: ID do lançamento não encontrado para edição.');
+    }
   }
 
-  deletarLancamento(lancamento: LancamentoDTO): void {
-    if (confirm(`Tem certeza que deseja deletar o lançamento "${lancamento.descricao}"?`)) {
+  deletarLancamento(lancamento: Lancamento): void {
+    if (lancamento.idLancamento && confirm(`Tem certeza que deseja deletar o lançamento "${lancamento.descricao}"?`)) {
       this.lancamentoService.delete(lancamento.idLancamento).subscribe({
         next: () => {
           console.log('✅ Lançamento deletado');
-          this.carregarLancamentos(); // Recarregar a lista
+          this.carregarLancamentos();
         },
         error: (error) => {
-          alert('Erro ao deletar lançamento');
+          alert('Erro ao deletar lançamento. Verifique se não há dependências.');
           console.error('❌ Erro:', error);
         }
       });
+    } else if (!lancamento.idLancamento) {
+      console.error('❌ ID do lançamento é undefined');
+      alert('Erro: ID do lançamento não encontrado.');
     }
   }
 
-  // Métodos auxiliares para o template
   formatarValor(valor: number): string {
-    return this.lancamentoService.formatarValor(valor);
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
   }
 
-  getSituacaoClasse(situacao: number): string {
-    return this.lancamentoService.getSituacaoClasse(situacao);
-  }
-
-  getSituacaoTexto(situacao: number): string {
-    return this.lancamentoService.getSituacaoTexto(situacao);
-  }
-
-  getTipoLancamentoIcone(tipo: number): string {
-    return this.lancamentoService.getTipoLancamentoIcone(tipo);
-  }
-
-  getTipoLancamentoClasse(tipo: number): string {
-    return this.lancamentoService.getTipoLancamentoClasse(tipo);
+  formatarData(data: string): string {
+    if (!data) return '';
+    
+    const partes = data.split('-');
+    if (partes.length === 3) {
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+    return data;
   }
 
   getTipoLancamentoTexto(tipo: number): string {
-    return this.lancamentoService.getTipoLancamentoTexto(tipo);
+    switch(tipo) {
+      case 0: return '📤 Débito';
+      case 1: return '📥 Crédito';
+      default: return 'Desconhecido';
+    }
+  }
+
+  // ✅ ADICIONAR método para ícone do tipo
+  getTipoLancamentoIcone(tipo: number): string {
+    switch(tipo) {
+      case 0: return '📤';
+      case 1: return '📥';
+      default: return '❓';
+    }
+  }
+
+  getSituacaoTexto(situacao: number): string {
+    switch(situacao) {
+      case 0: return '⏳ Pendente';
+      case 1: return '✅ Baixado';
+      case 2: return '❌ Atrasado';
+      default: return 'Desconhecida';
+    }
+  }
+
+  getSituacaoClasse(situacao: number): string {
+    switch(situacao) {
+      case 0: return 'text-warning';
+      case 1: return 'text-success';
+      case 2: return 'text-danger';
+      default: return 'text-muted';
+    }
+  }
+
+  getTipoClasse(tipo: number): string {
+    switch(tipo) {
+      case 0: return 'text-danger';
+      case 1: return 'text-success';
+      default: return 'text-muted';
+    }
+  }
+
+  // ✅ ADICIONAR método para classe do tipo (se necessário no HTML)
+  getTipoLancamentoClasse(tipo: number): string {
+    return this.getTipoClasse(tipo);
+  }
+
+  trackByLancamentoId(index: number, lancamento: Lancamento): number {
+    return lancamento.idLancamento || index;
   }
 }

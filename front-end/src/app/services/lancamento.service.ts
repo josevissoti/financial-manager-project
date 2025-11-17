@@ -11,35 +11,41 @@ export interface Lancamento {
   parcela: number;
   dataLancamento: string;
   prazoVencimento: string;
-  dataBaixa?: string | null;
-  tipoLancamento: number; // 0=Débito, 1=Crédito
-  situacao: number; // 0=Pendente, 1=Baixado, 2=Atrasado
+  dataBaixa?: string;
+  tipoLancamento: number;
+  situacao: number;
   idPessoa: number;
   idCategoriaLancamento: number;
   idConta: number;
+  descricaoCategoriaLancamento?: string;
+  descricaoConta?: string;
+  nome?: string;
+  email?: string;
+  saldo?: number;
+  agencia?: string;
+  numero?: string;
 }
 
-// Interface para a resposta da API
 export interface LancamentoDTO {
-  idLancamento: number;
+  idLancamento?: number;
   descricao: string;
   valor: number;
   parcela: number;
   dataLancamento: string;
   prazoVencimento: string;
-  dataBaixa: string | null;
+  dataBaixa?: string;
   tipoLancamento: number;
   situacao: number;
   idPessoa: number;
-  nome: string;
-  email: string;
   idCategoriaLancamento: number;
-  descricaoCategoriaLancamento: string;
   idConta: number;
-  descricaoConta: string;
-  saldo: number;
-  agencia: string;
-  numero: string;
+  nome?: string;
+  email?: string;
+  descricaoCategoriaLancamento?: string;
+  descricaoConta?: string;
+  saldo?: number;
+  agencia?: string;
+  numero?: string;
 }
 
 // Interface para filtros
