@@ -26,24 +26,71 @@ public class LancamentoService {
     private ContaRepository contaRepository;
 
     public List<LancamentoDTO> findAll() {
-        return lancamentoRepository.findAll().stream()
+        if (UserServiceStatic.isAuthenticatedUserAdmin()) {
+            return lancamentoRepository.findAll().stream()
+                    .map(obj -> new LancamentoDTO(obj))
+                    .collect(Collectors.toList());
+        } else {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            return lancamentoRepository.findByPessoaId(usuarioId).stream()
+                    .map(obj -> new LancamentoDTO(obj))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public Lancamento findById(Long id) {
+        Optional<Lancamento> obj;
+
+        if (UserServiceStatic.isAuthenticatedUserAdmin()) {
+            obj = lancamentoRepository.findById(id);
+        } else {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            obj = lancamentoRepository.findByIdAndPessoaId(id, usuarioId);
+        }
+
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
+    }
+
+    public List<LancamentoDTO> findByUsuarioAutenticado() {
+        Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+        if (usuarioId == null) {
+            throw new ObjectNotFoundException("Usuário não autenticado");
+        }
+        return lancamentoRepository.findByPessoaId(usuarioId).stream()
                 .map(obj -> new LancamentoDTO(obj))
                 .collect(Collectors.toList());
     }
 
-    public Lancamento findById(Long id) {
-        Optional<Lancamento> obj = lancamentoRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
-    }
-
     public Lancamento create(LancamentoDTO objDto) {
         objDto.setIdLancamento(null);
+
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            objDto.setIdPessoa(usuarioId);
+        }
+
         Lancamento newObj = new Lancamento(objDto);
 
         Conta conta = contaRepository.findById(objDto.getIdConta())
                 .orElseThrow(() -> new ObjectNotFoundException("Conta não encontrada. ID: " + objDto.getIdConta()));
-        atualizarSaldoConta(conta, newObj);
 
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (!conta.getPessoa().getIdPessoa().equals(usuarioId)) {
+                throw new DataIntegrityViolationException("Usuário não tem acesso a esta conta");
+            }
+        }
+
+        atualizarSaldoConta(conta, newObj);
         contaRepository.save(conta);
         return lancamentoRepository.save(newObj);
     }
@@ -52,12 +99,25 @@ public class LancamentoService {
         objDto.setIdLancamento(id);
         Lancamento oldObj = findById(id);
 
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            objDto.setIdPessoa(usuarioId);
+        }
+
         Conta contaOld = oldObj.getConta();
         reverterSaldoConta(contaOld, oldObj);
 
         oldObj = new Lancamento(objDto);
         Conta contaNew = contaRepository.findById(objDto.getIdConta())
                 .orElseThrow(() -> new ObjectNotFoundException("Conta não encontrada. ID: " + objDto.getIdConta()));
+
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (!contaNew.getPessoa().getIdPessoa().equals(usuarioId)) {
+                throw new DataIntegrityViolationException("Usuário não tem acesso a esta conta");
+            }
+        }
+
         atualizarSaldoConta(contaNew, oldObj);
 
         contaRepository.save(contaOld);
@@ -96,5 +156,4 @@ public class LancamentoService {
             conta.setSaldo(conta.getSaldo().add(valor));
         }
     }
-
 }

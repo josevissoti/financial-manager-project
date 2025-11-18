@@ -19,18 +19,58 @@ public class CategoriaLancamentoService {
     private CategoriaLancamentoRepostory categoriaLancamentoRepostory;
 
     public List<CategoriaLancamentoDTO> findAll() {
-        return categoriaLancamentoRepostory.findAll().stream()
+        if (UserServiceStatic.isAuthenticatedUserAdmin()) {
+            return categoriaLancamentoRepostory.findAll().stream()
+                    .map(obj -> new CategoriaLancamentoDTO(obj))
+                    .collect(Collectors.toList());
+        } else {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            return categoriaLancamentoRepostory.findByPessoaId(usuarioId).stream()
+                    .map(obj -> new CategoriaLancamentoDTO(obj))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public CategoriaLancamento findById(Long id) {
+        Optional<CategoriaLancamento> obj;
+
+        if (UserServiceStatic.isAuthenticatedUserAdmin()) {
+            obj = categoriaLancamentoRepostory.findById(id);
+        } else {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            obj = categoriaLancamentoRepostory.findByIdAndPessoaId(id, usuarioId);
+        }
+
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
+    }
+
+    public List<CategoriaLancamentoDTO> findByUsuarioAutenticado() {
+        Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+        if (usuarioId == null) {
+            throw new ObjectNotFoundException("Usuário não autenticado");
+        }
+        return categoriaLancamentoRepostory.findByPessoaId(usuarioId).stream()
                 .map(obj -> new CategoriaLancamentoDTO(obj))
                 .collect(Collectors.toList());
     }
 
-    public CategoriaLancamento findById(Long id) {
-        Optional<CategoriaLancamento> obj = categoriaLancamentoRepostory.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado. ID: " + id));
-    }
-
     public CategoriaLancamento create(CategoriaLancamentoDTO objDto) {
         objDto.setIdCategoriaLancamento(null);
+
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            if (usuarioId == null) {
+                throw new ObjectNotFoundException("Usuário não autenticado");
+            }
+            objDto.setIdPessoa(usuarioId);
+        }
+
         CategoriaLancamento newObj = new CategoriaLancamento(objDto);
         return categoriaLancamentoRepostory.save(newObj);
     }
@@ -38,6 +78,12 @@ public class CategoriaLancamentoService {
     public CategoriaLancamento update(Long id, CategoriaLancamentoDTO objDto) {
         objDto.setIdCategoriaLancamento(id);
         CategoriaLancamento oldObj = findById(id);
+
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            Long usuarioId = UserServiceStatic.getAuthenticatedUserId();
+            objDto.setIdPessoa(usuarioId);
+        }
+
         oldObj = new CategoriaLancamento(objDto);
         return categoriaLancamentoRepostory.save(oldObj);
     }
@@ -49,5 +95,4 @@ public class CategoriaLancamentoService {
         }
         categoriaLancamentoRepostory.deleteById(id);
     }
-
 }

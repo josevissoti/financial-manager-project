@@ -15,7 +15,6 @@ public class UserSS implements UserDetails {
     public UserSS(Pessoa pessoa) {
         this.username = pessoa.getEmail();
         this.password = pessoa.getSenha();
-        // ✅ USA O NOVO MÉTODO DA ENTIDADE PESSOA
         this.authorities = pessoa.getAuthorities();
     }
 

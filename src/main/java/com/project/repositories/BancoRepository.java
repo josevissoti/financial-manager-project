@@ -11,5 +11,4 @@ public interface BancoRepository extends JpaRepository<Banco, Integer> {
 
     Optional<Banco> findByRazaoSocial(String razaosocial);
 
-
 }

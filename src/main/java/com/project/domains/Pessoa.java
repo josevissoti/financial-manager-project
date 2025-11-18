@@ -195,7 +195,6 @@ public abstract class Pessoa {
         this.lancamentos = lancamentos;
     }
 
-    // ✅ NOVO MÉTODO PARA SPRING SECURITY
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getFuncaoPessoa().stream()

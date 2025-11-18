@@ -23,7 +23,6 @@ public class AdminSS implements UserDetails {
                 .collect(Collectors.toSet());
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

@@ -35,6 +35,10 @@ public class BancoService {
     }
 
     public Banco create(BancoDTO objDto) {
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            throw new DataIntegrityViolationException("Apenas administradores podem criar bancos");
+        }
+
         objDto.setIdBanco(null);
         ValidaBanco(objDto);
         Banco newObj = new Banco(objDto);
@@ -42,6 +46,10 @@ public class BancoService {
     }
 
     public Banco update(Integer id, BancoDTO objDto) {
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            throw new DataIntegrityViolationException("Apenas administradores podem atualizar bancos");
+        }
+
         objDto.setIdBanco(id);
         Banco oldObj = findById(id);
         ValidaBanco(objDto);
@@ -50,6 +58,10 @@ public class BancoService {
     }
 
     public void delete(Integer id) {
+        if (!UserServiceStatic.isAuthenticatedUserAdmin()) {
+            throw new DataIntegrityViolationException("Apenas administradores podem deletar bancos");
+        }
+
         Banco obj = findById(id);
         if (obj.getContas().size() > 0) {
             throw new DataIntegrityViolationException("Banco não pode ser deletado pois possui vinculos cadastrados");
@@ -63,5 +75,4 @@ public class BancoService {
             throw new DataIntegrityViolationException("Razão Social já cadastrado");
         }
     }
-
 }
