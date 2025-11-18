@@ -69,7 +69,16 @@ export class UsuarioService {
    * Criar novo usuário
    */
   create(usuario: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(this.API_URL, usuario);
+    console.log('📝 Criando novo usuário:', usuario);
+    
+    // Remove máscaras antes de enviar
+    const usuarioParaEnviar = {
+      ...usuario,
+      cpf: usuario.cpf.replace(/\D/g, ''),
+      telefone: usuario.telefone.replace(/\D/g, '')
+    };
+    
+    return this.http.post<Usuario>(this.API_URL, usuarioParaEnviar);
   }
 
   /**

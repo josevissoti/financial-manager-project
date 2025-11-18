@@ -24,7 +24,7 @@
 
 .login-content {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   position: relative;
   z-index: 10;
 }
@@ -95,6 +95,38 @@
   margin: 0;
 }
 
+/* ===== TABS DE MODALIDADE ===== */
+.mode-tabs {
+  display: flex;
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-tab.active {
+  background: white;
+  color: #2563eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mode-tab:hover:not(.active) {
+  color: #374151;
+  background: rgba(255, 255, 255, 0.5);
+}
+
 /* ===== FORM STYLES ===== */
 .login-form {
   display: flex;
@@ -141,6 +173,13 @@
   color: #9ca3af;
 }
 
+/* ===== TEXT HELP ===== */
+.form-text {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
 /* ===== ERROR MESSAGE ===== */
 .error-message {
   display: flex;
@@ -157,6 +196,25 @@
 }
 
 .error-icon {
+  font-size: 1rem;
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(34, 197, 94, 0.05);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 8px;
+  color: #16a34a;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+.success-icon {
   font-size: 1rem;
 }
 
@@ -182,47 +240,6 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-}
-
-/* ===== DEMO SECTION ===== */
-.demo-section {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: rgba(5, 150, 105, 0.05);
-  border: 1px solid rgba(5, 150, 105, 0.2);
-  border-radius: 8px;
-}
-
-.demo-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.demo-icon {
-  font-size: 1rem;
-}
-
-.demo-title {
-  font-weight: 600;
-  color: #059669;
-  font-size: 0.875rem;
-}
-
-.demo-credentials {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.credential-item {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.credential-item strong {
-  color: #374151;
 }
 
 /* ===== FOOTER ===== */
@@ -270,6 +287,19 @@
     font-size: 2rem;
     padding: 10px;
   }
+  
+  .mode-tabs {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .mode-tab {
+    text-align: center;
+  }
+  
+  .login-form {
+    gap: 1rem;
+  }
 }
 
 /* ===== ANIMAÇÕES ===== */
@@ -279,6 +309,10 @@
 
 .brand-section {
   animation: fadeIn 0.8s ease-out;
+}
+
+.login-form {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes slideUp {
