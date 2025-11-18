@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,7 +60,9 @@ public class UsuarioDTO {
         this.email = usuario.getEmail();
         this.senha = usuario.getSenha();
         this.status = usuario.getStatus().getId();
-        this.funcaoPessoa.stream().map(FuncaoPessoa::toEnum).collect(Collectors.toSet());
+        this.funcaoPessoa = usuario.getFuncaoPessoa().stream()
+                .map(FuncaoPessoa::getId)
+                .collect(Collectors.toSet());
     }
 
     public Long getIdUsuario() {
@@ -137,11 +138,16 @@ public class UsuarioDTO {
     }
 
     public Set<FuncaoPessoa> getFuncaoPessoa() {
-        return funcaoPessoa == null ? Collections.emptySet() :
-                funcaoPessoa.stream().map(FuncaoPessoa::toEnum).collect(Collectors.toSet());
+        return funcaoPessoa.stream()
+                .map(FuncaoPessoa::toEnum)
+                .collect(Collectors.toSet());
     }
 
     public void addFuncaoPessoa(FuncaoPessoa funcaoPessoa) {
         this.funcaoPessoa.add(funcaoPessoa.getId());
+    }
+
+    public void setFuncaoPessoa(Set<Integer> funcaoPessoa) {
+        this.funcaoPessoa = funcaoPessoa;
     }
 }

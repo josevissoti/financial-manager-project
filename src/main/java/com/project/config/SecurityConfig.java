@@ -6,6 +6,7 @@ import com.project.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,7 +26,13 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] PUBLIC_URLS = {"/h2-console/**", "/auth/**", "/login"};
+    private static final String[] PUBLIC_URLS = {
+            "/h2-console/**",
+            "/auth/**",
+            "/login",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
 
     private final Environment env;
     private final JWTUtils jwtUtils;
@@ -48,7 +55,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/usuario").permitAll()
                         .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable());
 
@@ -63,8 +72,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*")); // ✅ CORRIGIDO: Permite TODOS os headers
-        configuration.setExposedHeaders(Arrays.asList("Authorization")); // ✅ Adiciona headers expostos
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -7,11 +7,12 @@ import com.project.domains.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 @Entity
 @Table(name = "pessoa")
@@ -69,7 +70,6 @@ public abstract class Pessoa {
     @JsonIgnore
     @OneToMany(mappedBy = "pessoa")
     private List<Lancamento> lancamentos = new ArrayList<>();
-
 
     public Pessoa() {
         addFuncaoPessoa(FuncaoPessoa.USUARIO);
@@ -193,6 +193,14 @@ public abstract class Pessoa {
 
     public void setLancamentos(List<Lancamento> lancamentos) {
         this.lancamentos = lancamentos;
+    }
+
+    // ✅ NOVO MÉTODO PARA SPRING SECURITY
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getFuncaoPessoa().stream()
+                .map(funcao -> new SimpleGrantedAuthority("ROLE_" + funcao.name()))
+                .collect(Collectors.toList());
     }
 
     @Override

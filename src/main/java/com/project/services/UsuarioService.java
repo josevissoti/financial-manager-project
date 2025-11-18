@@ -2,6 +2,7 @@ package com.project.services;
 
 import com.project.domains.Usuario;
 import com.project.domains.dtos.UsuarioDTO;
+import com.project.domains.enums.FuncaoPessoa;
 import com.project.repositories.UsuarioRepository;
 import com.project.services.exceptions.DataIntegrityViolationException;
 import com.project.services.exceptions.ObjectNotFoundException;
@@ -67,6 +68,13 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    // ✅ NOVO MÉTODO PARA PROMOVER USUÁRIO A ADMIN
+    public Usuario promoteToAdmin(Long id) {
+        Usuario usuario = findById(id);
+        usuario.addFuncaoPessoa(FuncaoPessoa.ADMIN);
+        return usuarioRepository.save(usuario);
+    }
+
     private void ValidaPorCPFeEmail(UsuarioDTO objDto) {
         Optional<Usuario> obj = usuarioRepository.findByCpf(objDto.getCpf());
         if (obj.isPresent() && obj.get().getIdPessoa() != objDto.getIdUsuario()) {
@@ -78,5 +86,4 @@ public class UsuarioService {
             throw new DataIntegrityViolationException("Email já cadastrado no sistema");
         }
     }
-
 }

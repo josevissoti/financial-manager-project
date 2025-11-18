@@ -14,11 +14,11 @@ import java.io.IOException;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTUtils JWTUtils;
+    private final JWTUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JWTAuthenticationFilter(JWTUtils JWTUtils, UserDetailsServiceImpl userDetailsService) {
-        this.JWTUtils = JWTUtils;
+    public JWTAuthenticationFilter(JWTUtils jwtUtils, UserDetailsServiceImpl userDetailsService) {
+        this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
     }
 
@@ -28,21 +28,20 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         String token = getTokenFromRequest(request);
 
-        // ✅ ADICIONE DEBUG AQUI
-        System.out.println("🔐 JWT Filter - URL: " + request.getRequestURI());
-        System.out.println("🔐 JWT Filter - Token recebido: " + (token != null ? token.substring(0, Math.min(20, token.length())) + "..." : "NULL"));
-        System.out.println("🔐 JWT Filter - Header Authorization: " + request.getHeader("Authorization"));
+        System.out.println("JWT Filter - URL: " + request.getRequestURI());
+        System.out.println("JWT Filter - Token recebido: " + (token != null ? token.substring(0, Math.min(20, token.length())) + "..." : "NULL"));
+        System.out.println("JWT Filter - Header Authorization: " + request.getHeader("Authorization"));
 
-        if (token != null && JWTUtils.isTokenValid(token)) {
-            String username = JWTUtils.getUsername(token);
-            System.out.println("🔐 JWT Filter - Usuário autenticado: " + username);
+        if (token != null && jwtUtils.isTokenValid(token)) {
+            String username = jwtUtils.getUsername(token);
+            System.out.println("JWT Filter - Usuário autenticado: " + username);
 
             var userDetails = userDetailsService.loadUserByUsername(username);
             var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(auth);
         } else {
-            System.out.println("🔐 JWT Filter - Token inválido ou ausente");
+            System.out.println("JWT Filter - Token inválido ou ausente");
         }
 
         filterChain.doFilter(request, response);

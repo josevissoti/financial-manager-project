@@ -2,25 +2,21 @@ package com.project.security;
 
 import com.project.domains.Pessoa;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class UserSS implements UserDetails {
 
     private String username;
     private String password;
-
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserSS(Pessoa usuario) {
-        this.username = usuario.getEmail();
-        this.password = usuario.getSenha();
-        this.authorities = usuario.getFuncaoPessoa().stream()
-                .map(x -> new SimpleGrantedAuthority(x.getFuncaoPessoa()))
-                .collect(Collectors.toSet());
+    public UserSS(Pessoa pessoa) {
+        this.username = pessoa.getEmail();
+        this.password = pessoa.getSenha();
+        // ✅ USA O NOVO MÉTODO DA ENTIDADE PESSOA
+        this.authorities = pessoa.getAuthorities();
     }
 
     @Override

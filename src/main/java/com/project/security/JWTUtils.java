@@ -21,10 +21,10 @@ public class JWTUtils {
 
     public String generateToken(String username) {
         Key key = Keys.hmacShaKeyFor(secret.getBytes());
-        return Jwts.builder() // ✅ REMOVIDO: "Bearer " +
+        return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, key)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -49,11 +49,14 @@ public class JWTUtils {
 
     private Claims getClaims(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(secret.getBytes())
+            Key key = Keys.hmacShaKeyFor(secret.getBytes());
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
+            System.out.println("Erro ao validar token: " + e.getMessage());
             return null;
         }
     }
