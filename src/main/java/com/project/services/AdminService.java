@@ -55,6 +55,13 @@ public class AdminService {
         objDto.setIdAdmin(id);
         Admin oldObj = findById(id);
         ValidaPorCPFeEmail(objDto);
+
+        if (objDto.getSenha() != null && !objDto.getSenha().isEmpty()) {
+            objDto.setSenha(encoder.encode(objDto.getSenha()));
+        } else {
+            objDto.setSenha(oldObj.getSenha());
+        }
+
         oldObj = new Admin(objDto);
         return adminRepository.save(oldObj);
     }

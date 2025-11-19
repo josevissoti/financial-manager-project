@@ -56,6 +56,13 @@ public class UsuarioService {
         objDto.setIdUsuario(id);
         Usuario oldObj = findById(id);
         ValidaPorCPFeEmail(objDto);
+
+        if (objDto.getSenha() != null && !objDto.getSenha().isEmpty()) {
+            objDto.setSenha(encoder.encode(objDto.getSenha()));
+        } else {
+            objDto.setSenha(oldObj.getSenha());
+        }
+
         oldObj = new Usuario(objDto);
         return usuarioRepository.save(oldObj);
     }
@@ -68,7 +75,6 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    // ✅ NOVO MÉTODO PARA PROMOVER USUÁRIO A ADMIN
     public Usuario promoteToAdmin(Long id) {
         Usuario usuario = findById(id);
         usuario.addFuncaoPessoa(FuncaoPessoa.ADMIN);
