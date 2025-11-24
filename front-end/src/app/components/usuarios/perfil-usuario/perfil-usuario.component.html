@@ -90,16 +90,16 @@
                   </div>
                   <div class="info-item">
                     <span class="info-label">CPF</span>
-                    <span class="info-value">{{ formatarCPF(usuario.cpf) || 'Não informado' }}</span>
+                    <span class="info-value">{{ formatarCPF(usuario.cpf) }}</span>
                   </div>
                   <div class="info-item">
                     <span class="info-label">Telefone</span>
-                    <span class="info-value">{{ formatarTelefone(usuario.telefone) || 'Não informado' }}</span>
+                    <span class="info-value">{{ formatarTelefone(usuario.telefone) }}</span>
                   </div>
                   <div class="info-item">
                     <span class="info-label">Data de Nascimento</span>
                     <span class="info-value">
-                      {{ formatarData(usuario.datanascimento) || 'Não informado' }}
+                      {{ formatarData(usuario.datanascimento) }}
                       <span *ngIf="usuario.datanascimento" class="age-badge">
                         {{ calcularIdade() }} anos
                       </span>
@@ -275,33 +275,6 @@
                   <span class="system-label">ID do Usuário</span>
                   <span class="system-value code">{{ usuario.idUsuario || 'N/A' }}</span>
                 </div>
-                <div class="system-item">
-                  <span class="system-label">Última Atualização</span>
-                  <span class="system-value">{{ formatarData(usuario.dataAtualizacao) || 'Nunca' }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card: Ações Rápidas -->
-          <div class="profile-card actions-card">
-            <div class="card-header">
-              <h3>🚀 Ações</h3>
-            </div>
-            <div class="card-body">
-              <div class="quick-actions">
-                <button class="btn-quick" (click)="exportarDados()">
-                  <span class="btn-icon">📤</span>
-                  Exportar Dados
-                </button>
-                <button class="btn-quick" (click)="baixarRelatorio()">
-                  <span class="btn-icon">📊</span>
-                  Relatório PDF
-                </button>
-                <button class="btn-quick" routerLink="/dashboard">
-                  <span class="btn-icon">📈</span>
-                  Voltar ao Dashboard
-                </button>
               </div>
             </div>
           </div>

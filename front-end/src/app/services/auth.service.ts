@@ -11,7 +11,7 @@ export class AuthService {
   private usuarioLogadoSubject = new BehaviorSubject<any>(null);
   public usuarioLogado$ = this.usuarioLogadoSubject.asObservable();
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     // Carregar dados do usuário do localStorage ao inicializar
     this.carregarUsuarioDoStorage();
   }
@@ -19,22 +19,22 @@ export class AuthService {
   login(credenciais: CredenciaisDTO): Observable<TokenDTO> {
     console.log('🔐 Tentando login na URL:', `${this.API_URL}/login`);
     console.log('📧 Credenciais:', credenciais);
-    
+
     return this.http.post<TokenDTO>(`${this.API_URL}/login`, credenciais)
       .pipe(
         tap(response => {
           console.log('✅ Login bem sucedido! Resposta:', response);
-          
+
           // ✅ Remove "Bearer " se o backend já incluir
           let token = response.token;
           if (token.startsWith('Bearer ')) {
             token = token.substring(7);
             console.log('🔑 Token limpo (removido Bearer)');
           }
-          
+
           localStorage.setItem('token', token);
           console.log('🔑 Token salvo no localStorage:', token.substring(0, 20) + '...');
-          
+
           // Decodificar token e salvar dados do usuário
           this.salvarDadosUsuarioDoToken(token);
         }),
@@ -66,19 +66,19 @@ export class AuthService {
       console.log('🔐 Usuário não autenticado: token não encontrado');
       return false;
     }
-    
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const exp = payload.exp * 1000; // JWT exp está em segundos
       const isValid = Date.now() < exp;
-      
+
       console.log('🔐 Verificação de autenticação:', {
         tokenExiste: !!token,
         expiracao: new Date(exp),
         agora: new Date(),
         valido: isValid
       });
-      
+
       return isValid;
     } catch (error) {
       console.error('❌ Erro ao verificar token:', error);
@@ -91,7 +91,7 @@ export class AuthService {
     if (usuarioStorage) {
       return JSON.parse(usuarioStorage);
     }
-    
+
     const token = this.getToken();
     if (token) {
       try {
@@ -127,7 +127,9 @@ export class AuthService {
 
   // Novo método para obter dados completos do usuário logado
   getUsuarioLogado(): any {
-    return this.usuarioLogadoSubject.value;
+    const usuario = localStorage.getItem('usuario');
+    console.log('🔐 Usuário do localStorage:', usuario);
+    return usuario ? JSON.parse(usuario) : null;
   }
 
   // Método para atualizar dados do usuário
@@ -140,15 +142,35 @@ export class AuthService {
   private salvarDadosUsuarioDoToken(token: string): void {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('🔍 Payload completo do token:', payload);
+
+      // EXTRAIR FUNÇÕES/ROLES DO TOKEN
+      let funcoes = [];
+
+      // Tenta diferentes possíveis nomes de campo para roles
+      if (payload.roles) {
+        funcoes = payload.roles;
+      } else if (payload.authorities) {
+        funcoes = payload.authorities;
+      } else if (payload.funcaoPessoa) {
+        funcoes = payload.funcaoPessoa;
+      } else if (payload.scope) {
+        funcoes = payload.scope;
+      }
+
+      console.log('🎯 Funções extraídas do token:', funcoes);
+
       const usuario = {
         email: payload.sub,
         nome: payload.name || payload.sub.split('@')[0],
+        funcaoPessoa: funcoes, // SALVAR AS FUNÇÕES
+        idUsuario: payload.id || payload.userId,
         // Adicione outros campos que podem estar no token
       };
-      
+
       localStorage.setItem('usuario', JSON.stringify(usuario));
       this.usuarioLogadoSubject.next(usuario);
-      console.log('👤 Dados do usuário salvos:', usuario);
+      console.log('👤 Dados COMPLETOS do usuário salvos:', usuario);
     } catch (error) {
       console.error('❌ Erro ao salvar dados do usuário:', error);
     }
@@ -158,6 +180,24 @@ export class AuthService {
     const usuarioStorage = localStorage.getItem('usuario');
     if (usuarioStorage) {
       this.usuarioLogadoSubject.next(JSON.parse(usuarioStorage));
+    }
+  }
+
+  debugTokenDetails(): void {
+    const token = this.getToken();
+    if (token) {
+      console.log('🔍 DETALHES COMPLETOS DO TOKEN:');
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('📋 Payload completo:', payload);
+        console.log('👤 Subject:', payload.sub);
+        console.log('🎯 Roles/Funções:', payload.roles || payload.authorities || payload.funcaoPessoa);
+        console.log('📊 Todas as chaves:', Object.keys(payload));
+      } catch (error) {
+        console.error('❌ Erro ao decodificar token:', error);
+      }
+    } else {
+      console.log('🔍 Nenhum token encontrado');
     }
   }
 }
