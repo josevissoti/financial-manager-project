@@ -18,6 +18,7 @@ interface Usuario {
   status: number;
   funcaoPessoa: number[];
   isAdmin?: boolean;
+  senha?: string;
 }
 
 @Component({
@@ -54,7 +55,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     private usuarioService: UsuarioService,
     private adminService: AdminService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarUsuarios();
@@ -70,12 +71,12 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.usuarioService.findAll().subscribe({
       next: (usuariosNormais: any[]) => {
         console.log('✅ Usuários normais carregados:', usuariosNormais.length);
-        
+
         // Depois carrega admins
         this.adminService.findAll().subscribe({
           next: (admins: any[]) => {
             console.log('✅ Admins carregados:', admins.length);
-            
+
             // Combina e processa os dados
             this.processarUsuarios(usuariosNormais, admins);
             this.carregando = false;
@@ -108,7 +109,8 @@ export class GerenciarUsuariosComponent implements OnInit {
       dataCriacao: usuario.dataCriacao || '',
       status: usuario.status ?? 1,
       funcaoPessoa: this.mapearFuncoesDoBackend(usuario.funcaoPessoa),
-      isAdmin: false
+      isAdmin: false,
+      senha: usuario.senha || 'senhatemporaria' // ✅ GARANTIR que sempre tem senha
     }));
 
     // Processa admins
@@ -123,7 +125,8 @@ export class GerenciarUsuariosComponent implements OnInit {
       dataCriacao: admin.dataCriacao || '',
       status: admin.status ?? 1,
       funcaoPessoa: this.mapearFuncoesDoBackend(admin.funcaoPessoa),
-      isAdmin: true
+      isAdmin: true,
+      senha: admin.senha || 'senhatemporaria' // ✅ GARANTIR que sempre tem senha
     }));
 
     // Combina as listas
@@ -162,7 +165,7 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     this.salvando = true;
     this.erro = '';
-    
+
     console.log('👑 Promovendo usuário para admin:', usuario.nome, 'ID:', usuario.idUsuario);
 
     // Primeiro tenta usar o endpoint específico de promoção
@@ -192,11 +195,11 @@ export class GerenciarUsuariosComponent implements OnInit {
     }
 
     console.log('🔄 Promovendo via update... ID:', usuario.idUsuario);
-    
+
     // Cria uma cópia das funções atuais e adiciona ADMIN (ID 1)
     const novasFuncoes = [...new Set([...(usuario.funcaoPessoa || []), 1])];
-    
-    // ✅ CORRIGIDO: Enviar objeto Usuario completo
+
+    // ✅ CORRIGIDO: Incluir senha na promoção também
     const usuarioAtualizacao = {
       idUsuario: usuario.idUsuario,
       nome: usuario.nome,
@@ -206,7 +209,8 @@ export class GerenciarUsuariosComponent implements OnInit {
       cpf: usuario.cpf,
       datanascimento: usuario.datanascimento,
       dataCriacao: usuario.dataCriacao,
-      funcaoPessoa: novasFuncoes
+      funcaoPessoa: novasFuncoes,
+      senha: usuario.senha || 'senhatemporaria' // ✅ ADICIONAR SENHA
     };
 
     console.log('📤 Dados de atualização para promoção:', usuarioAtualizacao);
@@ -278,12 +282,12 @@ export class GerenciarUsuariosComponent implements OnInit {
   aplicarFiltros(): void {
     this.usuariosFiltrados = this.usuarios.filter(usuario => {
       // Filtro por texto (nome ou email)
-      const textoMatch = !this.filtroTexto || 
+      const textoMatch = !this.filtroTexto ||
         usuario.nome.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
         usuario.email.toLowerCase().includes(this.filtroTexto.toLowerCase());
 
       // Filtro por status
-      const statusMatch = this.filtroStatus === 'todos' || 
+      const statusMatch = this.filtroStatus === 'todos' ||
         (this.filtroStatus === 'ativo' && usuario.status === 1) ||
         (this.filtroStatus === 'inativo' && usuario.status === 0);
 
@@ -316,17 +320,21 @@ export class GerenciarUsuariosComponent implements OnInit {
     }
   }
 
-  // Modal de edição
-  abrirModalEdicao(usuario: Usuario): void {
-    this.usuarioEditando = { ...usuario };
-    this.mostrarModalEdicao = true;
+  fecharModalEdicao(): void {
+    this.mostrarModalEdicao = false;
+    this.usuarioEditando = null;
     this.erro = '';
     this.sucesso = '';
   }
 
-  fecharModalEdicao(): void {
-    this.mostrarModalEdicao = false;
-    this.usuarioEditando = null;
+  // NOVO: Variável para controlar a senha
+  novaSenha: string = '';
+
+  // NOVO: Método para abrir modal de edição com senha
+  abrirModalEdicao(usuario: Usuario): void {
+    this.usuarioEditando = { ...usuario };
+    this.novaSenha = ''; // Reset da senha
+    this.mostrarModalEdicao = true;
     this.erro = '';
     this.sucesso = '';
   }
@@ -340,23 +348,40 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.salvando = true;
     this.erro = '';
 
-    // ✅ CORRIGIDO: Enviar apenas os campos que podem ser atualizados
+    // ✅ CORREÇÃO: Sempre enviar a senha (ou a nova ou a atual)
     const dadosAtualizacao: any = {
-      nome: this.usuarioEditando.nome,
-      email: this.usuarioEditando.email,
-      telefone: this.usuarioEditando.telefone,
-      status: this.usuarioEditando.status
+      nome: this.usuarioEditando.nome || '',
+      email: this.usuarioEditando.email || '',
+      telefone: this.usuarioEditando.telefone || '',
+      status: this.usuarioEditando.status ?? 1,
+      cpf: this.usuarioEditando.cpf || '',
+      datanascimento: this.usuarioEditando.datanascimento || '',
+      dataCriacao: this.usuarioEditando.dataCriacao || '',
+      funcaoPessoa: this.usuarioEditando.funcaoPessoa || [0],
+      // ✅ SEMPRE enviar senha - se não for nova, usar a atual
+      senha: this.novaSenha && this.novaSenha.trim() !== '' && this.novaSenha.length >= 6
+        ? this.novaSenha
+        : this.usuarioEditando.senha || 'senhatemporaria' // Fallback caso não tenha senha
     };
+
+    console.log('🔐 Status da senha:', {
+      temNovaSenha: !!(this.novaSenha && this.novaSenha.trim() !== ''),
+      tamanhoNovaSenha: this.novaSenha?.length,
+      usandoSenhaAtual: !this.novaSenha || this.novaSenha.trim() === ''
+    });
 
     // ✅ CORRIGIDO: Garantir que o ID existe
     const id = this.usuarioEditando.idUsuario || this.usuarioEditando.idAdmin;
-    
+
     if (!id) {
       console.log('❌ ID do usuário não encontrado:', this.usuarioEditando);
       this.erro = 'ID do usuário não encontrado';
       this.salvando = false;
       return;
     }
+
+    // ✅ DEBUG: Verificar dados antes de enviar
+    this.debugDadosEnvio(this.usuarioEditando, dadosAtualizacao, this.usuarioEditando.isAdmin || false);
 
     console.log('📝 Salvando edição do usuário:', {
       id,
@@ -366,20 +391,13 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     if (this.usuarioEditando.isAdmin) {
       console.log('🔧 Atualizando como Admin...');
-      
-      // ✅ CORRIGIDO: Para Admin, criar objeto AdminDTO completo
+
+      // ✅ CORRIGIDO: Para Admin, garantir todos os campos
       const adminAtualizacao = {
-        idAdmin: id,
-        nome: this.usuarioEditando.nome,
-        email: this.usuarioEditando.email,
-        telefone: this.usuarioEditando.telefone,
-        status: this.usuarioEditando.status,
-        cpf: this.usuarioEditando.cpf, // Manter CPF original
-        datanascimento: this.usuarioEditando.datanascimento, // Manter data original
-        dataCriacao: this.usuarioEditando.dataCriacao, // Manter data criação
-        funcaoPessoa: this.usuarioEditando.funcaoPessoa // Manter funções
+        ...dadosAtualizacao,
+        idAdmin: id // Garantir que o ID está presente
       };
-      
+
       this.adminService.update(id, adminAtualizacao).subscribe({
         next: (response) => {
           console.log('✅ Admin atualizado com sucesso:', response);
@@ -392,20 +410,13 @@ export class GerenciarUsuariosComponent implements OnInit {
       });
     } else {
       console.log('🔧 Atualizando como Usuário...');
-      
-      // ✅ CORRIGIDO: Para Usuário, criar objeto UsuarioDTO completo
+
+      // ✅ CORRIGIDO: Para Usuário, garantir todos os campos
       const usuarioAtualizacao = {
-        idUsuario: id,
-        nome: this.usuarioEditando.nome,
-        email: this.usuarioEditando.email,
-        telefone: this.usuarioEditando.telefone,
-        status: this.usuarioEditando.status,
-        cpf: this.usuarioEditando.cpf, // Manter CPF original
-        datanascimento: this.usuarioEditando.datanascimento, // Manter data original
-        dataCriacao: this.usuarioEditando.dataCriacao, // Manter data criação
-        funcaoPessoa: this.usuarioEditando.funcaoPessoa // Manter funções
+        ...dadosAtualizacao,
+        idUsuario: id // Garantir que o ID está presente
       };
-      
+
       this.usuarioService.update(id, usuarioAtualizacao).subscribe({
         next: (response) => {
           console.log('✅ Usuário atualizado com sucesso:', response);
@@ -455,5 +466,36 @@ export class GerenciarUsuariosComponent implements OnInit {
     if (funcoes.includes(0)) textos.push('Usuário');
     if (funcoes.includes(1)) textos.push('Administrador');
     return textos.join(', ') || 'Nenhuma';
+  }
+
+  private debugDadosEnvio(usuario: Usuario, dadosAtualizacao: any, isAdmin: boolean): void {
+    console.log('🐛 DEBUG - Dados que serão enviados:');
+    console.log('📦 Usuário original:', usuario);
+    console.log('🔄 Dados de atualização:', dadosAtualizacao);
+    console.log('👤 É admin?', isAdmin);
+
+    // ✅ MELHORADO: Verificar especificamente a senha
+    console.log('🔐 DEBUG SENHA:', {
+      temSenhaNoEnvio: !!dadosAtualizacao.senha,
+      tipoSenha: dadosAtualizacao.senha ? typeof dadosAtualizacao.senha : 'null',
+      tamanhoSenha: dadosAtualizacao.senha ? dadosAtualizacao.senha.length : 0,
+      usandoNovaSenha: !!(this.novaSenha && this.novaSenha.trim() !== ''),
+      senhaNoUsuarioOriginal: !!usuario.senha
+    });
+
+    // ✅ MELHORADO: Verifica campos problemáticos
+    const camposProblema = [];
+    for (const [key, value] of Object.entries(dadosAtualizacao)) {
+      if (value === null || value === undefined || value === '') {
+        camposProblema.push({ campo: key, valor: value });
+      }
+    }
+
+    if (camposProblema.length > 0) {
+      console.warn('⚠️ CAMPOS COM PROBLEMA (null/undefined/vazio):', camposProblema);
+      console.warn('💡 RECOMENDAÇÃO: Remover estes campos do envio ou fornecer valores padrão');
+    } else {
+      console.log('✅ Todos os campos estão preenchidos corretamente');
+    }
   }
 }

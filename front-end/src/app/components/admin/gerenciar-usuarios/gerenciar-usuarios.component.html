@@ -270,6 +270,18 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">Nova Senha</label>
+                    <input type="password" class="form-control" [(ngModel)]="novaSenha"
+                        placeholder="Deixe em branco para manter a senha atual"
+                        minlength="6">
+                    <div class="form-hint">Mínimo 6 caracteres</div>
+                    <!-- ✅ NOVO: Mensagem de erro para senha curta -->
+                    <div *ngIf="novaSenha && novaSenha.length < 6" class="form-error">
+                        A senha deve ter pelo menos 6 caracteres
+                    </div>
+                </div>
+
                 <div class="form-group full-width">
                     <label class="form-label">Informações do Sistema</label>
                     <div class="system-info-readonly">
@@ -294,7 +306,7 @@
             <button class="btn btn-secondary" (click)="fecharModalEdicao()" [disabled]="salvando">
                 Cancelar
             </button>
-            <button class="btn btn-primary" (click)="salvarEdicao()" [disabled]="salvando">
+            <button class="btn btn-primary" (click)="salvarEdicao()" [disabled]="salvando || (novaSenha && novaSenha.length < 6)">
                 <span *ngIf="salvando" class="spinner"></span>
                 {{ salvando ? 'Salvando...' : 'Salvar Alterações' }}
             </button>
