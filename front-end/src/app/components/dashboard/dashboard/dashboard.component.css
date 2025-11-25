@@ -664,3 +664,44 @@
     gap: 0.75rem;
   }
 }
+
+/* ===== ESTILOS PARA ADMIN ===== */
+.admin-card {
+  border-left: 4px solid #7c3aed;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-card::before {
+  content: '👑';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.admin-card .action-icon {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: white;
+}
+
+.action-button.admin {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: white;
+  border-color: #7c3aed;
+}
+
+.action-button.admin:hover {
+  background: linear-gradient(135deg, #6d28d9, #5b21b6);
+  border-color: #6d28d9;
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVIDADE ADICIONAL ===== */
+@media (max-width: 768px) {
+  .admin-card::before {
+    top: 0.25rem;
+    right: 0.25rem;
+  }
+}

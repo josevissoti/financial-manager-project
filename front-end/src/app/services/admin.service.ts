@@ -81,6 +81,17 @@ export class AdminService {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
+  // ✅ NOVO MÉTODO: Promover usuário para admin
+  promoteToAdmin(id: number): Observable<any> {
+    return this.http.put(`${this.API_URL}/users/promote/${id}`, {});
+  }
+
+  // ✅ MÉTODO ALTERNATIVO: Caso o endpoint acima não exista
+  promoteUserToAdmin(userId: number): Observable<any> {
+    // Primeiro tenta o endpoint específico
+    return this.http.put(`http://localhost:8080/admin/users/promote/${userId}`, {});
+  }
+
   getStatusTexto(status: number): string {
     return status === 1 ? 'Ativo' : 'Inativo';
   }

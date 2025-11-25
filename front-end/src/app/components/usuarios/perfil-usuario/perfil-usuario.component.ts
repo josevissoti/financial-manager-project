@@ -287,7 +287,7 @@ export class PerfilUsuarioComponent implements OnInit {
     return telefone;
   }
 
-  formatarData(data: string): string {
+  formatarData(data: string | undefined | null): string {
     if (!data) return 'Não informado';
     if (data.includes('/')) return data;
     const partes = data.split('-');

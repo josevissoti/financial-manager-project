@@ -136,6 +136,16 @@
             </div>
             <div class="action-arrow">→</div>
           </a>
+
+          <!-- ✅ NOVO: Botão Gerenciar Usuários (só para Admin) -->
+          <a *ngIf="isAdmin" class="action-card admin-card" routerLink="/admin/usuarios">
+            <div class="action-icon">👥</div>
+            <div class="action-content">
+              <h3>Gerenciar Usuários</h3>
+              <p>Administrar usuários do sistema</p>
+            </div>
+            <div class="action-arrow">→</div>
+          </a>
         </div>
       </div>
 
@@ -159,6 +169,12 @@
             <button class="action-button secondary" routerLink="/categorias/nova">
               <span class="button-icon">🏷️</span>
               Nova Categoria
+            </button>
+            
+            <!-- ✅ NOVO: Botão Gerenciar Usuários na área de ações rápidas (só para Admin) -->
+            <button *ngIf="isAdmin" class="action-button admin" routerLink="/admin/usuarios">
+              <span class="button-icon">👥</span>
+              Gerenciar Usuários
             </button>
           </div>
         </div>
