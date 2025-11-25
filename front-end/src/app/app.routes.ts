@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GerenciarUsuariosComponent } from './components/admin/gerenciar-usuarios/gerenciar-usuarios.component';
+import { GerenciarBancosComponent } from './components/admin/gerenciar-bancos/gerenciar-bancos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -93,6 +94,11 @@ export const routes: Routes = [
   {
     path: 'admin/usuarios',
     component: GerenciarUsuariosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin/bancos',
+    component: GerenciarBancosComponent,
     canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '/dashboard' }

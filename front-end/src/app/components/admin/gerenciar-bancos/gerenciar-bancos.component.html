@@ -1,0 +1,290 @@
+<div class="page-container">
+    <!-- Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-main">
+                <h1 class="page-title">
+                    🏛️ Gerenciar Bancos
+                </h1>
+                <nav class="breadcrumb">
+                    <a routerLink="/dashboard">Dashboard</a> /
+                    <span>Gerenciar Bancos</span>
+                </nav>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" routerLink="/dashboard">
+                    <span class="btn-icon">⬅️</span>
+                    Voltar
+                </button>
+                <button class="btn btn-primary" (click)="abrirModalCriacao()">
+                    <span class="btn-icon">➕</span>
+                    Novo Banco
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <!-- Loading State -->
+        <div *ngIf="carregando" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Carregando lista de bancos...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="erro && !carregando" class="alert alert-error">
+            <div class="alert-content">
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-text">
+                    <strong>Erro</strong>
+                    <p>{{ erro }}</p>
+                </div>
+            </div>
+            <button class="alert-close" (click)="erro = ''">×</button>
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="sucesso && !carregando" class="alert alert-success">
+            <div class="alert-content">
+                <span class="alert-icon">✅</span>
+                <div class="alert-text">
+                    <strong>Sucesso!</strong>
+                    <p>{{ sucesso }}</p>
+                </div>
+            </div>
+            <button class="alert-close" (click)="sucesso = ''">×</button>
+        </div>
+
+        <!-- Filtros -->
+        <div *ngIf="!carregando" class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">🔍 Buscar</label>
+                    <input type="text" class="filter-input" placeholder="Razão social..." [(ngModel)]="filtroTexto"
+                        (input)="aplicarFiltros()">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">📊 Status</label>
+                    <select class="filter-select" [(ngModel)]="filtroStatus" (change)="aplicarFiltros()">
+                        <option value="todos">Todos os status</option>
+                        <option value="ativo">Ativos</option>
+                        <option value="inativo">Inativos</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">📄 Itens por página</label>
+                    <select class="filter-select" [(ngModel)]="itensPorPagina" (change)="aplicarFiltros()">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div *ngIf="!carregando" class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏛️</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ bancos.length }}</div>
+                        <div class="stat-label">Total de Bancos</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ getTotalAtivos() }}</div>
+                        <div class="stat-label">Bancos Ativos</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏸️</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ getTotalInativos() }}</div>
+                        <div class="stat-label">Bancos Inativos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Bancos -->
+        <div *ngIf="!carregando" class="content-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <h3>📋 Lista de Bancos</h3>
+                    <span class="panel-badge">{{ totalItens }}</span>
+                </div>
+                <div class="panel-actions">
+                    <span class="results-info">
+                        Mostrando {{ bancosPaginados.length }} de {{ totalItens }} bancos
+                    </span>
+                </div>
+            </div>
+
+            <div class="panel-content">
+                <div *ngIf="bancosFiltrados.length > 0; else emptyState" class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Banco</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let banco of bancosPaginados" class="table-row">
+                                <td>
+                                    <div class="banco-info">
+                                        <div class="banco-avatar">{{ getIniciais(banco.razaoSocial) }}</div>
+                                        <div class="banco-details">
+                                            <div class="banco-name">{{ banco.razaoSocial }}</div>
+                                            <div class="banco-id">ID: {{ banco.idBanco }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="getStatusClasse(banco.status)">
+                                        {{ getStatusTexto(banco.status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action edit" (click)="abrirModalEdicao(banco)"
+                                            title="Editar">
+                                            <span class="btn-icon">✏️</span>
+                                        </button>
+                                        <button class="btn-action delete" (click)="confirmarExclusao(banco)"
+                                            [disabled]="salvando" title="Excluir">
+                                            <span class="btn-icon">🗑️</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Paginação -->
+                    <div *ngIf="totalPaginas > 1" class="pagination">
+                        <button class="pagination-btn" [disabled]="paginaAtual === 1"
+                            (click)="mudarPagina(paginaAtual - 1)">
+                            ‹ Anterior
+                        </button>
+
+                        <div class="pagination-pages">
+                            <span class="pagination-info">
+                                Página {{ paginaAtual }} de {{ totalPaginas }}
+                            </span>
+                        </div>
+
+                        <button class="pagination-btn" [disabled]="paginaAtual === totalPaginas"
+                            (click)="mudarPagina(paginaAtual + 1)">
+                            Próxima ›
+                        </button>
+                    </div>
+                </div>
+
+                <ng-template #emptyState>
+                    <div class="empty-state">
+                        <div class="empty-icon">🏛️</div>
+                        <h4>Nenhum banco encontrado</h4>
+                        <p>Não há bancos correspondentes aos filtros aplicados</p>
+                        <button class="btn btn-secondary"
+                            (click)="filtroTexto = ''; filtroStatus = 'todos'; aplicarFiltros()">
+                            🔄 Limpar Filtros
+                        </button>
+                        <button class="btn btn-primary" (click)="abrirModalCriacao()" style="margin-top: 1rem;">
+                            ➕ Criar Primeiro Banco
+                        </button>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Criação/Edição -->
+<div *ngIf="mostrarModal && bancoEditando" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <!-- ✅ CORRIGIDO: Usa método isEdicao() -->
+            <h3>{{ isEdicao() ? '✏️ Editar Banco' : '➕ Criar Novo Banco' }}</h3>
+            <button class="modal-close" (click)="fecharModal()">×</button>
+        </div>
+
+        <div class="modal-content">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label">Razão Social *</label>
+                    <input type="text" class="form-control" [(ngModel)]="bancoEditando.razaoSocial"
+                        placeholder="Nome completo do banco" maxlength="100">
+                    <div class="form-hint">Máximo 100 caracteres</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Status *</label>
+                    <select class="form-control" [(ngModel)]="bancoEditando.status">
+                        <option [value]="1">Ativo</option>
+                        <option [value]="0">Inativo</option>
+                    </select>
+                </div>
+
+                <!-- ✅ CORRIGIDO: Usa método isEdicao() -->
+                <div *ngIf="isEdicao()" class="form-group full-width">
+                    <label class="form-label">Informações do Sistema</label>
+                    <div class="system-info-readonly">
+                        <div class="info-item">
+                            <span class="info-label">ID:</span>
+                            <!-- ✅ CORRIGIDO: Usa método getIdBanco() -->
+                            <span class="info-value">{{ getIdBanco() }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="fecharModal()" [disabled]="salvando">
+                Cancelar
+            </button>
+            <!-- ✅ CORRIGIDO: Usa método isEdicao() -->
+            <button class="btn btn-primary" (click)="salvarBanco()" [disabled]="salvando || !bancoEditando.razaoSocial">
+                <span *ngIf="salvando" class="spinner"></span>
+                {{ salvando ? 'Salvando...' : (isEdicao() ? 'Salvar Alterações' : 'Criar Banco') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div *ngIf="mostrarModalConfirmacao && bancoParaExcluir" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>🗑️ Excluir Banco</h3>
+            <button class="modal-close" (click)="fecharModalConfirmacao()">×</button>
+        </div>
+
+        <div class="modal-content">
+            <div class="confirmation-content">
+                <div class="confirmation-icon">⚠️</div>
+                <h4>Confirmar exclusão</h4>
+                <p>Tem certeza que deseja excluir o banco <strong>"{{ bancoParaExcluir.razaoSocial }}"</strong>?</p>
+                <p class="confirmation-warning">Esta ação não pode ser desfeita.</p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="fecharModalConfirmacao()" [disabled]="salvando">
+                Cancelar
+            </button>
+            <button class="btn btn-danger" (click)="excluirBanco()" [disabled]="salvando">
+                <span *ngIf="salvando" class="spinner"></span>
+                {{ salvando ? 'Excluindo...' : 'Sim, Excluir' }}
+            </button>
+        </div>
+    </div>
+</div>
