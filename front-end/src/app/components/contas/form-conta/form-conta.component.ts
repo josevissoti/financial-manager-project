@@ -65,7 +65,7 @@ export class FormContaComponent implements OnInit {
         this.bancos = bancos;
         console.log('✅ Bancos carregados:', bancos);
         
-        if (!this.isEditando && bancos.length > 0) {
+        if (!this.isEditando && bancos.length > 0 && this.conta.tipoConta !== 2) {
           this.conta.idBanco = bancos[0].idBanco;
         }
         
@@ -85,6 +85,13 @@ export class FormContaComponent implements OnInit {
     this.contaService.findById(id).subscribe({
       next: (conta) => {
         this.conta = conta;
+        // Formata os valores ao carregar para edição
+        if (conta.agencia) {
+          this.conta.agencia = this.formatarAgenciaParaExibicao(conta.agencia);
+        }
+        if (conta.numero) {
+          this.conta.numero = this.formatarNumeroParaExibicao(conta.numero);
+        }
         this.carregando = false;
         console.log('✅ Conta carregada para edição:', conta);
       },
@@ -96,27 +103,112 @@ export class FormContaComponent implements OnInit {
     });
   }
 
+  onTipoContaChange(): void {
+    // Para cartão de crédito, limpa banco, agência e número se necessário
+    if (this.conta.tipoConta === 2) {
+      this.conta.idBanco = 0;
+      this.conta.agencia = '';
+      this.conta.numero = '';
+    } else if (this.conta.tipoConta !== 2 && this.bancos.length > 0 && !this.conta.idBanco) {
+      // Para outros tipos, seleciona o primeiro banco se não houver seleção
+      this.conta.idBanco = this.bancos[0].idBanco;
+    }
+  }
+
+  // ✅ CORRIGIDO: Máscara para agência (4 dígitos)
+  formatarAgencia(): void {
+    if (!this.conta.agencia) return;
+    
+    // Remove tudo que não é número
+    const numeros = this.conta.agencia.replace(/\D/g, '');
+    
+    // Limita a 4 dígitos
+    this.conta.agencia = numeros.slice(0, 4);
+  }
+
+  // ✅ CORRIGIDO: Máscara para número da conta (6 dígitos: 5 + 1)
+  formatarNumeroConta(): void {
+    if (!this.conta.numero) return;
+    
+    // Remove tudo que não é número
+    const numeros = this.conta.numero.replace(/\D/g, '');
+    
+    // Para cartão de crédito: formata como XXXX XXXX XXXX XXXX (16 dígitos)
+    if (this.conta.tipoConta === 2) {
+      if (numeros.length <= 4) {
+        this.conta.numero = numeros;
+      } else if (numeros.length <= 8) {
+        this.conta.numero = `${numeros.slice(0, 4)} ${numeros.slice(4)}`;
+      } else if (numeros.length <= 12) {
+        this.conta.numero = `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8)}`;
+      } else {
+        this.conta.numero = `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
+      }
+    } 
+    // Para contas bancárias: formata como XXXXX-X (6 dígitos no total)
+    else {
+      if (numeros.length <= 5) {
+        this.conta.numero = numeros;
+      } else if (numeros.length <= 6) {
+        this.conta.numero = `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
+      } else {
+        this.conta.numero = `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
+      }
+    }
+  }
+
   onSubmit(): void {
     this.enviando = true;
     this.erro = '';
 
-    // Validações
-    if (!this.conta.descricao || !this.conta.agencia || !this.conta.numero) {
-      this.erro = 'Por favor, preencha todos os campos obrigatórios.';
+    // Validações específicas por tipo de conta
+    if (!this.conta.descricao) {
+      this.erro = 'Por favor, preencha a descrição da conta.';
       this.enviando = false;
       return;
     }
 
-    if (this.conta.idBanco === 0) {
-      this.erro = 'Por favor, selecione um banco.';
-      this.enviando = false;
-      return;
+    // Para tipos que não são cartão de crédito, valida banco, agência e número
+    if (this.conta.tipoConta !== 2) {
+      if (!this.conta.idBanco || this.conta.idBanco === 0) {
+        this.erro = 'Por favor, selecione um banco.';
+        this.enviando = false;
+        return;
+      }
+      
+      // Valida agência (exatamente 4 dígitos)
+      const agenciaNumeros = this.conta.agencia.replace(/\D/g, '');
+      if (!agenciaNumeros || agenciaNumeros.length !== 4) {
+        this.erro = 'A agência deve ter exatamente 4 dígitos.';
+        this.enviando = false;
+        return;
+      }
+      
+      // Valida número da conta (5 dígitos + 1 dígito verificador)
+      const numeroNumeros = this.conta.numero.replace(/\D/g, '');
+      if (!numeroNumeros || numeroNumeros.length !== 6) {
+        this.erro = 'O número da conta deve ter exatamente 6 dígitos (5 + dígito verificador).';
+        this.enviando = false;
+        return;
+      }
     }
 
-    console.log('📤 Enviando conta:', this.conta);
+    // Para cartão de crédito, ajusta o saldo (negativo = dívida)
+    if (this.conta.tipoConta === 2 && this.conta.saldo > 0) {
+      this.conta.saldo = -this.conta.saldo;
+    }
+
+    // Remove formatação antes de enviar
+    const contaParaEnviar = {
+      ...this.conta,
+      agencia: this.conta.agencia.replace(/\D/g, ''),
+      numero: this.conta.numero.replace(/\D/g, '')
+    };
+
+    console.log('📤 Enviando conta:', contaParaEnviar);
 
     if (this.isEditando && this.conta.idConta) {
-      this.contaService.update(this.conta.idConta, this.conta).subscribe({
+      this.contaService.update(this.conta.idConta, contaParaEnviar).subscribe({
         next: (response) => {
           console.log('✅ Conta atualizada:', response);
           this.enviando = false;
@@ -130,7 +222,7 @@ export class FormContaComponent implements OnInit {
         }
       });
     } else {
-      this.contaService.create(this.conta).subscribe({
+      this.contaService.create(contaParaEnviar).subscribe({
         next: (response) => {
           console.log('✅ Conta criada:', response);
           this.enviando = false;
@@ -156,7 +248,10 @@ export class FormContaComponent implements OnInit {
 
   getTipoContaTexto(tipo: number): string {
     const tipoEncontrado = this.tiposConta.find(t => t.valor === tipo);
-    return tipoEncontrado ? tipoEncontrado.texto.replace(/[^\w\s]/g, '') : 'Desconhecido';
+    if (tipoEncontrado) {
+      return tipoEncontrado.texto.replace(/[^\w\s]/g, '').trim();
+    }
+    return 'Desconhecido';
   }
 
   getBancoNome(idBanco: number): string {
@@ -168,63 +263,34 @@ export class FormContaComponent implements OnInit {
     return saldo >= 0 ? 'positive' : 'negative';
   }
 
-  getLimiteStatusClasse(): string {
-    if (this.conta.limite <= 0) return 'status-info';
+  // ✅ CORRIGIDO: Formata número para exibição
+  formatarNumeroParaExibicao(numero: string): string {
+    if (!numero) return '';
     
-    const utilizacao = (this.conta.saldo / this.conta.limite) * 100;
+    const numeros = numero.replace(/\D/g, '');
     
+    // Para cartão de crédito
     if (this.conta.tipoConta === 2) {
-      // Cartão de crédito - saldo negativo é uso do limite
-      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.9) {
-        return 'status-danger';
-      }
-      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.7) {
-        return 'status-warning';
-      }
-      return 'status-success';
+      if (numeros.length <= 4) return numeros;
+      if (numeros.length <= 8) return `${numeros.slice(0, 4)} ${numeros.slice(4)}`;
+      if (numeros.length <= 12) return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8)}`;
+      if (numeros.length <= 16) return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
+      return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
     }
     
-    // Outras contas - saldo positivo é bom
-    if (this.conta.saldo >= this.conta.limite * 0.7) {
-      return 'status-success';
-    }
-    if (this.conta.saldo >= this.conta.limite * 0.4) {
-      return 'status-info';
-    }
-    return 'status-secondary';
+    // Para contas bancárias: XXXXX-X
+    if (numeros.length <= 5) return numeros;
+    if (numeros.length <= 6) return `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
+    return `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
   }
 
-  getLimiteStatusTexto(): string {
-    if (this.conta.limite <= 0) return 'Sem limite definido';
-    
-    const utilizacao = (this.conta.saldo / this.conta.limite) * 100;
-    
-    if (this.conta.tipoConta === 2) {
-      // Cartão de crédito
-      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.9) {
-        return '⚠️ Limite quase esgotado';
-      }
-      if (this.conta.saldo < 0 && Math.abs(this.conta.saldo) >= this.conta.limite * 0.7) {
-        return '🔶 Uso elevado do limite';
-      }
-      if (this.conta.saldo < 0) {
-        return '✅ Limite sob controle';
-      }
-      return '🟢 Sem utilização do limite';
-    }
-    
-    // Outras contas
-    if (this.conta.saldo >= this.conta.limite * 0.7) {
-      return '🎉 Meta quase atingida!';
-    }
-    if (this.conta.saldo >= this.conta.limite * 0.4) {
-      return '📈 Boa evolução';
-    }
-    return '🌱 Começando bem';
+  // ✅ NOVO: Formata agência para exibição
+  formatarAgenciaParaExibicao(agencia: string): string {
+    if (!agencia) return '';
+    return agencia.replace(/\D/g, '').slice(0, 4);
   }
 
   private mostrarSucesso(mensagem: string): void {
-    // Poderia ser um toast notification
     console.log('✅ ' + mensagem);
   }
 }

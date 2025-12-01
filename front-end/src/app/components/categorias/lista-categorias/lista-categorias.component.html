@@ -50,25 +50,13 @@
                  placeholder="🔍 Buscar por nome da categoria..."
                  class="search-input">
         </div>
-        <div class="filter-options">
-          <select [(ngModel)]="filtroStatus" (change)="filtrarCategorias()" class="filter-select">
-            <option value="">Todos os status</option>
-            <option value="ativa">Ativas</option>
-            <option value="inativa">Inativas</option>
-          </select>
-          <select [(ngModel)]="filtroLancamentos" (change)="filtrarCategorias()" class="filter-select">
-            <option value="">Todos os tipos</option>
-            <option value="com-lancamentos">Com lançamentos</option>
-            <option value="sem-lancamentos">Sem lançamentos</option>
-          </select>
-        </div>
       </div>
 
       <div class="results-info">
         <span class="results-count">
           {{ categoriasFiltradas.length }} de {{ categorias.length }} categorias
         </span>
-        <button *ngIf="termoBusca || filtroStatus || filtroLancamentos" 
+        <button *ngIf="termoBusca" 
                 class="btn btn-text" 
                 (click)="limparFiltros()">
           🗑️ Limpar Filtros
@@ -83,11 +71,11 @@
       <div *ngIf="categoriasFiltradas.length === 0" class="empty-state">
         <div class="empty-icon">🏷️</div>
         <h3>Nenhuma categoria encontrada</h3>
-        <p *ngIf="termoBusca || filtroStatus || filtroLancamentos">
+        <p *ngIf="termoBusca">
           Tente ajustar os filtros ou 
           <button class="btn-link" (click)="limparFiltros()">limpar a busca</button>
         </p>
-        <p *ngIf="!termoBusca && !filtroStatus && !filtroLancamentos">
+        <p *ngIf="!termoBusca">
           Comece cadastrando sua primeira categoria
         </p>
         <button class="btn btn-primary" routerLink="/categorias/nova">
@@ -102,9 +90,6 @@
             <h3 class="category-name">{{ categoria.descricao }}</h3>
             <div class="category-meta">
               <span class="category-type">Categoria</span>
-              <span class="category-status" [ngClass]="getStatusClasse(categoria)">
-                {{ getStatusTexto(categoria) }}
-              </span>
             </div>
           </div>
           <div class="category-actions">
@@ -158,19 +143,7 @@
 
         <!-- Ações e Status -->
         <div class="category-footer">
-          <div class="footer-actions">
-            <button class="btn-quick" 
-                    (click)="verLancamentos(categoria)"
-                    [disabled]="getQuantidadeLancamentos(categoria) === 0"
-                    title="Ver lançamentos">
-              📊 Lançamentos
-            </button>
-            <button class="btn-quick" 
-                    (click)="editarCategoria(categoria.idCategoriaLancamento)"
-                    title="Editar categoria">
-              ⚙️ Editar
-            </button>
-          </div>
+          <!-- REMOVIDO: Botões Lançamentos e Editar do footer -->
           
           <!-- Mensagem de Proteção -->
           <div *ngIf="getQuantidadeLancamentos(categoria) > 0" class="protection-warning">
@@ -179,6 +152,8 @@
               Categoria protegida ({{ getQuantidadeLancamentos(categoria) }} lançamentos vinculados)
             </span>
           </div>
+          
+          <!-- REMOVIDO: Caixa de status -->
         </div>
       </div>
     </div>

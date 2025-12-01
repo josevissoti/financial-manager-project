@@ -54,15 +54,15 @@
           <select [(ngModel)]="filtroTipo" (change)="filtrarContas()" class="filter-select">
             <option value="">Todos os tipos</option>
             <option value="0">Conta Corrente</option>
-            <option value="1">Conta Poupança</option>
+            <option value="1">Conta Investimento</option>
             <option value="2">Cartão de Crédito</option>
-            <option value="3">Investimentos</option>
+            <option value="3">Alimentação</option>
+            <option value="4">Poupança</option>
           </select>
           <select [(ngModel)]="filtroStatus" (change)="filtrarContas()" class="filter-select">
             <option value="">Todos os status</option>
             <option value="positivo">Saldo Positivo</option>
             <option value="negativo">Saldo Negativo</option>
-            <option value="limite-alto">Limite Alto</option>
           </select>
         </div>
       </div>
@@ -126,11 +126,15 @@
             </div>
             <div class="info-item">
               <span class="info-label">Conta</span>
-              <span class="info-value">{{ conta.numero || '—' }}</span>
+              <span class="info-value">{{ formatarNumeroConta(conta.numero, conta.tipoConta) || '—' }}</span>
             </div>
             <div class="info-item full-width">
               <span class="info-label">Banco</span>
               <span class="info-value">{{ conta.razaoSocialBanco || 'Não informado' }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="info-label">Tipo da Conta</span>
+              <span class="info-value">{{ getTipoContaTexto(conta.tipoConta) }}</span>
             </div>
           </div>
 
@@ -144,10 +148,12 @@
             </div>
           </div>
 
-          <!-- Limite e Progresso -->
-          <div *ngIf="conta.limite > 0" class="limit-section">
+          <!-- Limite (apenas para cartão de crédito e contas com limite) -->
+          <div *ngIf="conta.limite > 0 && (conta.tipoConta === 2 || conta.saldo < 0)" class="limit-section">
             <div class="limit-header">
-              <span class="limit-label">{{ getLimiteTexto(conta) }}</span>
+              <span class="limit-label">
+                {{ conta.tipoConta === 2 ? 'Limite do Cartão' : 'Cheque Especial' }}
+              </span>
               <span class="limit-percentage">
                 {{ getLimiteUtilizado(conta) | number:'1.0-0' }}%
               </span>
@@ -165,23 +171,6 @@
                 Limite: {{ formatarValor(conta.limite) }}
               </span>
             </div>
-
-            <!-- Status do Limite -->
-            <div class="limit-status" [ngClass]="getLimiteStatusClasse(conta)">
-              {{ getLimiteStatusTexto(conta) }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="account-footer">
-          <div class="quick-actions">
-            <button class="btn-quick" (click)="verExtrato(conta)" title="Ver extrato">
-              📊 Extrato
-            </button>
-            <button class="btn-quick" (click)="fazerTransferencia(conta)" title="Fazer transferência">
-              💸 Transferir
-            </button>
           </div>
         </div>
       </div>

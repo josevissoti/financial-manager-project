@@ -68,51 +68,6 @@
                   </div>
                 </div>
 
-                <!-- Cor da Categoria (Opcional - Feature Futura) -->
-                <div class="form-group">
-                  <label class="form-label">
-                    🎨 Cor da Categoria <span class="optional">(Opcional)</span>
-                  </label>
-                  <div class="color-preview">
-                    <div class="color-options">
-                      <div *ngFor="let color of coresCategoria" 
-                           class="color-option"
-                           [class.selected]="corSelecionada === color.value"
-                           [style.background]="color.value"
-                           (click)="selecionarCor(color.value)"
-                           [title]="color.nome">
-                      </div>
-                    </div>
-                    <div class="selected-color" *ngIf="corSelecionada">
-                      Cor selecionada: 
-                      <span class="color-sample" [style.background]="corSelecionada"></span>
-                      <span class="color-name">{{ getNomeCor(corSelecionada) }}</span>
-                    </div>
-                  </div>
-                  <div class="form-hint">
-                    A cor ajuda a identificar visualmente a categoria nos relatórios
-                  </div>
-                </div>
-
-                <!-- Ícone da Categoria (Opcional - Feature Futura) -->
-                <div class="form-group">
-                  <label class="form-label">
-                    🔤 Ícone da Categoria <span class="optional">(Opcional)</span>
-                  </label>
-                  <div class="icon-options">
-                    <div *ngFor="let icon of iconesCategoria" 
-                         class="icon-option"
-                         [class.selected]="iconeSelecionado === icon.value"
-                         (click)="selecionarIcone(icon.value)"
-                         [title]="icon.nome">
-                         {{ icon.value }}
-                    </div>
-                  </div>
-                  <div class="form-hint">
-                    Escolha um ícone que represente bem esta categoria
-                  </div>
-                </div>
-
               </div>
             </div>
 
@@ -171,17 +126,12 @@
                   <!-- Preview da Categoria -->
                   <div class="category-preview">
                     <div class="preview-header">
-                      <span class="preview-icon" *ngIf="iconeSelecionado">{{ iconeSelecionado }}</span>
                       <span class="preview-name">{{ categoria.descricao || 'Nome da Categoria' }}</span>
                     </div>
                     <div class="preview-stats">
                       <div class="stat">
                         <span class="stat-label">Lançamentos</span>
                         <span class="stat-value">0</span>
-                      </div>
-                      <div class="stat">
-                        <span class="stat-label">Status</span>
-                        <span class="stat-value status-active">Ativa</span>
                       </div>
                     </div>
                   </div>
@@ -195,13 +145,6 @@
                     <div class="info-item">
                       <span class="info-label">Criador:</span>
                       <span class="info-value">Você</span>
-                    </div>
-                    <div class="info-item" *ngIf="corSelecionada">
-                      <span class="info-label">Cor:</span>
-                      <span class="info-value">
-                        <span class="color-badge" [style.background]="corSelecionada"></span>
-                        {{ getNomeCor(corSelecionada) }}
-                      </span>
                     </div>
                   </div>
 

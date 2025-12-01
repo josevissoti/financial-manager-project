@@ -70,6 +70,7 @@
                   </label>
                   <select id="tipoConta" name="tipoConta"
                           [(ngModel)]="conta.tipoConta" required
+                          (change)="onTipoContaChange()"
                           class="form-control select-with-icon">
                     <option [ngValue]="null" disabled>Selecione o tipo de conta</option>
                     <option *ngFor="let tipo of tiposConta" [value]="tipo.valor">
@@ -86,15 +87,20 @@
                       <span class="input-symbol">R$</span>
                       <input type="number" id="saldo" name="saldo"
                              [(ngModel)]="conta.saldo" 
-                             step="0.01" min="0"
+                             step="0.01"
                              class="form-control" 
                              placeholder="0,00">
                     </div>
-                    <div class="form-hint">Saldo atual da conta</div>
+                    <div class="form-hint">
+                      <span *ngIf="conta.tipoConta === 2">Para cartão de crédito, use valor negativo para dívida</span>
+                      <span *ngIf="conta.tipoConta !== 2">Saldo atual da conta</span>
+                    </div>
                   </div>
                   
                   <div class="form-group">
-                    <label for="limite" class="form-label">Limite Disponível</label>
+                    <label for="limite" class="form-label">
+                      {{ conta.tipoConta === 2 ? 'Limite do Cartão' : 'Limite Disponível' }}
+                    </label>
                     <div class="input-with-symbol">
                       <span class="input-symbol">R$</span>
                       <input type="number" id="limite" name="limite"
@@ -103,7 +109,12 @@
                              class="form-control" 
                              placeholder="0,00">
                     </div>
-                    <div class="form-hint">Limite para cartão de crédito ou cheque especial</div>
+                    <div class="form-hint">
+                      <span *ngIf="conta.tipoConta === 2">Limite total do cartão de crédito</span>
+                      <span *ngIf="conta.tipoConta === 0">Limite para cheque especial</span>
+                      <span *ngIf="conta.tipoConta === 1 || conta.tipoConta === 4">Meta de economia</span>
+                      <span *ngIf="conta.tipoConta === 3">Limite do cartão alimentação</span>
+                    </div>
                   </div>
                 </div>
 
@@ -125,17 +136,19 @@
                 <!-- Banco -->
                 <div class="form-group">
                   <label for="idBanco" class="form-label">
-                    Banco <span class="required">*</span>
+                    Banco <span class="required" *ngIf="conta.tipoConta !== 2">*</span>
                   </label>
                   <select id="idBanco" name="idBanco"
-                          [(ngModel)]="conta.idBanco" required
+                          [(ngModel)]="conta.idBanco"
+                          [required]="conta.tipoConta !== 2"
                           class="form-control"
                           [disabled]="carregandoDados"
-                          [class.invalid]="form.submitted && (!conta.idBanco || conta.idBanco === 0)">
+                          [class.invalid]="form.submitted && conta.tipoConta !== 2 && (!conta.idBanco || conta.idBanco === 0)">
                     <option [value]="0" disabled>Selecione um banco</option>
                     <option *ngFor="let banco of bancos" [value]="banco.idBanco">
                       🏛️ {{ banco.razaoSocial }}
                     </option>
+                    <option [value]="0" *ngIf="conta.tipoConta === 2">Não se aplica (Cartão de Crédito)</option>
                   </select>
                   <div *ngIf="carregandoDados" class="form-loading">
                     <small>🔄 Carregando bancos...</small>
@@ -146,26 +159,34 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="agencia" class="form-label">
-                      Agência <span class="required">*</span>
+                      Agência <span class="required" *ngIf="conta.tipoConta !== 2">*</span>
                     </label>
                     <input type="text" id="agencia" name="agencia"
-                           [(ngModel)]="conta.agencia" required
+                           [(ngModel)]="conta.agencia"
+                           [required]="conta.tipoConta !== 2"
                            class="form-control"
                            placeholder="0000"
-                           maxlength="10"
-                           [class.invalid]="form.submitted && !conta.agencia">
+                           maxlength="4"
+                           (input)="formatarAgencia()"
+                           [class.invalid]="form.submitted && conta.tipoConta !== 2 && !conta.agencia">
+                    <div class="form-hint" *ngIf="conta.tipoConta === 2">Opcional para cartão de crédito</div>
+                    <div class="form-hint" *ngIf="conta.tipoConta !== 2">4 dígitos</div>
                   </div>
                   
                   <div class="form-group">
                     <label for="numero" class="form-label">
-                      Número da Conta <span class="required">*</span>
+                      Número <span class="required" *ngIf="conta.tipoConta !== 2">*</span>
                     </label>
                     <input type="text" id="numero" name="numero"
-                           [(ngModel)]="conta.numero" required
+                           [(ngModel)]="conta.numero"
+                           [required]="conta.tipoConta !== 2"
                            class="form-control"
                            placeholder="00000-0"
-                           maxlength="20"
-                           [class.invalid]="form.submitted && !conta.numero">
+                           maxlength="7"
+                           (input)="formatarNumeroConta()"
+                           [class.invalid]="form.submitted && conta.tipoConta !== 2 && !conta.numero">
+                    <div class="form-hint" *ngIf="conta.tipoConta === 2">Número do cartão (opcional)</div>
+                    <div class="form-hint" *ngIf="conta.tipoConta !== 2">6 dígitos (5 + dígito verificador)</div>
                   </div>
                 </div>
 
@@ -192,39 +213,38 @@
                   <div class="preview-item">
                     <span class="preview-label">Banco:</span>
                     <span class="preview-value">
-                      {{ getBancoNome(conta.idBanco) || '—' }}
+                      {{ getBancoNome(conta.idBanco) || (conta.tipoConta === 2 ? '—' : 'Não selecionado') }}
                     </span>
                   </div>
 
                   <!-- Agência/Conta -->
                   <div class="preview-item">
-                    <span class="preview-label">Agência/Conta:</span>
+                    <span class="preview-label">{{ conta.tipoConta === 2 ? 'Cartão/Número:' : 'Agência/Conta:' }}</span>
                     <span class="preview-value">
-                      {{ conta.agencia || '—' }} / {{ conta.numero || '—' }}
+                      {{ conta.agencia || '—' }} 
+                      <span *ngIf="conta.tipoConta !== 2 && conta.agencia && conta.numero">/</span>
+                      {{ formatarNumeroParaExibicao(conta.numero) || '—' }}
                     </span>
                   </div>
 
                   <!-- Saldo -->
                   <div class="preview-item highlight">
-                    <span class="preview-label">Saldo:</span>
+                    <span class="preview-label">
+                      {{ conta.tipoConta === 2 ? 'Dívida Atual:' : 'Saldo:' }}
+                    </span>
                     <span class="preview-value" [ngClass]="getSaldoClasse(conta.saldo)">
                       {{ formatarValor(conta.saldo) }}
                     </span>
                   </div>
 
-                  <!-- Limite -->
-                  <div *ngIf="conta.limite > 0" class="preview-item">
-                    <span class="preview-label">Limite:</span>
+                  <!-- Limite (apenas para cartão de crédito e cheque especial) -->
+                  <div *ngIf="conta.limite > 0 && (conta.tipoConta === 2 || conta.tipoConta === 0)" class="preview-item">
+                    <span class="preview-label">
+                      {{ conta.tipoConta === 2 ? 'Limite Total:' : 'Cheque Especial:' }}
+                    </span>
                     <span class="preview-value text-info">
                       {{ formatarValor(conta.limite) }}
                     </span>
-                  </div>
-
-                  <!-- Status do Limite -->
-                  <div *ngIf="conta.limite > 0" class="preview-status">
-                    <div class="status-indicator" [ngClass]="getLimiteStatusClasse()">
-                      {{ getLimiteStatusTexto() }}
-                    </div>
                   </div>
 
                 </div>

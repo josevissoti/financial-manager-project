@@ -230,26 +230,6 @@
   color: #2563eb;
 }
 
-.preview-status {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-.status-indicator {
-  padding: 0.5rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-align: center;
-}
-
-.status-success { background: #d1fae5; color: #065f46; }
-.status-warning { background: #fef3c7; color: #92400e; }
-.status-danger { background: #fee2e2; color: #991b1b; }
-.status-info { background: #dbeafe; color: #1e40af; }
-.status-secondary { background: #f3f4f6; color: #374151; }
-
 /* Dicas e Textos de Ajuda */
 .form-hint {
   font-size: 0.75rem;

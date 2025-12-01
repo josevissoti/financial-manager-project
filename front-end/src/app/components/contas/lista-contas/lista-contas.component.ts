@@ -42,13 +42,12 @@ export class ListaContasComponent implements OnInit {
         this.carregando = false;
         console.log(`✅ ${contas.length} contas carregadas`);
 
-        // Debug: verificar cálculos
+        // Debug: verificar dados
         contas.forEach(conta => {
           console.log(`Conta: ${conta.descricao}`, {
-            saldo: conta.saldo,
-            limite: conta.limite,
-            limiteUtilizado: this.getLimiteUtilizado(conta),
-            tipoConta: this.getTipoContaTexto(conta.tipoConta)
+            tipoConta: conta.tipoConta,
+            tipoTexto: this.getTipoContaTexto(conta.tipoConta),
+            banco: conta.razaoSocialBanco
           });
         });
       },
@@ -65,12 +64,13 @@ export class ListaContasComponent implements OnInit {
       // Filtro por busca
       const buscaMatch = !this.termoBusca || 
         conta.descricao.toLowerCase().includes(this.termoBusca.toLowerCase()) ||
-        (conta.razaoSocialBanco && conta.razaoSocialBanco.toLowerCase().includes(this.termoBusca.toLowerCase()));
+        (conta.razaoSocialBanco && conta.razaoSocialBanco.toLowerCase().includes(this.termoBusca.toLowerCase())) ||
+        this.getTipoContaTexto(conta.tipoConta).toLowerCase().includes(this.termoBusca.toLowerCase());
 
       // Filtro por tipo
       const tipoMatch = !this.filtroTipo || conta.tipoConta.toString() === this.filtroTipo;
 
-      // Filtro por status
+      // Filtro por status (removido filtro de "limite-alto")
       let statusMatch = true;
       if (this.filtroStatus) {
         switch (this.filtroStatus) {
@@ -79,9 +79,6 @@ export class ListaContasComponent implements OnInit {
             break;
           case 'negativo':
             statusMatch = conta.saldo < 0;
-            break;
-          case 'limite-alto':
-            statusMatch = this.getLimiteUtilizado(conta) >= 70;
             break;
         }
       }
@@ -118,171 +115,123 @@ export class ListaContasComponent implements OnInit {
     }
   }
 
-  verExtrato(conta: Conta): void {
-    if (conta.idConta) {
-      this.router.navigate(['/lancamentos'], { 
-        queryParams: { conta: conta.idConta } 
-      });
-    }
-  }
-
-  fazerTransferencia(conta: Conta): void {
-    // Implementar lógica de transferência
-    console.log('Iniciar transferência da conta:', conta);
-    alert(`Funcionalidade de transferência para ${conta.descricao} em desenvolvimento`);
-  }
-
   formatarValor(valor: number): string {
     return this.contaService.formatarValor(valor);
   }
 
+  // ✅ CORRIGIDO: Bug do tipo "desconhecido"
   getTipoContaTexto(tipo: number): string {
-    return this.contaService.getTipoContaTexto(tipo);
+    const tipos = {
+      0: 'Conta Corrente',
+      1: 'Conta Investimento',
+      2: 'Cartão de Crédito',
+      3: 'Alimentação',
+      4: 'Poupança'
+    };
+    return tipos[tipo as keyof typeof tipos] || 'Desconhecido';
   }
+
+  // ✅ NOVA FUNÇÃO: Formata número da conta com máscara
+  // ✅ ATUALIZADA: Formata número da conta com máscara correta
+// ✅ CORRIGIDA: Função para formatar número da conta com máscara
+// ✅ CORRIGIDA: Função para formatar número da conta
+formatarNumeroConta(numero: string, tipoConta: number): string {
+  if (!numero) return '';
+  
+  // Remove tudo que não é número
+  const numeros = numero.replace(/\D/g, '');
+  
+  // Para cartão de crédito (tipo 2): formata como XXXX XXXX XXXX XXXX
+  if (tipoConta === 2) {
+    if (numeros.length === 0) return '';
+    if (numeros.length <= 4) return numeros;
+    if (numeros.length <= 8) return `${numeros.slice(0, 4)} ${numeros.slice(4)}`;
+    if (numeros.length <= 12) return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8)}`;
+    if (numeros.length <= 16) return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
+    return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
+  }
+  
+  // Para outros tipos de conta: formata como XXXXX-X (5 dígitos + 1 dígito verificador)
+  if (numeros.length === 0) return '';
+  if (numeros.length <= 5) {
+    return numeros;
+  }
+  return `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
+}
 
   getSaldoClasse(saldo: number): string {
     return saldo >= 0 ? 'positive' : 'negative';
   }
 
-  /**
-   * ✅ CORRIGIDO: Cálculo do limite utilizado
-   * Para cartão de crédito e cheque especial: mostra quanto do limite já foi utilizado
-   * Para outros tipos: mostra disponibilidade baseada no saldo
-   */
+  // ✅ ATUALIZADO: Cálculo do limite utilizado apenas para cartão e cheque especial
   getLimiteUtilizado(conta: Conta): number {
     if (conta.limite <= 0) return 0;
 
     const tipo = conta.tipoConta;
 
-    // Cartão de Crédito (ID 2) - Limite é o total disponível
+    // Cartão de Crédito (ID 2)
     if (tipo === 2) {
-      // Para cartão: limite utilizado = (limite - saldo disponível) / limite
-      // Saldo negativo indica quanto já foi gasto
       const utilizado = Math.max(-conta.saldo, 0);
       return Math.min((utilizado / conta.limite) * 100, 100);
     }
 
-    // Cheque Especial (Conta Corrente com limite) - ID 0
-    // Para conta corrente: limite utilizado quando saldo é negativo
+    // Cheque Especial (Conta Corrente com saldo negativo)
     if (tipo === 0 && conta.saldo < 0) {
       const utilizado = Math.abs(conta.saldo);
       return Math.min((utilizado / conta.limite) * 100, 100);
     }
 
-    // Para outros tipos (poupança, investimento): mostra disponibilidade baseada no saldo
-    // Quanto do limite já foi "preenchido" com saldo positivo
-    if (conta.saldo > 0) {
-      return Math.min((conta.saldo / conta.limite) * 100, 100);
-    }
-
     return 0;
   }
 
-  /**
-   * ✅ MELHORADO: Classes para a barra de progresso
-   */
+  // ✅ ATUALIZADO: Classes para a barra de progresso
   getLimiteClasse(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 
-    // Cartão de crédito e cheque especial: alto uso é perigoso
     if (conta.tipoConta === 2 || (conta.tipoConta === 0 && conta.saldo < 0)) {
       if (utilizacao >= 90) return 'danger';
       if (utilizacao >= 70) return 'warning';
+      if (utilizacao >= 30) return 'info';
       return 'success';
     }
 
-    // Para outros tipos: alto "preenchimento" é bom (tem bastante dinheiro)
-    if (utilizacao >= 70) return 'success';
-    if (utilizacao >= 40) return 'info';
     return 'secondary';
   }
 
-  /**
-   * ✅ NOVO: Texto descritivo para o limite
-   */
+  // ✅ ATUALIZADO: Texto descritivo para o limite
   getLimiteTexto(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 
     if (conta.tipoConta === 2) {
-      // Cartão de crédito
       if (utilizacao === 0) return 'Limite Disponível';
       if (utilizacao >= 90) return 'Limite Quase Esgotado';
       if (utilizacao >= 70) return 'Limite Alto Utilizado';
-      return 'Limite Parcialmente Utilizado';
+      return 'Limite Utilizado';
     }
 
     if (conta.tipoConta === 0 && conta.saldo < 0) {
-      // Cheque especial
       if (utilizacao >= 90) return 'Cheque Especial Quase Esgotado';
       if (utilizacao >= 70) return 'Cheque Especial Alto Utilizado';
       return 'Cheque Especial Utilizado';
     }
 
-    // Outros tipos
-    if (utilizacao >= 70) return 'Meta Quase Atingida';
-    if (utilizacao >= 40) return 'Boa Economia';
-    return 'Começando a Economizar';
+    return 'Limite';
   }
 
-  /**
-   * ✅ NOVO: Detalhe específico do limite
-   */
+  // ✅ ATUALIZADO: Detalhe específico do limite
   getLimiteDetalhe(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 
     if (conta.tipoConta === 2) {
-      // Cartão de crédito
       const utilizado = Math.max(-conta.saldo, 0);
-      const disponivel = Math.max(conta.limite - utilizado, 0);
       return `Utilizado: ${this.formatarValor(utilizado)}`;
     }
 
     if (conta.tipoConta === 0 && conta.saldo < 0) {
-      // Cheque especial
       const utilizado = Math.abs(conta.saldo);
-      const disponivel = Math.max(conta.limite - utilizado, 0);
       return `Utilizado: ${this.formatarValor(utilizado)}`;
     }
 
-    // Outros tipos
     return `Saldo: ${this.formatarValor(conta.saldo)}`;
-  }
-
-  /**
-   * ✅ NOVO: Status do limite com emoji
-   */
-  getLimiteStatusTexto(conta: Conta): string {
-    const utilizacao = this.getLimiteUtilizado(conta);
-
-    if (conta.tipoConta === 2 || (conta.tipoConta === 0 && conta.saldo < 0)) {
-      if (utilizacao >= 90) return '⚠️ Atenção: Limite quase esgotado';
-      if (utilizacao >= 70) return '🔶 Cuidado: Uso elevado do limite';
-      if (utilizacao >= 30) return '✅ Uso moderado do limite';
-      return '🟢 Limite sob controle';
-    }
-
-    // Para metas de economia
-    if (utilizacao >= 90) return '🎉 Meta quase atingida!';
-    if (utilizacao >= 70) return '🚀 Excelente progresso';
-    if (utilizacao >= 40) return '📈 Boa evolução';
-    return '🌱 Começando bem';
-  }
-
-  /**
-   * ✅ NOVO: Classe para o status do limite
-   */
-  getLimiteStatusClasse(conta: Conta): string {
-    const utilizacao = this.getLimiteUtilizado(conta);
-
-    if (conta.tipoConta === 2 || (conta.tipoConta === 0 && conta.saldo < 0)) {
-      if (utilizacao >= 90) return 'status-danger';
-      if (utilizacao >= 70) return 'status-warning';
-      if (utilizacao >= 30) return 'status-info';
-      return 'status-success';
-    }
-
-    if (utilizacao >= 70) return 'status-success';
-    if (utilizacao >= 40) return 'status-info';
-    return 'status-secondary';
   }
 }

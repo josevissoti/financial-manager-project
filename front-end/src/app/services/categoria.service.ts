@@ -8,6 +8,7 @@ export interface Categoria {
   idPessoa: number;
   nome?: string;
   email?: string;
+  lancamentos?: any[];
 }
 
 @Injectable({

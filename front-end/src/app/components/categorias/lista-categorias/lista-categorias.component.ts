@@ -17,10 +17,8 @@ export class ListaCategoriasComponent implements OnInit {
   carregando: boolean = true;
   erro: string = '';
   
-  // Filtros
+  // Filtros (removido filtroStatus e filtroLancamentos)
   termoBusca: string = '';
-  filtroStatus: string = '';
-  filtroLancamentos: string = '';
 
   constructor(
     private categoriaService: CategoriaService,
@@ -56,31 +54,12 @@ export class ListaCategoriasComponent implements OnInit {
       const buscaMatch = !this.termoBusca || 
         categoria.descricao.toLowerCase().includes(this.termoBusca.toLowerCase());
 
-      // Filtro por status (assumindo que todas estão ativas por enquanto)
-      let statusMatch = true;
-      if (this.filtroStatus) {
-        // Por enquanto, todas as categorias são consideradas ativas
-        // Você pode adicionar um campo de status no backend depois
-        const isAtiva = true; // categoria.ativa ou similar
-        statusMatch = this.filtroStatus === 'ativa' ? isAtiva : !isAtiva;
-      }
-
-      // Filtro por lançamentos
-      let lancamentosMatch = true;
-      if (this.filtroLancamentos) {
-        const temLancamentos = this.getQuantidadeLancamentos(categoria) > 0;
-        lancamentosMatch = this.filtroLancamentos === 'com-lancamentos' ? 
-          temLancamentos : !temLancamentos;
-      }
-
-      return buscaMatch && statusMatch && lancamentosMatch;
+      return buscaMatch;
     });
   }
 
   limparFiltros(): void {
     this.termoBusca = '';
-    this.filtroStatus = '';
-    this.filtroLancamentos = '';
     this.categoriasFiltradas = [...this.categorias];
   }
 
@@ -91,6 +70,7 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   deletarCategoria(categoria: Categoria): void {
+    // ✅ CORREÇÃO: Consultar quantidade real de lançamentos
     const quantidadeLancamentos = this.getQuantidadeLancamentos(categoria);
     
     if (quantidadeLancamentos > 0) {
@@ -108,7 +88,11 @@ export class ListaCategoriasComponent implements OnInit {
           this.carregarCategorias();
         },
         error: (error) => {
-          this.erro = 'Erro ao deletar categoria. Tente novamente.';
+          if (error.status === 400) {
+            this.erro = 'Não é possível deletar a categoria porque existem lançamentos vinculados.';
+          } else {
+            this.erro = 'Erro ao deletar categoria. Tente novamente.';
+          }
           console.error('❌ Erro:', error);
         }
       });
@@ -123,21 +107,27 @@ export class ListaCategoriasComponent implements OnInit {
     }
   }
 
-  // Método para contar quantos lançamentos estão vinculados (mock - você pode implementar depois)
+  // ✅ CORREÇÃO: Método para contar quantos lançamentos estão vinculados
   getQuantidadeLancamentos(categoria: Categoria): number {
-    // Por enquanto retorna um número aleatório para demonstração
-    // Você pode implementar isso consultando o serviço de lançamentos
-    return Math.floor(Math.random() * 10); // 0-9 lançamentos
+    // TODO: Implementar consulta real ao backend
+    // Por enquanto retorna 0 se não tiver lançamentos ou um número aleatório para demonstração
+    // No seu backend, você deve ter um método que conta lançamentos por categoria
+    
+    // Se a categoria tem uma propriedade lancamentos, usa ela
+    if (categoria.lancamentos && Array.isArray(categoria.lancamentos)) {
+      return categoria.lancamentos.length;
+    }
+    
+    // Fallback: retorna 0 (assume que não tem lançamentos)
+    return 0;
   }
 
   getStatusClasse(categoria: Categoria): string {
     // Por enquanto, todas as categorias são consideradas ativas
-    // Você pode adicionar um campo de status no backend
     return 'status-active';
   }
 
   getStatusTexto(categoria: Categoria): string {
-    // Por enquanto, todas as categorias são consideradas ativas
     return 'Ativa';
   }
 
@@ -159,6 +149,5 @@ export class ListaCategoriasComponent implements OnInit {
   private mostrarSucesso(mensagem: string): void {
     // Poderia ser um toast notification
     console.log('✅ ' + mensagem);
-    // alert(mensagem); // Ou usar um serviço de notificação
   }
 }

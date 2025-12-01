@@ -17,42 +17,14 @@ export class FormCategoriaComponent implements OnInit {
     idPessoa: 1
   };
 
-  // Propriedades separadas para features futuras
-  corSelecionada: string = '';
-  iconeSelecionado: string = '';
+  // REMOVIDO: corSelecionada e iconeSelecionado
 
   isEditando: boolean = false;
   carregando: boolean = false;
   enviando: boolean = false;
   erro: string = '';
 
-  // Cores para categorias (feature futura)
-  coresCategoria = [
-    { value: '#ef4444', nome: 'Vermelho' },
-    { value: '#f59e0b', nome: 'Amarelo' },
-    { value: '#10b981', nome: 'Verde' },
-    { value: '#3b82f6', nome: 'Azul' },
-    { value: '#8b5cf6', nome: 'Roxo' },
-    { value: '#ec4899', nome: 'Rosa' },
-    { value: '#6b7280', nome: 'Cinza' },
-    { value: '#000000', nome: 'Preto' }
-  ];
-
-  // Ícones para categorias (feature futura)
-  iconesCategoria = [
-    { value: '💰', nome: 'Dinheiro' },
-    { value: '🛒', nome: 'Compras' },
-    { value: '🚗', nome: 'Transporte' },
-    { value: '🏠', nome: 'Casa' },
-    { value: '💊', nome: 'Saúde' },
-    { value: '🎮', nome: 'Entretenimento' },
-    { value: '✈️', nome: 'Viagem' },
-    { value: '🎓', nome: 'Educação' },
-    { value: '👕', nome: 'Roupas' },
-    { value: '🍽️', nome: 'Alimentação' },
-    { value: '⚡', nome: 'Utilidades' },
-    { value: '🎁', nome: 'Presentes' }
-  ];
+  // REMOVIDO: coresCategoria e iconesCategoria
 
   // Categorias sugeridas
   categoriasSugeridas = [
@@ -95,10 +67,6 @@ export class FormCategoriaComponent implements OnInit {
         this.categoria = categoria;
         this.carregando = false;
         console.log('✅ Categoria carregada para edição:', categoria);
-        
-        // Se no futuro a categoria tiver cor e ícone, podemos carregar aqui
-        // this.corSelecionada = categoria.cor || '';
-        // this.iconeSelecionado = categoria.icone || '';
       },
       error: (error) => {
         this.erro = 'Erro ao carregar categoria para edição.';
@@ -125,10 +93,9 @@ export class FormCategoriaComponent implements OnInit {
       return;
     }
 
-    // Preparar dados para envio (sem cor e ícone por enquanto)
+    // Preparar dados para envio
     const categoriaParaEnviar: Categoria = {
       ...this.categoria
-      // No futuro, adicionar: cor: this.corSelecionada, icone: this.iconeSelecionado
     };
 
     console.log('📤 Enviando categoria:', categoriaParaEnviar);
@@ -189,8 +156,6 @@ export class FormCategoriaComponent implements OnInit {
           descricao: '',
           idPessoa: 1
         };
-        this.corSelecionada = '';
-        this.iconeSelecionado = '';
       },
       error: (error) => {
         this.erro = 'Erro ao criar categoria. Tente novamente.';
@@ -200,13 +165,7 @@ export class FormCategoriaComponent implements OnInit {
     });
   }
 
-  selecionarCor(cor: string): void {
-    this.corSelecionada = cor;
-  }
-
-  selecionarIcone(icone: string): void {
-    this.iconeSelecionado = icone;
-  }
+  // REMOVIDO: selecionarCor() e selecionarIcone()
 
   sugerirCategoria(): void {
     const sugestaoAleatoria = this.categoriasSugeridas[
@@ -220,14 +179,7 @@ export class FormCategoriaComponent implements OnInit {
       descricao: '',
       idPessoa: 1
     };
-    this.corSelecionada = '';
-    this.iconeSelecionado = '';
     this.erro = '';
-  }
-
-  getNomeCor(cor: string): string {
-    const corEncontrada = this.coresCategoria.find(c => c.value === cor);
-    return corEncontrada ? corEncontrada.nome : 'Personalizada';
   }
 
   voltar(): void {
@@ -235,8 +187,6 @@ export class FormCategoriaComponent implements OnInit {
   }
 
   private mostrarSucesso(mensagem: string): void {
-    // Poderia ser um toast notification
     console.log('✅ ' + mensagem);
-    // alert(mensagem); // Ou usar um serviço de notificação
   }
 }
