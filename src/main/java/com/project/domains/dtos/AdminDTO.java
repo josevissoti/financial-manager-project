@@ -39,8 +39,6 @@ public class AdminDTO {
     @NotBlank(message = "O campo Email não pode ser vazio")
     protected String email;
 
-    @NotNull(message = "O campo Senha não pode ser nulo")
-    @NotBlank(message = "O campo Senha não pode ser vazio")
     protected String senha;
 
     @NotNull(message = "O campo Status é requerido")

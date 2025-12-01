@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LancamentoService, LancamentoDTO } from '../../../services/lancamento.service';
-import { AdminService } from '../../../services/admin.service';
-import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,18 +23,17 @@ export class DashboardComponent implements OnInit {
   carregando: boolean = true;
   isAdmin: boolean = false;
   
-  // Controle do dropdown do usuário
   isUserDropdownOpen: boolean = false;
 
   constructor(
     private authService: AuthService,
     private lancamentoService: LancamentoService,
-    private adminService: AdminService,
-    private usuarioService: UsuarioService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    console.log('🚀 Dashboard inicializando...');
+    
     this.loadUserInfo();
     this.loadDashboardData();
   }
@@ -46,106 +43,18 @@ export class DashboardComponent implements OnInit {
     this.userEmail = usuarioLogado?.email || '';
     
     if (this.userEmail) {
-      // Tentar extrair o nome do email (parte antes do @)
       this.userName = this.userEmail.split('@')[0];
       this.userName = this.userName.charAt(0).toUpperCase() + this.userName.slice(1);
     }
 
-    // ✅ VERIFICAR SE É ADMIN USANDO A MESMA ESTRATÉGIA DO PERFIL
-    this.checkAdminStatus();
-  }
-
-  private checkAdminStatus(): void {
-    const usuarioLogado = this.authService.getUsuarioLogado();
-    const email = usuarioLogado?.email;
-
-    if (!email) {
-      console.log('❌ Email não disponível para verificar admin');
-      this.isAdmin = false;
-      return;
-    }
-
-    console.log('🔍 Verificando se é Admin para:', email);
-
-    // Estratégia: Tenta como ADMIN primeiro, depois USUÁRIO (igual ao perfil)
-    this.adminService.findByEmail(email).subscribe({
-      next: (adminCompleto: any) => {
-        console.log('✅ É Admin! Dados:', adminCompleto);
-        this.isAdmin = true;
-        
-        // Atualiza os dados do usuário no AuthService (igual ao perfil)
-        this.authService.atualizarUsuario({
-          ...usuarioLogado,
-          tipo: 'ADMIN',
-          isAdmin: true,
-          funcaoPessoa: this.mapearFuncoesDoBackend(adminCompleto.funcaoPessoa),
-          idAdmin: adminCompleto.idAdmin || adminCompleto.idPessoa
-        });
-      },
-      error: (errorAdmin) => {
-        console.log('❌ Não é admin, verificando como usuário normal...');
-        
-        // Se não for admin, tenta como usuário
-        this.usuarioService.findByEmail(email).subscribe({
-          next: (usuarioCompleto: any) => {
-            console.log('✅ É Usuário normal:', usuarioCompleto);
-            this.isAdmin = false;
-            
-            // Atualiza os dados do usuário no AuthService
-            this.authService.atualizarUsuario({
-              ...usuarioLogado,
-              tipo: 'USER', 
-              isAdmin: false,
-              funcaoPessoa: this.mapearFuncoesDoBackend(usuarioCompleto.funcaoPessoa),
-              idUsuario: usuarioCompleto.idUsuario || usuarioCompleto.idPessoa
-            });
-          },
-          error: (errorUsuario) => {
-            console.log('❌ Não encontrado nem como admin nem como usuário');
-            this.isAdmin = false;
-            
-            // Fallback: verifica dados básicos do AuthService
-            const temTipoAdmin = usuarioLogado?.tipo === 'ADMIN';
-            const temIsAdmin = usuarioLogado?.isAdmin === true;
-            const temFuncaoAdmin = usuarioLogado?.funcaoPessoa && 
-                                  Array.isArray(usuarioLogado.funcaoPessoa) && 
-                                  usuarioLogado.funcaoPessoa.includes(1);
-
-            this.isAdmin = temTipoAdmin || temIsAdmin || temFuncaoAdmin;
-            
-            console.log('🎯 Status final de Admin (fallback):', this.isAdmin);
-          }
-        });
-      }
+    // ✅ CORREÇÃO SIMPLIFICADA
+    this.isAdmin = this.authService.isAdmin();
+    
+    console.log('👑 Status de Admin no Dashboard:', {
+      email: this.userEmail,
+      isAdmin: this.isAdmin,
+      funcoes: usuarioLogado?.funcaoPessoa
     });
-  }
-
-  // Método auxiliar igual ao do perfil para mapear funções
-  private mapearFuncoesDoBackend(funcoesBackend: any): number[] {
-    if (!funcoesBackend) return [0];
-
-    if (Array.isArray(funcoesBackend) && funcoesBackend.every(item => typeof item === 'number')) {
-      return funcoesBackend;
-    }
-
-    if (Array.isArray(funcoesBackend)) {
-      return funcoesBackend.map(item => {
-        if (typeof item === 'number') return item;
-        if (typeof item === 'string') {
-          return item.toUpperCase() === 'ADMIN' ? 1 : 0;
-        }
-        if (typeof item === 'object' && item !== null) {
-          return item.id || 0;
-        }
-        return 0;
-      });
-    }
-
-    if (funcoesBackend instanceof Set) {
-      return this.mapearFuncoesDoBackend(Array.from(funcoesBackend));
-    }
-
-    return [0];
   }
 
   loadDashboardData(): void {
@@ -161,7 +70,6 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('❌ Erro ao carregar lançamentos:', error);
         this.carregando = false;
-        // Em caso de erro, definir valores padrão
         this.totalLancamentos = 0;
         this.saldoTotal = 0;
         this.receitasMes = 0;
@@ -173,20 +81,18 @@ export class DashboardComponent implements OnInit {
 
   private processarDados(lancamentos: LancamentoDTO[]): void {
     this.totalLancamentos = lancamentos.length;
-    this.ultimosLancamentos = lancamentos.slice(-5).reverse(); // Últimos 5, mais recentes primeiro
+    this.ultimosLancamentos = lancamentos.slice(-5).reverse();
 
-    // Calcular totais
     this.receitasMes = lancamentos
-      .filter(l => l.tipoLancamento === 1) // Crédito
+      .filter(l => l.tipoLancamento === 1)
       .reduce((sum, l) => sum + l.valor, 0);
 
     this.despesasMes = lancamentos
-      .filter(l => l.tipoLancamento === 0) // Débito
+      .filter(l => l.tipoLancamento === 0)
       .reduce((sum, l) => sum + l.valor, 0);
 
     this.saldoTotal = this.receitasMes - this.despesasMes;
 
-    // Contar lançamentos pendentes (situação = 0)
     this.lancamentosPendentes = lancamentos
       .filter(l => l.situacao === 0)
       .length;
@@ -200,7 +106,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Métodos para controle do dropdown
   toggleUserDropdown(): void {
     this.isUserDropdownOpen = !this.isUserDropdownOpen;
   }
@@ -224,7 +129,6 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // Métodos auxiliares para o template
   formatarValor(valor: number): string {
     return this.lancamentoService.formatarValor(valor);
   }

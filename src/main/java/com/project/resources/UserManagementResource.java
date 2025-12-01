@@ -3,6 +3,8 @@ package com.project.resources;
 import com.project.domains.Usuario;
 import com.project.domains.dtos.UsuarioDTO;
 import com.project.services.UsuarioService;
+import com.project.services.exceptions.DataIntegrityViolationException;
+import com.project.services.exceptions.ObjectNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,13 @@ public class UserManagementResource {
     @PutMapping("/promote/{id}")
     @Operation(summary = "Promover usuário para Admin")
     public ResponseEntity<UsuarioDTO> promoteToAdmin(@PathVariable Long id) {
-        Usuario usuario = usuarioService.promoteToAdmin(id);
-        return ResponseEntity.ok().body(new UsuarioDTO(usuario));
+        try {
+            Usuario usuarioPromovido = usuarioService.promoteToAdmin(id);
+            return ResponseEntity.ok().body(new UsuarioDTO(usuarioPromovido));
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

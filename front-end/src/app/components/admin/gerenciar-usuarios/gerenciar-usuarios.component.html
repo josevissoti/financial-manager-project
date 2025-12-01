@@ -184,14 +184,25 @@
                                 <td>
                                     <div class="action-buttons">
                                         <button class="btn-action edit" (click)="abrirModalEdicao(usuario)"
-                                            title="Editar">
+                                            title="Editar usuário">
                                             <span class="btn-icon">✏️</span>
                                         </button>
-                                        <button *ngIf="!usuario.isAdmin" class="btn-action promote"
-                                            (click)="promoverParaAdmin(usuario)" [disabled]="salvando"
-                                            title="Promover para Admin">
+                                        
+                                        <!-- ✅ BOTÃO DE PROMOÇÃO: Mostrar apenas para usuários não-admins -->
+                                        <button *ngIf="!usuario.isAdmin && !temFuncaoAdmin(usuario)" 
+                                                class="btn-action promote" 
+                                                (click)="promoverParaAdmin(usuario)" 
+                                                [disabled]="salvando"
+                                                title="Promover para Administrador">
                                             <span class="btn-icon">👑</span>
                                         </button>
+                                        
+                                        <!-- ✅ BADGE: Mostrar para usuários que já são admins -->
+                                        <span *ngIf="usuario.isAdmin || temFuncaoAdmin(usuario)" 
+                                              class="admin-badge" 
+                                              title="Administrador">
+                                            👑 Admin
+                                        </span>
                                     </div>
                                 </td>
                             </tr>
@@ -234,7 +245,7 @@
     </div>
 </div>
 
-<!-- Modal de Edição -->
+<!-- Modal de Edição ATUALIZADO -->
 <div *ngIf="mostrarModalEdicao && usuarioEditando" class="modal-overlay">
     <div class="modal-container">
         <div class="modal-header">
@@ -244,30 +255,39 @@
 
         <div class="modal-content">
             <div class="form-grid">
+                <!-- Informações Básicas -->
                 <div class="form-group">
-                    <label class="form-label">Nome Completo</label>
+                    <label class="form-label">Nome Completo *</label>
                     <input type="text" class="form-control" [(ngModel)]="usuarioEditando.nome"
-                        placeholder="Nome do usuário">
+                        placeholder="Nome do usuário" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Email *</label>
                     <input type="email" class="form-control" [(ngModel)]="usuarioEditando.email"
-                        placeholder="email@exemplo.com">
+                        placeholder="email@exemplo.com" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Telefone</label>
+                    <label class="form-label">Telefone *</label>
                     <input type="text" class="form-control" [(ngModel)]="usuarioEditando.telefone"
-                        placeholder="(00) 00000-0000">
+                        placeholder="(00) 00000-0000" required>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <select class="form-control" [(ngModel)]="usuarioEditando.status">
-                        <option [value]="1">Ativo</option>
-                        <option [value]="0">Inativo</option>
+                    <label class="form-label">Status *</label>
+                    <select class="form-control" [(ngModel)]="usuarioEditando.status" required>
+                        <option [value]="1">🟢 Ativo</option>
+                        <option [value]="0">🔴 Inativo</option>
                     </select>
+                </div>
+
+                <!-- ✅ Campo para alterar senha (opcional) - CORRIGIDO -->
+                <div class="form-group full-width">
+                <label class="form-label">Alterar Senha (opcional)</label>
+                <input type="password" class="form-control" [(ngModel)]="novaSenha"
+                    placeholder="Deixe em branco para manter a senha atual">
+                <small class="form-text">Mínimo 6 caracteres</small>
                 </div>
 
                 <div class="form-group full-width">
@@ -282,8 +302,16 @@
                             <span class="info-value">{{ getTipoUsuario(usuarioEditando) }}</span>
                         </div>
                         <div class="info-item">
+                            <span class="info-label">Data de Nascimento:</span>
+                            <span class="info-value">{{ formatarData(usuarioEditando.datanascimento) }}</span>
+                        </div>
+                        <div class="info-item">
                             <span class="info-label">Data de Criação:</span>
                             <span class="info-value">{{ formatarData(usuarioEditando.dataCriacao) }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Funções:</span>
+                            <span class="info-value">{{ getFuncoesTexto(usuarioEditando.funcaoPessoa) }}</span>
                         </div>
                     </div>
                 </div>

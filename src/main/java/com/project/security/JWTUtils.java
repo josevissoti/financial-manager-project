@@ -21,6 +21,7 @@ public class JWTUtils {
 
     public String generateToken(String username) {
         Key key = Keys.hmacShaKeyFor(secret.getBytes());
+
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -56,7 +57,6 @@ public class JWTUtils {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            System.out.println("Erro ao validar token: " + e.getMessage());
             return null;
         }
     }

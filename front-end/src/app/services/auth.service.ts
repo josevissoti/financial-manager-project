@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, BehaviorSubject } from 'rxjs';
+import { Observable, tap, catchError, BehaviorSubject, switchMap } from 'rxjs';
 import { CredenciaisDTO, TokenDTO } from '../models/auth-data.model';
+import { AdminService } from './admin.service';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,11 @@ export class AuthService {
   private usuarioLogadoSubject = new BehaviorSubject<any>(null);
   public usuarioLogado$ = this.usuarioLogadoSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    // Carregar dados do usuário do localStorage ao inicializar
+  constructor(
+    private http: HttpClient,
+    private adminService: AdminService,
+    private usuarioService: UsuarioService
+  ) {
     this.carregarUsuarioDoStorage();
   }
 
@@ -22,31 +27,143 @@ export class AuthService {
 
     return this.http.post<TokenDTO>(`${this.API_URL}/login`, credenciais)
       .pipe(
-        tap(response => {
+        switchMap(response => {
           console.log('✅ Login bem sucedido! Resposta:', response);
 
-          // ✅ Remove "Bearer " se o backend já incluir
           let token = response.token;
           if (token.startsWith('Bearer ')) {
             token = token.substring(7);
-            console.log('🔑 Token limpo (removido Bearer)');
           }
 
           localStorage.setItem('token', token);
-          console.log('🔑 Token salvo no localStorage:', token.substring(0, 20) + '...');
+          console.log('🔑 Token salvo no localStorage');
 
-          // Decodificar token e salvar dados do usuário
-          this.salvarDadosUsuarioDoToken(token);
+          // ✅ CORREÇÃO: Buscar informações completas do usuário
+          return this.buscarUsuarioCompleto(credenciais.username).pipe(
+            tap(usuarioCompleto => {
+              console.log('👤 Usuário completo carregado:', usuarioCompleto);
+              this.salvarDadosUsuario(usuarioCompleto, token);
+            })
+          );
         }),
         catchError(error => {
           console.error('❌ ERRO no login:', error);
-          console.log('📋 Detalhes do erro:');
-          console.log(' - Status:', error.status);
-          console.log(' - Message:', error.message);
-          console.log(' - Error body:', error.error);
           throw error;
         })
       );
+  }
+
+  // ✅ MÉTODO CORRIGIDO: Buscar informações completas do usuário
+  private buscarUsuarioCompleto(email: string): Observable<any> {
+    console.log('🔍 Buscando informações completas do usuário:', email);
+    
+    // Primeiro tenta como Admin
+    return this.adminService.findByEmail(email).pipe(
+      catchError(errorAdmin => {
+        console.log('❌ Não é admin, tentando como usuário...');
+        // Se não for admin, tenta como usuário normal
+        return this.usuarioService.findByEmail(email);
+      })
+    );
+  }
+
+  // ✅ MÉTODO CORRIGIDO: Salvar dados do usuário
+  private salvarDadosUsuario(usuarioBackend: any, token: string): void {
+    console.log('💾 Salvando dados do usuário:', usuarioBackend);
+    
+    // ✅ CORREÇÃO: Converter funções para números se forem strings
+    const funcoes = this.converterFuncoesParaNumeros(usuarioBackend.funcaoPessoa);
+    const isAdmin = this.verificarSeEhAdmin(funcoes);
+    
+    const nome = usuarioBackend.nome || usuarioBackend.email?.split('@')[0] || 'Usuário';
+
+    const usuario = {
+      email: usuarioBackend.email,
+      nome: nome,
+      funcaoPessoa: funcoes,
+      roles: this.mapearFuncoesParaRoles(funcoes),
+      isAdmin: isAdmin,
+      tipo: isAdmin ? 'ADMIN' : 'USER',
+      idUsuario: usuarioBackend.idUsuario || usuarioBackend.idAdmin || usuarioBackend.idPessoa,
+      dadosCompletos: usuarioBackend // Salva todos os dados do backend
+    };
+
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    this.usuarioLogadoSubject.next(usuario);
+    console.log('👤 Dados COMPLETOS do usuário salvos:', usuario);
+  }
+
+  // ✅ NOVO MÉTODO: Converter funções strings para números
+  private converterFuncoesParaNumeros(funcoes: any): number[] {
+    if (!funcoes) return [0];
+    
+    console.log('🔄 Convertendo funções:', funcoes);
+    
+    if (Array.isArray(funcoes)) {
+      return funcoes.map(funcao => {
+        if (typeof funcao === 'number') {
+          return funcao;
+        } else if (typeof funcao === 'string') {
+          // Converte string para número
+          switch (funcao.toUpperCase()) {
+            case 'ADMIN': return 1;
+            case 'USUARIO': return 0;
+            case 'USER': return 0;
+            default: return 0;
+          }
+        } else if (typeof funcao === 'object' && funcao !== null) {
+          // Se for objeto, extrai o ID
+          return funcao.id || 0;
+        }
+        return 0;
+      });
+    }
+    
+    return [0];
+  }
+
+  // ✅ MÉTODO CORRIGIDO: Verificar se é admin baseado nas funções
+  private verificarSeEhAdmin(funcoes: number[]): boolean {
+    console.log('🔍 Verificando funções para admin:', funcoes);
+    
+    // Se tem função 1 (ADMIN), é admin
+    const isAdmin = Array.isArray(funcoes) && funcoes.includes(1);
+    
+    console.log('👑 Resultado da verificação de admin:', isAdmin);
+    return isAdmin;
+  }
+
+  // ✅ MÉTODO: Mapear funções numéricas para roles de texto
+  private mapearFuncoesParaRoles(funcoes: number[]): string[] {
+    const roles: string[] = [];
+    
+    funcoes.forEach(funcao => {
+      if (funcao === 0) roles.push('ROLE_USER');
+      if (funcao === 1) roles.push('ROLE_ADMIN');
+    });
+    
+    return roles;
+  }
+
+  // ✅ MÉTODO CORRIGIDO: Verificar se é Admin
+  isAdmin(): boolean {
+    const usuario = this.getUsuarioLogado();
+    
+    if (!usuario) {
+      console.log('🔍 isAdmin: Nenhum usuário logado');
+      return false;
+    }
+
+    // ✅ CORREÇÃO: Verificar diretamente as funções
+    const isAdmin = this.verificarSeEhAdmin(usuario.funcaoPessoa);
+
+    console.log('👑 Verificação de Admin:', {
+      email: usuario.email,
+      isAdmin: isAdmin,
+      funcaoPessoa: usuario.funcaoPessoa
+    });
+
+    return isAdmin;
   }
 
   logout(): void {
@@ -69,16 +186,8 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const exp = payload.exp * 1000; // JWT exp está em segundos
+      const exp = payload.exp * 1000;
       const isValid = Date.now() < exp;
-
-      console.log('🔐 Verificação de autenticação:', {
-        tokenExiste: !!token,
-        expiracao: new Date(exp),
-        agora: new Date(),
-        valido: isValid
-      });
-
       return isValid;
     } catch (error) {
       console.error('❌ Erro ao verificar token:', error);
@@ -91,89 +200,17 @@ export class AuthService {
     if (usuarioStorage) {
       return JSON.parse(usuarioStorage);
     }
-
-    const token = this.getToken();
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('👤 Informações do usuário do token:', payload);
-        return payload;
-      } catch (error) {
-        console.error('❌ Erro ao decodificar token:', error);
-        return null;
-      }
-    }
     return null;
   }
 
-  // Método para debug - mostra informações detalhadas do token
-  debugToken(): void {
-    const token = this.getToken();
-    if (token) {
-      console.log('🔍 DEBUG DO TOKEN:');
-      console.log(' - Token completo:', token);
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log(' - Payload decodificado:', payload);
-        console.log(' - Expiração:', new Date(payload.exp * 1000));
-        console.log(' - Subject:', payload.sub);
-      } catch (error) {
-        console.error(' - Erro ao decodificar:', error);
-      }
-    } else {
-      console.log('🔍 DEBUG: Nenhum token encontrado');
-    }
-  }
-
-  // Novo método para obter dados completos do usuário logado
   getUsuarioLogado(): any {
     const usuario = localStorage.getItem('usuario');
-    console.log('🔐 Usuário do localStorage:', usuario);
     return usuario ? JSON.parse(usuario) : null;
   }
 
-  // Método para atualizar dados do usuário
   atualizarUsuario(usuario: any): void {
     localStorage.setItem('usuario', JSON.stringify(usuario));
     this.usuarioLogadoSubject.next(usuario);
-  }
-
-  // Métodos privados
-  private salvarDadosUsuarioDoToken(token: string): void {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      console.log('🔍 Payload completo do token:', payload);
-
-      // EXTRAIR FUNÇÕES/ROLES DO TOKEN
-      let funcoes = [];
-
-      // Tenta diferentes possíveis nomes de campo para roles
-      if (payload.roles) {
-        funcoes = payload.roles;
-      } else if (payload.authorities) {
-        funcoes = payload.authorities;
-      } else if (payload.funcaoPessoa) {
-        funcoes = payload.funcaoPessoa;
-      } else if (payload.scope) {
-        funcoes = payload.scope;
-      }
-
-      console.log('🎯 Funções extraídas do token:', funcoes);
-
-      const usuario = {
-        email: payload.sub,
-        nome: payload.name || payload.sub.split('@')[0],
-        funcaoPessoa: funcoes, // SALVAR AS FUNÇÕES
-        idUsuario: payload.id || payload.userId,
-        // Adicione outros campos que podem estar no token
-      };
-
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      this.usuarioLogadoSubject.next(usuario);
-      console.log('👤 Dados COMPLETOS do usuário salvos:', usuario);
-    } catch (error) {
-      console.error('❌ Erro ao salvar dados do usuário:', error);
-    }
   }
 
   private carregarUsuarioDoStorage(): void {
@@ -181,6 +218,29 @@ export class AuthService {
     if (usuarioStorage) {
       this.usuarioLogadoSubject.next(JSON.parse(usuarioStorage));
     }
+  }
+
+  // ✅ MÉTODO DE DEBUG MELHORADO
+  debugAdminCheck(): void {
+    const token = this.getToken();
+    const usuario = this.getUsuarioLogado();
+    
+    console.log('🔍 DEBUG ADMIN CHECK:');
+    console.log('📋 Token existe:', !!token);
+    console.log('👤 Usuário logado:', usuario);
+    
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('🎯 Payload do token:', payload);
+      } catch (error) {
+        console.error('❌ Erro ao decodificar token:', error);
+      }
+    }
+    
+    console.log('👑 Resultado isAdmin():', this.isAdmin());
+    console.log('🎯 Funções do usuário:', usuario?.funcaoPessoa);
+    console.log('🔍 Verificação detalhada:', this.verificarSeEhAdmin(usuario?.funcaoPessoa));
   }
 
   debugTokenDetails(): void {
@@ -193,6 +253,7 @@ export class AuthService {
         console.log('👤 Subject:', payload.sub);
         console.log('🎯 Roles/Funções:', payload.roles || payload.authorities || payload.funcaoPessoa);
         console.log('📊 Todas as chaves:', Object.keys(payload));
+        console.log('👑 É admin (AuthService):', this.isAdmin());
       } catch (error) {
         console.error('❌ Erro ao decodificar token:', error);
       }

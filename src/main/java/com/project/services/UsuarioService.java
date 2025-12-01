@@ -77,6 +77,9 @@ public class UsuarioService {
 
     public Usuario promoteToAdmin(Long id) {
         Usuario usuario = findById(id);
+        if (usuario.getFuncaoPessoa().contains(FuncaoPessoa.ADMIN)) {
+            throw new DataIntegrityViolationException("Usuário já é administrador");
+        }
         usuario.addFuncaoPessoa(FuncaoPessoa.ADMIN);
         return usuarioRepository.save(usuario);
     }

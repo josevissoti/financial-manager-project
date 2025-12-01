@@ -17,7 +17,12 @@ export class AuthGuard implements CanActivate {
     
     if (this.authService.isAuthenticated()) {
       console.log('✅ AuthGuard: Usuário autenticado, acesso permitido');
-      this.authService.debugToken(); // Debug opcional
+      
+      // ✅ CORREÇÃO: Debug das informações do usuário
+      const usuario = this.authService.getUsuarioLogado();
+      console.log('👤 Usuário logado:', usuario);
+      console.log('👑 É admin?:', this.authService.isAdmin());
+      
       return true;
     } else {
       console.log('❌ AuthGuard: Usuário NÃO autenticado, redirecionando para login');
