@@ -15,6 +15,10 @@
           <span class="btn-icon">✏️</span>
           Editar Perfil
         </button>
+        <button class="btn btn-logout" (click)="logout()">
+          <span class="btn-icon">🚪</span>
+          Sair
+        </button>
       </div>
       <div class="header-actions" *ngIf="editando">
         <button type="button" class="btn btn-secondary" (click)="cancelarEdicao()">
@@ -231,6 +235,9 @@
               <div class="user-summary">
                 <h4>{{ usuario.nome || 'Usuário' }}</h4>
                 <p class="user-email">{{ usuario.email }}</p>
+                <div class="user-role">
+                  <span class="role-badge">{{ usuario.isAdmin ? 'Administrador' : 'Usuário' }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -255,7 +262,7 @@
                 </div>
                 <div class="system-item">
                   <span class="system-label">ID do Usuário</span>
-                  <span class="system-value code">{{ usuario.idUsuario || 'N/A' }}</span>
+                  <span class="system-value code">{{ usuario.idUsuario || usuario.idAdmin || 'N/A' }}</span>
                 </div>
               </div>
             </div>
@@ -270,8 +277,8 @@
       <h3>Não foi possível carregar o perfil</h3>
       <p>Tente fazer login novamente ou verifique sua conexão</p>
       <div class="empty-actions">
-        <button class="btn btn-primary" routerLink="/login">
-          🔄 Fazer Login Novamente
+        <button class="btn btn-logout" (click)="logout()">
+          🚪 Fazer Logout
         </button>
         <button class="btn btn-secondary" (click)="carregarPerfil()">
           🔃 Tentar Novamente

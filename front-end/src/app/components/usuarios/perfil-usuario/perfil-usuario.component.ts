@@ -154,6 +154,11 @@ export class PerfilUsuarioComponent implements OnInit {
     return [0];
   }
 
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   iniciarEdicao(): void {
     this.editando = true;
     this.erro = '';

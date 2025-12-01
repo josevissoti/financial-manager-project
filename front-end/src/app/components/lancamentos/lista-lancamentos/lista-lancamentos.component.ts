@@ -23,7 +23,7 @@ export class ListaLancamentosComponent implements OnInit {
   constructor(
     private lancamentoService: LancamentoService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarLancamentos();
@@ -51,12 +51,12 @@ export class ListaLancamentosComponent implements OnInit {
   aplicarFiltros(): void {
     this.lancamentosFiltrados = this.lancamentos.filter(lancamento => {
       const descricaoMatch = lancamento.descricao.toLowerCase().includes(this.filtroDescricao.toLowerCase());
-      
+
       let tipoMatch = true;
       if (this.filtroTipo !== 'todos') {
         tipoMatch = lancamento.tipoLancamento === Number(this.filtroTipo);
       }
-      
+
       return descricaoMatch && tipoMatch;
     });
   }
@@ -103,7 +103,7 @@ export class ListaLancamentosComponent implements OnInit {
 
   formatarData(data: string): string {
     if (!data) return '';
-    
+
     const partes = data.split('-');
     if (partes.length === 3) {
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
@@ -111,33 +111,45 @@ export class ListaLancamentosComponent implements OnInit {
     return data;
   }
 
+
   getTipoLancamentoTexto(tipo: number): string {
-    switch(tipo) {
-      case 0: return '📤 Débito';
-      case 1: return '📥 Crédito';
+    switch (tipo) {
+      case 0: return 'Débito';
+      case 1: return 'Crédito';
       default: return 'Desconhecido';
     }
   }
 
+
   getTipoLancamentoIcone(tipo: number): string {
-    switch(tipo) {
+    switch (tipo) {
       case 0: return '📤';
       case 1: return '📥';
       default: return '❓';
     }
   }
 
+
   getSituacaoTexto(situacao: number): string {
-    switch(situacao) {
-      case 0: return '⏳ Pendente';
-      case 1: return '✅ Baixado';
-      case 2: return '❌ Atrasado';
+    switch (situacao) {
+      case 0: return 'Pendente';
+      case 1: return 'Baixado';
+      case 2: return 'Atrasado';
       default: return 'Desconhecida';
     }
   }
 
+  getSituacaoIcone(situacao: number): string {
+    switch (situacao) {
+      case 0: return '⏳';
+      case 1: return '✅';
+      case 2: return '❌';
+      default: return '❓';
+    }
+  }
+
   getSituacaoClasse(situacao: number): string {
-    switch(situacao) {
+    switch (situacao) {
       case 0: return 'text-warning';
       case 1: return 'text-success';
       case 2: return 'text-danger';
@@ -146,7 +158,7 @@ export class ListaLancamentosComponent implements OnInit {
   }
 
   getTipoClasse(tipo: number): string {
-    switch(tipo) {
+    switch (tipo) {
       case 0: return 'text-danger';
       case 1: return 'text-success';
       default: return 'text-muted';

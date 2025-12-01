@@ -68,8 +68,8 @@
             [(ngModel)]="filtroTipo" 
             (change)="aplicarFiltros()">
             <option value="todos">Todos os tipos</option>
-            <option value="0">📤 Débito</option>
-            <option value="1">📥 Crédito</option>
+            <option value="0">Débito</option>
+            <option value="1">Crédito</option>
           </select>
         </div>
 
@@ -169,6 +169,7 @@
                 
                 <td class="situacao-cell">
                   <span class="status-badge" [ngClass]="getSituacaoClasse(lancamento.situacao)">
+                    <span class="badge-icon">{{ getSituacaoIcone(lancamento.situacao) }}</span>
                     {{ getSituacaoTexto(lancamento.situacao) }}
                   </span>
                 </td>
