@@ -3,7 +3,6 @@
   background: #f8fafc;
 }
 
-/* Header */
 .page-header {
   background: white;
   border-bottom: 1px solid #e2e8f0;
@@ -56,14 +55,12 @@
   text-decoration: underline;
 }
 
-/* Conteúdo Principal */
 .page-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-/* Filtros */
 .filters-section {
   margin-bottom: 2rem;
 }
@@ -96,9 +93,6 @@
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* REMOVIDO: .filter-options, .filter-select */
-/* REMOVIDO: Filtro de status e lançamentos */
-
 .results-info {
   display: flex;
   justify-content: space-between;
@@ -111,14 +105,12 @@
   color: #64748b;
 }
 
-/* Grid de Categorias */
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 1.5rem;
 }
 
-/* Card de Categoria */
 .category-card {
   background: white;
   border: 1px solid #e2e8f0;
@@ -169,9 +161,6 @@
   font-weight: 500;
 }
 
-/* REMOVIDO: .category-status */
-/* REMOVIDO: .status-active, .status-inactive */
-
 .category-actions {
   display: flex;
   gap: 0.5rem;
@@ -205,7 +194,6 @@
   background: none;
 }
 
-/* Corpo do Card */
 .category-body {
   padding: 1rem 1.5rem;
 }
@@ -221,7 +209,6 @@
   line-height: 1.5;
 }
 
-/* Estatísticas */
 .stats-section {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
@@ -259,7 +246,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Informações do Criador */
 .creator-info {
   display: flex;
   align-items: center;
@@ -296,16 +282,11 @@
   color: #64748b;
 }
 
-/* Footer do Card */
 .category-footer {
   padding: 1rem 1.5rem;
   background: #f8fafc;
   border-top: 1px solid #e5e7eb;
 }
-
-/* REMOVIDO: .footer-actions */
-/* REMOVIDO: .btn-quick */
-/* REMOVIDO: Botões "Lançamentos" e "Editar" */
 
 .protection-warning {
   display: flex;
@@ -327,7 +308,6 @@
   flex: 1;
 }
 
-/* Estados */
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -422,7 +402,6 @@
   color: #1d4ed8;
 }
 
-/* Botões */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -475,7 +454,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .page-header {
     padding: 1rem;

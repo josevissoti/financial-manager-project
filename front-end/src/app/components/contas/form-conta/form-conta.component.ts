@@ -85,7 +85,6 @@ export class FormContaComponent implements OnInit {
     this.contaService.findById(id).subscribe({
       next: (conta) => {
         this.conta = conta;
-        // Formata os valores ao carregar para edição
         if (conta.agencia) {
           this.conta.agencia = this.formatarAgenciaParaExibicao(conta.agencia);
         }
@@ -104,36 +103,28 @@ export class FormContaComponent implements OnInit {
   }
 
   onTipoContaChange(): void {
-    // Para cartão de crédito, limpa banco, agência e número se necessário
     if (this.conta.tipoConta === 2) {
       this.conta.idBanco = 0;
       this.conta.agencia = '';
       this.conta.numero = '';
     } else if (this.conta.tipoConta !== 2 && this.bancos.length > 0 && !this.conta.idBanco) {
-      // Para outros tipos, seleciona o primeiro banco se não houver seleção
       this.conta.idBanco = this.bancos[0].idBanco;
     }
   }
 
-  // ✅ CORRIGIDO: Máscara para agência (4 dígitos)
   formatarAgencia(): void {
     if (!this.conta.agencia) return;
     
-    // Remove tudo que não é número
     const numeros = this.conta.agencia.replace(/\D/g, '');
     
-    // Limita a 4 dígitos
     this.conta.agencia = numeros.slice(0, 4);
   }
 
-  // ✅ CORRIGIDO: Máscara para número da conta (6 dígitos: 5 + 1)
   formatarNumeroConta(): void {
     if (!this.conta.numero) return;
     
-    // Remove tudo que não é número
     const numeros = this.conta.numero.replace(/\D/g, '');
     
-    // Para cartão de crédito: formata como XXXX XXXX XXXX XXXX (16 dígitos)
     if (this.conta.tipoConta === 2) {
       if (numeros.length <= 4) {
         this.conta.numero = numeros;
@@ -145,7 +136,6 @@ export class FormContaComponent implements OnInit {
         this.conta.numero = `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
       }
     } 
-    // Para contas bancárias: formata como XXXXX-X (6 dígitos no total)
     else {
       if (numeros.length <= 5) {
         this.conta.numero = numeros;
@@ -161,14 +151,12 @@ export class FormContaComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    // Validações específicas por tipo de conta
     if (!this.conta.descricao) {
       this.erro = 'Por favor, preencha a descrição da conta.';
       this.enviando = false;
       return;
     }
 
-    // Para tipos que não são cartão de crédito, valida banco, agência e número
     if (this.conta.tipoConta !== 2) {
       if (!this.conta.idBanco || this.conta.idBanco === 0) {
         this.erro = 'Por favor, selecione um banco.';
@@ -176,7 +164,6 @@ export class FormContaComponent implements OnInit {
         return;
       }
       
-      // Valida agência (exatamente 4 dígitos)
       const agenciaNumeros = this.conta.agencia.replace(/\D/g, '');
       if (!agenciaNumeros || agenciaNumeros.length !== 4) {
         this.erro = 'A agência deve ter exatamente 4 dígitos.';
@@ -184,7 +171,6 @@ export class FormContaComponent implements OnInit {
         return;
       }
       
-      // Valida número da conta (5 dígitos + 1 dígito verificador)
       const numeroNumeros = this.conta.numero.replace(/\D/g, '');
       if (!numeroNumeros || numeroNumeros.length !== 6) {
         this.erro = 'O número da conta deve ter exatamente 6 dígitos (5 + dígito verificador).';
@@ -193,12 +179,10 @@ export class FormContaComponent implements OnInit {
       }
     }
 
-    // Para cartão de crédito, ajusta o saldo (negativo = dívida)
     if (this.conta.tipoConta === 2 && this.conta.saldo > 0) {
       this.conta.saldo = -this.conta.saldo;
     }
 
-    // Remove formatação antes de enviar
     const contaParaEnviar = {
       ...this.conta,
       agencia: this.conta.agencia.replace(/\D/g, ''),
@@ -263,13 +247,11 @@ export class FormContaComponent implements OnInit {
     return saldo >= 0 ? 'positive' : 'negative';
   }
 
-  // ✅ CORRIGIDO: Formata número para exibição
   formatarNumeroParaExibicao(numero: string): string {
     if (!numero) return '';
     
     const numeros = numero.replace(/\D/g, '');
     
-    // Para cartão de crédito
     if (this.conta.tipoConta === 2) {
       if (numeros.length <= 4) return numeros;
       if (numeros.length <= 8) return `${numeros.slice(0, 4)} ${numeros.slice(4)}`;
@@ -278,13 +260,11 @@ export class FormContaComponent implements OnInit {
       return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
     }
     
-    // Para contas bancárias: XXXXX-X
     if (numeros.length <= 5) return numeros;
     if (numeros.length <= 6) return `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
     return `${numeros.slice(0, 5)}-${numeros.slice(5, 6)}`;
   }
 
-  // ✅ NOVO: Formata agência para exibição
   formatarAgenciaParaExibicao(agencia: string): string {
     if (!agencia) return '';
     return agencia.replace(/\D/g, '').slice(0, 4);

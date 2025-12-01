@@ -17,7 +17,6 @@ export class ListaCategoriasComponent implements OnInit {
   carregando: boolean = true;
   erro: string = '';
   
-  // Filtros (removido filtroStatus e filtroLancamentos)
   termoBusca: string = '';
 
   constructor(
@@ -50,7 +49,6 @@ export class ListaCategoriasComponent implements OnInit {
 
   filtrarCategorias(): void {
     this.categoriasFiltradas = this.categorias.filter(categoria => {
-      // Filtro por busca
       const buscaMatch = !this.termoBusca || 
         categoria.descricao.toLowerCase().includes(this.termoBusca.toLowerCase());
 
@@ -70,7 +68,6 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   deletarCategoria(categoria: Categoria): void {
-    // ✅ CORREÇÃO: Consultar quantidade real de lançamentos
     const quantidadeLancamentos = this.getQuantidadeLancamentos(categoria);
     
     if (quantidadeLancamentos > 0) {
@@ -107,23 +104,16 @@ export class ListaCategoriasComponent implements OnInit {
     }
   }
 
-  // ✅ CORREÇÃO: Método para contar quantos lançamentos estão vinculados
   getQuantidadeLancamentos(categoria: Categoria): number {
-    // TODO: Implementar consulta real ao backend
-    // Por enquanto retorna 0 se não tiver lançamentos ou um número aleatório para demonstração
-    // No seu backend, você deve ter um método que conta lançamentos por categoria
-    
-    // Se a categoria tem uma propriedade lancamentos, usa ela
+
     if (categoria.lancamentos && Array.isArray(categoria.lancamentos)) {
       return categoria.lancamentos.length;
     }
     
-    // Fallback: retorna 0 (assume que não tem lançamentos)
     return 0;
   }
 
   getStatusClasse(categoria: Categoria): string {
-    // Por enquanto, todas as categorias são consideradas ativas
     return 'status-active';
   }
 
@@ -147,7 +137,6 @@ export class ListaCategoriasComponent implements OnInit {
   }
 
   private mostrarSucesso(mensagem: string): void {
-    // Poderia ser um toast notification
     console.log('✅ ' + mensagem);
   }
 }

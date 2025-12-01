@@ -2,7 +2,6 @@
   <div class="login-background"></div>
   
   <div class="login-content">
-    <!-- Logo Section -->
     <div class="brand-section">
       <div class="brand-logo">
         <div class="logo-icon">💰</div>
@@ -11,9 +10,7 @@
       <p class="brand-tagline">Controle financeiro simplificado</p>
     </div>
 
-    <!-- Login/Cadastro Card -->
     <div class="login-card">
-      <!-- Header com Tabs -->
       <div class="card-header">
         <div class="mode-tabs">
           <button 
@@ -38,14 +35,12 @@
         </p>
       </div>
 
-      <!-- Formulário de Login -->
       <form 
         *ngIf="isLoginMode" 
         (ngSubmit)="onSubmit()" 
         #loginForm="ngForm" 
         class="login-form">
         
-        <!-- Email -->
         <div class="form-group">
           <label for="email" class="form-label">
             <span class="label-icon">📧</span>
@@ -61,7 +56,6 @@
             placeholder="seu@email.com">
         </div>
         
-        <!-- Password -->
         <div class="form-group">
           <label for="password" class="form-label">
             <span class="label-icon">🔒</span>
@@ -77,19 +71,16 @@
             placeholder="Sua senha">
         </div>
 
-        <!-- Error Message -->
         <div *ngIf="error" class="alert alert-danger error-message">
           <span class="error-icon">⚠️</span>
           {{ error }}
         </div>
 
-        <!-- Success Message -->
         <div *ngIf="success" class="alert alert-success success-message">
           <span class="success-icon">✅</span>
           {{ success }}
         </div>
         
-        <!-- Submit Button -->
         <button 
           type="submit" 
           class="btn btn-primary login-button"
@@ -99,14 +90,12 @@
         </button>
       </form>
 
-      <!-- Formulário de Cadastro -->
       <form 
         *ngIf="!isLoginMode" 
         (ngSubmit)="onRegister()" 
         #registerForm="ngForm" 
         class="login-form">
         
-        <!-- Nome Completo -->
         <div class="form-group">
           <label for="nome" class="form-label">
             <span class="label-icon">👤</span>
@@ -122,7 +111,6 @@
             placeholder="Seu nome completo">
         </div>
 
-        <!-- CPF -->
         <div class="form-group">
           <label for="cpf" class="form-label">
             <span class="label-icon">🆔</span>
@@ -140,7 +128,6 @@
             maxlength="14">
         </div>
 
-        <!-- Data de Nascimento -->
         <div class="form-group">
           <label for="datanascimento" class="form-label">
             <span class="label-icon">📅</span>
@@ -160,7 +147,6 @@
           <small class="form-text">Digite a data no formato dd/mm/aaaa | Mínimo 16 anos</small>
         </div>
 
-        <!-- Telefone -->
         <div class="form-group">
           <label for="telefone" class="form-label">
             <span class="label-icon">📱</span>
@@ -178,7 +164,6 @@
             maxlength="15">
         </div>
 
-        <!-- Email -->
         <div class="form-group">
           <label for="emailCadastro" class="form-label">
             <span class="label-icon">📧</span>
@@ -194,7 +179,6 @@
             placeholder="seu@email.com">
         </div>
         
-        <!-- Senha -->
         <div class="form-group">
           <label for="senha" class="form-label">
             <span class="label-icon">🔒</span>
@@ -211,7 +195,6 @@
             minlength="6">
         </div>
 
-        <!-- Confirmar Senha -->
         <div class="form-group">
           <label for="confirmarSenha" class="form-label">
             <span class="label-icon">🔒</span>
@@ -227,19 +210,16 @@
             placeholder="Digite a senha novamente">
         </div>
 
-        <!-- Error Message -->
         <div *ngIf="error" class="alert alert-danger error-message">
           <span class="error-icon">⚠️</span>
           {{ error }}
         </div>
 
-        <!-- Success Message -->
         <div *ngIf="success" class="alert alert-success success-message">
           <span class="success-icon">✅</span>
           {{ success }}
         </div>
         
-        <!-- Submit Button -->
         <button 
           type="submit" 
           class="btn btn-primary login-button"
@@ -250,7 +230,6 @@
       </form>
     </div>
 
-    <!-- Footer -->
     <div class="login-footer">
       <p class="footer-text">
         Sistema Financial Manager v1.0

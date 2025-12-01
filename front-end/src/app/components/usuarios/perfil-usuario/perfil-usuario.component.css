@@ -3,7 +3,6 @@
     background: #f8fafc;
 }
 
-/* Header */
 .page-header {
     background: white;
     border-bottom: 1px solid #e2e8f0;
@@ -50,14 +49,12 @@
     align-items: center;
 }
 
-/* Conteúdo Principal */
 .page-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
 
-/* Layout do Perfil */
 .profile-container {
     max-width: 100%;
 }
@@ -80,7 +77,6 @@
     gap: 1.5rem;
 }
 
-/* Cards do Perfil */
 .profile-card {
     background: white;
     border: 1px solid #e2e8f0;
@@ -144,7 +140,6 @@
     background: transparent;
 }
 
-/* Status e Badges */
 .status-badge {
     padding: 0.375rem 0.75rem;
     border-radius: 1rem;
@@ -183,7 +178,6 @@
     font-weight: 500;
 }
 
-/* Modo Visualização */
 .view-mode {
     width: 100%;
 }
@@ -218,7 +212,6 @@
     color: white;
 }
 
-/* Modo Edição */
 .edit-mode {
     width: 100%;
 }
@@ -295,7 +288,6 @@
     white-space: nowrap;
 }
 
-/* Segurança */
 .security-view {
     display: flex;
     justify-content: space-between;
@@ -406,7 +398,6 @@
     font-size: 1rem;
 }
 
-/* Sidebar Components */
 .user-avatar-large {
     width: 5rem;
     height: 5rem;
@@ -516,7 +507,6 @@
     transform: translateY(-1px);
 }
 
-/* Estados */
 .loading-state {
     display: flex;
     flex-direction: column;
@@ -622,7 +612,6 @@
     justify-content: center;
 }
 
-/* Botões */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -705,7 +694,6 @@
     }
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
     .profile-layout {
         grid-template-columns: 1fr;

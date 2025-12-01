@@ -19,20 +19,16 @@ export class GerenciarBancosComponent implements OnInit {
   erro: string = '';
   sucesso: string = '';
 
-  // Filtros
   filtroTexto: string = '';
   filtroStatus: string = 'todos';
 
-  // Paginação
   paginaAtual: number = 1;
   itensPorPagina: number = 10;
   totalItens: number = 0;
 
-  // Modal de criação/edição
   bancoEditando: Banco | NovoBanco | null = null;
   mostrarModal: boolean = false;
 
-  // Modal de confirmação de exclusão
   bancoParaExcluir: Banco | null = null;
   mostrarModalConfirmacao: boolean = false;
 
@@ -67,7 +63,6 @@ export class GerenciarBancosComponent implements OnInit {
     });
   }
 
-  // ✅ MÉTODOS PARA AS ESTATÍSTICAS
   getTotalAtivos(): number {
     return this.bancos.filter(b => b.status === 1).length;
   }
@@ -76,14 +71,11 @@ export class GerenciarBancosComponent implements OnInit {
     return this.bancos.filter(b => b.status === 0).length;
   }
 
-  // Filtros
   aplicarFiltros(): void {
     this.bancosFiltrados = this.bancos.filter(banco => {
-      // Filtro por texto (razão social)
       const textoMatch = !this.filtroTexto || 
         banco.razaoSocial.toLowerCase().includes(this.filtroTexto.toLowerCase());
 
-      // Filtro por status
       const statusMatch = this.filtroStatus === 'todos' || 
         (this.filtroStatus === 'ativo' && banco.status === 1) ||
         (this.filtroStatus === 'inativo' && banco.status === 0);
@@ -92,10 +84,9 @@ export class GerenciarBancosComponent implements OnInit {
     });
 
     this.totalItens = this.bancosFiltrados.length;
-    this.paginaAtual = 1; // Reset para primeira página
+    this.paginaAtual = 1;
   }
 
-  // Paginação
   get bancosPaginados(): Banco[] {
     const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
     const fim = inicio + this.itensPorPagina;
@@ -112,7 +103,6 @@ export class GerenciarBancosComponent implements OnInit {
     }
   }
 
-  // Modal de criação/edição
   abrirModalCriacao(): void {
     this.bancoEditando = {
       razaoSocial: '',
@@ -153,9 +143,7 @@ export class GerenciarBancosComponent implements OnInit {
 
     console.log('💾 Salvando banco:', bancoParaSalvar);
 
-    // ✅ VERIFICA SE É EDIÇÃO OU CRIAÇÃO
     if (this.isBancoComId(bancoParaSalvar)) {
-      // Edição
       this.bancoService.update(bancoParaSalvar.idBanco, bancoParaSalvar).subscribe({
         next: (response) => {
           console.log('✅ Banco atualizado com sucesso:', response);
@@ -167,7 +155,6 @@ export class GerenciarBancosComponent implements OnInit {
         }
       });
     } else {
-      // Criação
       this.bancoService.create(bancoParaSalvar).subscribe({
         next: (response) => {
           console.log('✅ Banco criado com sucesso:', response);
@@ -181,22 +168,18 @@ export class GerenciarBancosComponent implements OnInit {
     }
   }
 
-  // ✅ MÉTODO AUXILIAR para verificar se é um Banco com ID
   private isBancoComId(banco: any): banco is Banco {
     return (banco as Banco).idBanco !== undefined;
   }
 
-  // ✅ MÉTODO para verificar se é edição (para o template)
   isEdicao(): boolean {
     return this.bancoEditando !== null && this.isBancoComId(this.bancoEditando);
   }
 
-  // ✅ MÉTODO para obter o ID do banco (se existir)
   getIdBanco(): number | null {
     return this.isEdicao() ? (this.bancoEditando as Banco).idBanco : null;
   }
 
-  // Modal de confirmação de exclusão
   confirmarExclusao(banco: Banco): void {
     this.bancoParaExcluir = banco;
     this.mostrarModalConfirmacao = true;
@@ -236,12 +219,11 @@ export class GerenciarBancosComponent implements OnInit {
     });
   }
 
-  // Métodos auxiliares para operações
   private finalizarOperacao(mensagemSucesso: string): void {
     this.salvando = false;
     this.sucesso = mensagemSucesso;
     this.fecharModal();
-    this.carregarBancos(); // Recarrega a lista para refletir as mudanças
+    this.carregarBancos();
   }
 
   private tratarErroOperacao(error: any, operacao: string): void {
@@ -250,7 +232,6 @@ export class GerenciarBancosComponent implements OnInit {
     console.error(`❌ Erro na ${operacao}:`, error);
   }
 
-  // Utilitários para o template
   getIniciais(razaoSocial: string): string {
     if (!razaoSocial) return 'B';
     

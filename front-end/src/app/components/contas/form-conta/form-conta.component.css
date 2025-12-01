@@ -3,7 +3,6 @@
   background: #f8fafc;
 }
 
-/* Header */
 .page-header {
   background: white;
   border-bottom: 1px solid #e2e8f0;
@@ -40,14 +39,12 @@
   text-decoration: underline;
 }
 
-/* Conteúdo Principal */
 .page-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-/* Container do Formulário */
 .form-container {
   max-width: 100%;
 }
@@ -65,7 +62,6 @@
   gap: 1.5rem;
 }
 
-/* Cards do Formulário */
 .form-card {
   background: white;
   border: 1px solid #e2e8f0;
@@ -101,7 +97,6 @@
   padding: 1.5rem;
 }
 
-/* Grupos de Formulário */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -151,7 +146,6 @@
   cursor: not-allowed;
 }
 
-/* Componentes Especiais */
 .input-with-symbol {
   position: relative;
 }
@@ -178,7 +172,6 @@
   appearance: none;
 }
 
-/* Preview */
 .preview-content {
   display: flex;
   flex-direction: column;
@@ -230,7 +223,6 @@
   color: #2563eb;
 }
 
-/* Dicas e Textos de Ajuda */
 .form-hint {
   font-size: 0.75rem;
   color: #6b7280;
@@ -241,7 +233,6 @@
   margin-top: 0.25rem;
 }
 
-/* Ações do Formulário */
 .form-actions {
   display: flex;
   justify-content: space-between;
@@ -251,7 +242,6 @@
   margin-top: 2rem;
 }
 
-/* Estados */
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -311,7 +301,6 @@
   font-size: 0.875rem;
 }
 
-/* Botões */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -365,7 +354,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .form-grid {
     grid-template-columns: 1fr;

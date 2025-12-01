@@ -63,7 +63,6 @@ export class ListaUsuariosComponent implements OnInit {
     }
   }
 
-  // Métodos auxiliares para o template
   getStatusTexto(status: number): string {
     return this.usuarioService.getStatusTexto(status);
   }
@@ -80,7 +79,6 @@ export class ListaUsuariosComponent implements OnInit {
     return this.usuarioService.formatarData(data);
   }
 
-  // Método para calcular idade (aproximada)
   calcularIdade(dataNascimento: string): number {
     if (!dataNascimento) return 0;
     

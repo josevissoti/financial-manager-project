@@ -35,17 +35,14 @@ export class GerenciarUsuariosComponent implements OnInit {
   erro: string = '';
   sucesso: string = '';
 
-  // Filtros
   filtroTexto: string = '';
   filtroStatus: string = 'todos';
   filtroTipo: string = 'todos';
 
-  // Paginação
   paginaAtual: number = 1;
   itensPorPagina: number = 10;
   totalItens: number = 0;
 
-  // Modal de edição
   usuarioEditando: Usuario | null = null;
   mostrarModalEdicao: boolean = false;
   novaSenha: string = ''; // ✅ NOVO: Campo para nova senha
@@ -67,23 +64,19 @@ export class GerenciarUsuariosComponent implements OnInit {
 
     console.log('📋 Carregando lista de usuários...');
 
-    // Primeiro carrega usuários normais
     this.usuarioService.findAll().subscribe({
       next: (usuariosNormais: any[]) => {
         console.log('✅ Usuários normais carregados:', usuariosNormais.length);
         
-        // Depois carrega admins
         this.adminService.findAll().subscribe({
           next: (admins: any[]) => {
             console.log('✅ Admins carregados:', admins.length);
             
-            // Combina e processa os dados
             this.processarUsuarios(usuariosNormais, admins);
             this.carregando = false;
           },
           error: (errorAdmin) => {
             console.error('❌ Erro ao carregar admins:', errorAdmin);
-            // Se der erro nos admins, usa só os usuários normais
             this.processarUsuarios(usuariosNormais, []);
             this.carregando = false;
           }
@@ -98,7 +91,6 @@ export class GerenciarUsuariosComponent implements OnInit {
   }
 
   private processarUsuarios(usuariosNormais: any[], admins: any[]): void {
-    // Processa usuários normais
     const usuariosProcessados = usuariosNormais.map(usuario => ({
       idUsuario: usuario.idUsuario || usuario.idPessoa || this.gerarIdTemporario(),
       nome: usuario.nome || '',
@@ -112,7 +104,6 @@ export class GerenciarUsuariosComponent implements OnInit {
       isAdmin: false
     }));
 
-    // Processa admins
     const adminsProcessados = admins.map(admin => ({
       idAdmin: admin.idAdmin || admin.idPessoa || this.gerarIdTemporario(),
       idUsuario: admin.idAdmin || admin.idPessoa || this.gerarIdTemporario(), // Para compatibilidade
@@ -127,7 +118,6 @@ export class GerenciarUsuariosComponent implements OnInit {
       isAdmin: true
     }));
 
-    // Combina as listas
     this.usuarios = [...usuariosProcessados, ...adminsProcessados];
     this.usuariosFiltrados = [...this.usuarios];
     this.totalItens = this.usuarios.length;
@@ -135,7 +125,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     console.log('👥 Total de usuários carregados:', this.usuarios.length);
   }
 
-  // ✅ MÉTODO PROMOVER PARA ADMIN
   promoverParaAdmin(usuario: Usuario): void {
     if (!usuario.idUsuario) {
       console.error('❌ ID do usuário não encontrado para promoção');
@@ -160,11 +149,9 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.salvando = false;
         this.sucesso = `${usuario.nome} foi promovido para Administrador com sucesso!`;
         
-        // Atualiza o usuário localmente
         usuario.isAdmin = true;
         usuario.funcaoPessoa = [...(usuario.funcaoPessoa || []), 1];
         
-        // Recarrega a lista após 2 segundos
         setTimeout(() => {
           this.carregarUsuarios();
         }, 2000);
@@ -174,7 +161,6 @@ export class GerenciarUsuariosComponent implements OnInit {
         this.salvando = false;
         this.erro = error.error?.message || 'Erro ao promover usuário para admin';
         
-        // Mostra mensagem mais amigável para o usuário
         if (error.status === 400) {
           this.erro = 'Este usuário já é um administrador.';
         } else if (error.status === 404) {
@@ -186,12 +172,10 @@ export class GerenciarUsuariosComponent implements OnInit {
     });
   }
 
-  // ✅ MÉTODO AUXILIAR PARA VERIFICAR SE É ADMIN
   temFuncaoAdmin(usuario: Usuario): boolean {
     return usuario.funcaoPessoa?.includes(1) || false;
   }
 
-  // ✅ NOVOS MÉTODOS PARA AS ESTATÍSTICAS
   getTotalAdmins(): number {
     return this.usuarios.filter(u => u.isAdmin || this.temFuncaoAdmin(u)).length;
   }
@@ -204,14 +188,12 @@ export class GerenciarUsuariosComponent implements OnInit {
     return this.usuarios.filter(u => u.status === 0).length;
   }
 
-  // ✅ MÉTODO DE EDIÇÃO CORRIGIDO
   salvarEdicao(): void {
     if (!this.usuarioEditando) {
       console.log('❌ Nenhum usuário selecionado para edição');
       return;
     }
 
-    // Validações
     if (!this.usuarioEditando.nome || !this.usuarioEditando.email || !this.usuarioEditando.telefone) {
       this.erro = 'Nome, email e telefone são obrigatórios';
       return;
@@ -225,24 +207,21 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.salvando = true;
     this.erro = '';
 
-    // ✅ CORREÇÃO: Preparar dados para envio sem problemas de senha
     const dadosAtualizacao: any = {
       nome: this.usuarioEditando.nome,
       email: this.usuarioEditando.email,
       telefone: this.usuarioEditando.telefone,
       status: this.usuarioEditando.status,
-      cpf: this.usuarioEditando.cpf, // Manter CPF original
-      datanascimento: this.usuarioEditando.datanascimento, // Manter data original
-      dataCriacao: this.usuarioEditando.dataCriacao, // Manter data criação
-      funcaoPessoa: this.usuarioEditando.funcaoPessoa // Manter funções
+      cpf: this.usuarioEditando.cpf,
+      datanascimento: this.usuarioEditando.datanascimento,
+      dataCriacao: this.usuarioEditando.dataCriacao,
+      funcaoPessoa: this.usuarioEditando.funcaoPessoa
     };
 
-    // ✅ CORREÇÃO: Adicionar senha apenas se foi informada
     if (this.novaSenha && this.novaSenha.length >= 6) {
       dadosAtualizacao.senha = this.novaSenha;
     }
 
-    // ✅ CORREÇÃO: Garantir que o ID existe
     const id = this.usuarioEditando.idUsuario || this.usuarioEditando.idAdmin;
     
     if (!id) {
@@ -262,7 +241,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     if (this.usuarioEditando.isAdmin) {
       console.log('🔧 Atualizando como Admin...');
       
-      // Para Admin, adicionar idAdmin
       dadosAtualizacao.idAdmin = id;
       
       this.adminService.update(id, dadosAtualizacao).subscribe({
@@ -278,7 +256,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     } else {
       console.log('🔧 Atualizando como Usuário...');
       
-      // Para Usuário, adicionar idUsuario
       dadosAtualizacao.idUsuario = id;
       
       this.usuarioService.update(id, dadosAtualizacao).subscribe({
@@ -294,10 +271,9 @@ export class GerenciarUsuariosComponent implements OnInit {
     }
   }
 
-  // Modal de edição
   abrirModalEdicao(usuario: Usuario): void {
     this.usuarioEditando = { ...usuario };
-    this.novaSenha = ''; // ✅ Resetar campo de senha
+    this.novaSenha = '';
     this.mostrarModalEdicao = true;
     this.erro = '';
     this.sucesso = '';
@@ -306,7 +282,7 @@ export class GerenciarUsuariosComponent implements OnInit {
   fecharModalEdicao(): void {
     this.mostrarModalEdicao = false;
     this.usuarioEditando = null;
-    this.novaSenha = ''; // ✅ Limpar campo de senha
+    this.novaSenha = '';
     this.erro = '';
     this.sucesso = '';
   }
@@ -315,7 +291,7 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.salvando = false;
     this.sucesso = 'Usuário atualizado com sucesso!';
     this.fecharModalEdicao();
-    this.carregarUsuarios(); // Recarrega a lista para refletir as mudanças
+    this.carregarUsuarios();
   }
 
   private tratarErroEdicao(error: any): void {
@@ -324,7 +300,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     console.error('❌ Erro na edição:', error);
   }
 
-  // ... (mantenha os outros métodos auxiliares iguais)
   private gerarIdTemporario(): number {
     return Math.floor(Math.random() * 1000000) * -1;
   }
@@ -352,7 +327,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     return [0];
   }
 
-  // Filtros
   aplicarFiltros(): void {
     this.usuariosFiltrados = this.usuarios.filter(usuario => {
       const textoMatch = !this.filtroTexto || 
@@ -374,7 +348,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.paginaAtual = 1;
   }
 
-  // Paginação
   get usuariosPaginados(): Usuario[] {
     const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
     const fim = inicio + this.itensPorPagina;
@@ -391,7 +364,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     }
   }
 
-  // Utilitários para o template
   formatarData(data: string): string {
     if (!data) return 'Não informado';
     if (data.includes('/')) return data;

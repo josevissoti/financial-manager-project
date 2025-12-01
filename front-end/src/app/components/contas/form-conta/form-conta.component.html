@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-main">
@@ -16,13 +15,11 @@
   </header>
 
   <div class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando dados da conta...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="alert alert-error">
       <div class="alert-content">
         <span class="alert-icon">⚠️</span>
@@ -33,24 +30,19 @@
       </div>
     </div>
 
-    <!-- Formulário -->
     <div *ngIf="!carregando" class="form-container">
       <form (ngSubmit)="onSubmit()" #form="ngForm" class="conta-form">
         
-        <!-- Layout em Grid -->
         <div class="form-grid">
           
-          <!-- Coluna Esquerda - Informações da Conta -->
           <div class="form-column">
             
-            <!-- Card: Informações da Conta -->
             <div class="form-card">
               <div class="card-header">
                 <h3>📋 Informações da Conta</h3>
               </div>
               <div class="card-body">
                 
-                <!-- Descrição -->
                 <div class="form-group">
                   <label for="descricao" class="form-label">
                     Descrição <span class="required">*</span>
@@ -63,7 +55,6 @@
                   <div class="form-hint">Use um nome que ajude a identificar facilmente esta conta</div>
                 </div>
 
-                <!-- Tipo de Conta -->
                 <div class="form-group">
                   <label for="tipoConta" class="form-label">
                     Tipo de Conta <span class="required">*</span>
@@ -79,7 +70,6 @@
                   </select>
                 </div>
 
-                <!-- Saldo e Limite -->
                 <div class="form-row">
                   <div class="form-group">
                     <label for="saldo" class="form-label">Saldo Inicial</label>
@@ -123,17 +113,14 @@
 
           </div>
 
-          <!-- Coluna Direita - Dados Bancários e Resumo -->
           <div class="form-column">
             
-            <!-- Card: Dados Bancários -->
             <div class="form-card">
               <div class="card-header">
                 <h3>🏦 Dados Bancários</h3>
               </div>
               <div class="card-body">
                 
-                <!-- Banco -->
                 <div class="form-group">
                   <label for="idBanco" class="form-label">
                     Banco <span class="required" *ngIf="conta.tipoConta !== 2">*</span>
@@ -155,7 +142,6 @@
                   </div>
                 </div>
 
-                <!-- Agência e Número da Conta -->
                 <div class="form-row">
                   <div class="form-group">
                     <label for="agencia" class="form-label">
@@ -193,7 +179,6 @@
               </div>
             </div>
 
-            <!-- Card: Resumo -->
             <div class="form-card preview-card">
               <div class="card-header">
                 <h3>📊 Resumo</h3>
@@ -201,7 +186,6 @@
               <div class="card-body">
                 <div class="preview-content">
                   
-                  <!-- Tipo de Conta -->
                   <div class="preview-item">
                     <span class="preview-label">Tipo:</span>
                     <span class="preview-value">
@@ -209,7 +193,6 @@
                     </span>
                   </div>
 
-                  <!-- Banco -->
                   <div class="preview-item">
                     <span class="preview-label">Banco:</span>
                     <span class="preview-value">
@@ -217,7 +200,6 @@
                     </span>
                   </div>
 
-                  <!-- Agência/Conta -->
                   <div class="preview-item">
                     <span class="preview-label">{{ conta.tipoConta === 2 ? 'Cartão/Número:' : 'Agência/Conta:' }}</span>
                     <span class="preview-value">
@@ -227,7 +209,6 @@
                     </span>
                   </div>
 
-                  <!-- Saldo -->
                   <div class="preview-item highlight">
                     <span class="preview-label">
                       {{ conta.tipoConta === 2 ? 'Dívida Atual:' : 'Saldo:' }}
@@ -237,7 +218,6 @@
                     </span>
                   </div>
 
-                  <!-- Limite (apenas para cartão de crédito e cheque especial) -->
                   <div *ngIf="conta.limite > 0 && (conta.tipoConta === 2 || conta.tipoConta === 0)" class="preview-item">
                     <span class="preview-label">
                       {{ conta.tipoConta === 2 ? 'Limite Total:' : 'Cheque Especial:' }}
@@ -254,7 +234,6 @@
           </div>
         </div>
 
-        <!-- Ações do Formulário -->
         <div class="form-actions">
           <button type="button" (click)="voltar()" class="btn btn-secondary">
             ↩️ Cancelar

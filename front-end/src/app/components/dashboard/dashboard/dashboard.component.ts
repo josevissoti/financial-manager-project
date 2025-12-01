@@ -47,7 +47,6 @@ export class DashboardComponent implements OnInit {
       this.userName = this.userName.charAt(0).toUpperCase() + this.userName.slice(1);
     }
 
-    // ✅ CORREÇÃO SIMPLIFICADA
     this.isAdmin = this.authService.isAdmin();
     
     console.log('👑 Status de Admin no Dashboard:', {

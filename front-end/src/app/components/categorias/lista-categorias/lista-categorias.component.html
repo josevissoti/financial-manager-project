@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-main">
@@ -20,13 +19,11 @@
   </header>
 
   <div class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando categorias...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="alert alert-error">
       <div class="alert-content">
         <span class="alert-icon">⚠️</span>
@@ -40,7 +37,6 @@
       </button>
     </div>
 
-    <!-- Filtros e Busca -->
     <div *ngIf="!carregando && !erro" class="filters-section">
       <div class="filters-card">
         <div class="search-box">
@@ -64,10 +60,8 @@
       </div>
     </div>
 
-    <!-- Grid de Categorias -->
     <div *ngIf="!carregando && !erro" class="categories-grid">
       
-      <!-- Empty State -->
       <div *ngIf="categoriasFiltradas.length === 0" class="empty-state">
         <div class="empty-icon">🏷️</div>
         <h3>Nenhuma categoria encontrada</h3>
@@ -83,7 +77,6 @@
         </button>
       </div>
 
-      <!-- Cards de Categorias -->
       <div *ngFor="let categoria of categoriasFiltradas" class="category-card">
         <div class="category-header">
           <div class="category-info">
@@ -108,12 +101,10 @@
         </div>
 
         <div class="category-body">
-          <!-- Descrição -->
           <div class="description-section">
             <p class="category-description">{{ categoria.descricao }}</p>
           </div>
 
-          <!-- Estatísticas -->
           <div class="stats-section">
             <div class="stats-grid">
               <div class="stat-item">
@@ -129,7 +120,6 @@
             </div>
           </div>
 
-          <!-- Informações do Criador -->
           <div class="creator-info">
             <div class="creator-avatar">
               {{ getIniciais(categoria.nome) }}
@@ -141,11 +131,8 @@
           </div>
         </div>
 
-        <!-- Ações e Status -->
         <div class="category-footer">
-          <!-- REMOVIDO: Botões Lançamentos e Editar do footer -->
           
-          <!-- Mensagem de Proteção -->
           <div *ngIf="getQuantidadeLancamentos(categoria) > 0" class="protection-warning">
             <span class="warning-icon">⚠️</span>
             <span class="warning-text">
@@ -153,7 +140,6 @@
             </span>
           </div>
           
-          <!-- REMOVIDO: Caixa de status -->
         </div>
       </div>
     </div>

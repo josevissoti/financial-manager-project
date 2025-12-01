@@ -20,7 +20,6 @@
   --radius-lg: 0.75rem;
 }
 
-/* ===== LAYOUT PRINCIPAL ===== */
 .dashboard-container {
   min-height: 100vh;
   background-color: var(--background-color);
@@ -40,7 +39,6 @@
   padding: 1.5rem 0;
 }
 
-/* ===== HEADER & NAVIGATION ===== */
 .navbar {
   display: flex;
   align-items: center;
@@ -70,7 +68,6 @@
   background-clip: text;
 }
 
-/* ===== USER DROPDOWN ===== */
 .user-dropdown {
   position: relative;
 }
@@ -186,7 +183,6 @@
   text-align: center;
 }
 
-/* ===== BREADCRUMB ===== */
 .breadcrumb-nav {
   padding: 0 1.5rem;
   max-width: 1400px;
@@ -203,7 +199,6 @@
   font-weight: 500;
 }
 
-/* ===== LOADING STATE ===== */
 .loading-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -225,7 +220,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* ===== METRICS GRID ===== */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -311,7 +305,6 @@
   color: var(--error-color);
 }
 
-/* ===== SECTIONS ===== */
 .section {
   max-width: 1400px;
   margin: 0 auto 2rem;
@@ -334,7 +327,6 @@
   margin: 0;
 }
 
-/* ===== QUICK ACTIONS GRID ===== */
 .quick-actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -396,7 +388,6 @@
   color: var(--primary-color);
 }
 
-/* ===== CONTENT GRID ===== */
 .content-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -458,7 +449,6 @@
   padding: 1.5rem;
 }
 
-/* ===== ACTION BUTTONS ===== */
 .action-button {
   display: flex;
   align-items: center;
@@ -497,11 +487,6 @@
 
 .button-icon {
   font-size: 1rem;
-}
-
-/* ===== TRANSACTIONS LIST ===== */
-.transactions-list {
-  space-y: 0.75rem;
 }
 
 .transaction-item {
@@ -572,7 +557,6 @@
   margin-left: auto;
 }
 
-/* ===== EMPTY STATE ===== */
 .empty-state {
   text-align: center;
   padding: 2rem;
@@ -594,7 +578,6 @@
   margin: 0 0 1.5rem 0;
 }
 
-/* ===== UTILITY CLASSES ===== */
 .bg-success { background-color: var(--success-color); color: white; }
 .bg-warning { background-color: var(--warning-color); color: white; }
 .bg-danger { background-color: var(--error-color); color: white; }
@@ -605,7 +588,6 @@
 .text-danger { color: var(--error-color); }
 .text-info { color: var(--info-color); }
 
-/* ===== RESPONSIVIDADE ===== */
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -665,7 +647,6 @@
   }
 }
 
-/* ===== ESTILOS PARA ADMIN ===== */
 .admin-card {
   border-left: 4px solid #7c3aed;
   position: relative;
@@ -698,7 +679,6 @@
   transform: translateY(-1px);
 }
 
-/* ===== RESPONSIVIDADE ADICIONAL ===== */
 @media (max-width: 768px) {
   .admin-card::before {
     top: 0.25rem;

@@ -1,5 +1,4 @@
 <div class="lancamentos-container">
-  <!-- Header -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-left">
@@ -22,13 +21,11 @@
   </header>
 
   <main class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando lançamentos...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="error-state">
       <div class="error-icon">⚠️</div>
       <div class="error-content">
@@ -40,7 +37,6 @@
       </div>
     </div>
 
-    <!-- Filters -->
     <div *ngIf="!carregando && !erro && lancamentos.length > 0" class="filters-section">
       <div class="filters-header">
         <h3>🔍 Filtros</h3>
@@ -86,7 +82,6 @@
       </div>
     </div>
 
-    <!-- Results Counter -->
     <div *ngIf="!carregando && !erro && lancamentosFiltrados.length !== lancamentos.length" class="results-counter">
       <div class="counter-icon">🔍</div>
       <div class="counter-text">
@@ -95,9 +90,7 @@
       </div>
     </div>
 
-    <!-- Lançamentos List -->
     <div *ngIf="!carregando && !erro" class="content-section">
-      <!-- Empty State -->
       <div *ngIf="lancamentos.length === 0" class="empty-state">
         <div class="empty-icon">💸</div>
         <div class="empty-content">
@@ -109,7 +102,6 @@
         </div>
       </div>
 
-      <!-- No Results State -->
       <div *ngIf="lancamentosFiltrados.length === 0 && lancamentos.length > 0" class="empty-state">
         <div class="empty-icon">🔍</div>
         <div class="empty-content">
@@ -126,7 +118,6 @@
         </div>
       </div>
 
-      <!-- Lançamentos Table -->
       <div *ngIf="lancamentosFiltrados.length > 0" class="table-container">
         <div class="table-responsive">
           <table class="data-table">
@@ -146,7 +137,6 @@
               <tr *ngFor="let lancamento of lancamentosFiltrados; trackBy: trackByLancamentoId" 
                   class="table-row">
                 
-                <!-- Descrição -->
                 <td class="descricao-cell">
                   <div class="descricao-content">
                     <div class="descricao-title">{{ lancamento.descricao }}</div>
@@ -164,14 +154,12 @@
                   </div>
                 </td>
                 
-                <!-- Valor -->
                 <td class="valor-cell">
                   <span class="valor-amount" [ngClass]="getTipoClasse(lancamento.tipoLancamento)">
                     {{ formatarValor(lancamento.valor) }}
                   </span>
                 </td>
                 
-                <!-- Tipo -->
                 <td class="tipo-cell">
                   <span class="status-badge" [ngClass]="getTipoLancamentoClasse(lancamento.tipoLancamento)">
                     <span class="badge-icon">{{ getTipoLancamentoIcone(lancamento.tipoLancamento) }}</span>
@@ -179,14 +167,12 @@
                   </span>
                 </td>
                 
-                <!-- Situação -->
                 <td class="situacao-cell">
                   <span class="status-badge" [ngClass]="getSituacaoClasse(lancamento.situacao)">
                     {{ getSituacaoTexto(lancamento.situacao) }}
                   </span>
                 </td>
                 
-                <!-- Vencimento -->
                 <td class="vencimento-cell">
                   <span class="vencimento-date" [ngClass]="{
                     'atrasado': lancamento.situacao === 2,
@@ -196,17 +182,14 @@
                   </span>
                 </td>
                 
-                <!-- Categoria -->
                 <td class="categoria-cell">
-                  <span class="categoria-text">{{ lancamento.idCategoriaLancamento || 'N/A' }}</span>
+                  <span class="categoria-text">{{ lancamento.descricaoCategoriaLancamento || 'N/A' }}</span>
                 </td>
                 
-                <!-- Conta -->
                 <td class="conta-cell">
-                  <span class="conta-text">{{ lancamento.idConta || 'N/A' }}</span>
+                  <span class="conta-text">{{ lancamento.descricaoConta || 'N/A' }}</span>
                 </td>
                 
-                <!-- Ações -->
                 <td class="acoes-cell">
                   <div class="actions-group">
                     <button class="action-btn edit-btn" 

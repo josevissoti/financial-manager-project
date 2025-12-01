@@ -15,7 +15,6 @@ export class AdminGuard implements CanActivate {
   canActivate(): boolean {
     console.log('👑 AdminGuard verificando permissões...');
     
-    // DEBUG TEMPORÁRIO
     this.authService.debugAdminCheck();
     
     const isAuthenticated = this.authService.isAuthenticated();

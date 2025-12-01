@@ -19,8 +19,8 @@ export class FormUsuarioComponent implements OnInit {
     telefone: '',
     email: '',
     senha: '',
-    status: 1, // Ativo por padrão
-    funcaoPessoa: [0] // Usuário por padrão
+    status: 1,
+    funcaoPessoa: [0]
   };
 
   confirmarSenha: string = '';
@@ -29,7 +29,6 @@ export class FormUsuarioComponent implements OnInit {
   enviando: boolean = false;
   erro: string = '';
 
-  // Opções para os selects
   statusOptions = [
     { valor: 1, texto: '✅ Ativo' },
     { valor: 0, texto: '❌ Inativo' }
@@ -68,7 +67,6 @@ export class FormUsuarioComponent implements OnInit {
           email: usuarioDTO.email,
           status: usuarioDTO.status,
           funcaoPessoa: usuarioDTO.funcaoPessoa
-          // Não carrega a senha por segurança
         };
         this.carregando = false;
         console.log('✅ Usuário carregado para edição:', this.usuario);
@@ -85,19 +83,16 @@ export class FormUsuarioComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    // Validações
     if (!this.validarFormulario()) {
       this.enviando = false;
       return;
     }
 
-    // Preparar dados para envio
     const usuarioParaEnviar: Usuario = {
       ...this.usuario,
       datanascimento: this.converterDataParaBackend(this.usuario.datanascimento)
     };
 
-    // Se é edição e não mudou a senha, remove o campo senha
     if (this.isEditando && (!this.usuario.senha || this.usuario.senha === '')) {
       delete usuarioParaEnviar.senha;
     }
@@ -136,39 +131,33 @@ export class FormUsuarioComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
-    // Validações básicas
     if (!this.usuario.nome || !this.usuario.cpf || !this.usuario.email || !this.usuario.telefone) {
       this.erro = 'Por favor, preencha todos os campos obrigatórios.';
       return false;
     }
 
-    // Validação de CPF (formato básico)
     const cpfLimpo = this.usuario.cpf.replace(/\D/g, '');
     if (cpfLimpo.length !== 11) {
       this.erro = 'CPF deve conter 11 dígitos.';
       return false;
     }
 
-    // Validação de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.usuario.email)) {
       this.erro = 'Por favor, informe um email válido.';
       return false;
     }
 
-    // Validação de senha (apenas para criação)
     if (!this.isEditando && (!this.usuario.senha || this.usuario.senha.length < 6)) {
       this.erro = 'A senha deve ter pelo menos 6 caracteres.';
       return false;
     }
 
-    // Validação de confirmação de senha
     if (!this.isEditando && this.usuario.senha !== this.confirmarSenha) {
       this.erro = 'As senhas não coincidem.';
       return false;
     }
 
-    // Validação de data de nascimento
     if (!this.validarData(this.usuario.datanascimento)) {
       this.erro = 'Data de nascimento inválida. Use o formato DD/MM/AAAA.';
       return false;
@@ -177,7 +166,6 @@ export class FormUsuarioComponent implements OnInit {
     return true;
   }
 
-  // Métodos para manipulação de datas
   private formatarDataParaInput(data: Date): string {
     const dia = data.getDate().toString().padStart(2, '0');
     const mes = (data.getMonth() + 1).toString().padStart(2, '0');
@@ -188,7 +176,6 @@ export class FormUsuarioComponent implements OnInit {
   private converterDataParaFormatoInput(dataString: string): string {
     if (!dataString) return '';
     
-    // Converte de "yyyy-MM-dd" para "dd/MM/yyyy"
     const partes = dataString.split('-');
     if (partes.length === 3) {
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
@@ -199,7 +186,6 @@ export class FormUsuarioComponent implements OnInit {
   private converterDataParaBackend(dataString: string): string {
     if (!dataString) return '';
     
-    // Converte de "dd/MM/yyyy" para "yyyy-MM-dd"
     const partes = dataString.split('/');
     if (partes.length === 3) {
       return `${partes[2]}-${partes[1]}-${partes[0]}`;
@@ -224,7 +210,6 @@ export class FormUsuarioComponent implements OnInit {
            dataObj.getFullYear() === ano;
   }
 
-  // Métodos para máscaras
   aplicarMascaraCPF(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
     
@@ -271,7 +256,6 @@ export class FormUsuarioComponent implements OnInit {
     this.usuario.datanascimento = value;
   }
 
-  // Método para seleção de funções
   toggleFuncao(funcao: number): void {
     const index = this.usuario.funcaoPessoa!.indexOf(funcao);
     if (index > -1) {
@@ -289,7 +273,6 @@ export class FormUsuarioComponent implements OnInit {
     this.router.navigate(['/usuarios']);
   }
 
-  // Calcular idade aproximada
   calcularIdade(): number {
     if (!this.usuario.datanascimento || !this.validarData(this.usuario.datanascimento)) {
       return 0;

@@ -1,7 +1,6 @@
 package com.project.domains.dtos;
 
 import com.project.domains.Banco;
-import com.project.domains.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

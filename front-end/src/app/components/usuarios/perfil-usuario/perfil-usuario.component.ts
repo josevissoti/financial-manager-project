@@ -76,13 +76,11 @@ export class PerfilUsuarioComponent implements OnInit {
       return;
     }
 
-    // Estratégia: Tenta como ADMIN primeiro, depois USUÁRIO
     this.adminService.findByEmail(email).subscribe({
       next: (adminCompleto: any) => {
         this.processarUsuario(adminCompleto, true);
       },
       error: (errorAdmin) => {
-        // Se não for admin, tenta como usuário
         this.usuarioService.findByEmail(email).subscribe({
           next: (usuarioCompleto: any) => {
             this.processarUsuario(usuarioCompleto, false);
@@ -91,7 +89,6 @@ export class PerfilUsuarioComponent implements OnInit {
             this.carregando = false;
             this.erro = `Perfil não encontrado. O email ${email} não está cadastrado como admin nem como usuário.`;
             
-            // Fallback: usa dados básicos do AuthService
             this.processarUsuario(usuarioLogado, false);
           }
         });

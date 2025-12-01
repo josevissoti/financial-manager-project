@@ -3,7 +3,6 @@ package com.project.domains.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.domains.Usuario;
 import com.project.domains.enums.FuncaoPessoa;
-import com.project.domains.enums.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;

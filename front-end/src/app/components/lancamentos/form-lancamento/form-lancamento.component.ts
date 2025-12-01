@@ -142,7 +142,6 @@ export class FormLancamentoComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    // Validações básicas
     if (!this.lancamento.descricao || !this.lancamento.valor || this.lancamento.valor <= 0) {
       this.erro = 'Por favor, preencha todos os campos obrigatórios corretamente.';
       this.enviando = false;
@@ -155,7 +154,6 @@ export class FormLancamentoComponent implements OnInit {
       return;
     }
 
-    // Validação de datas
     if (!this.isDataValida(this.lancamento.dataLancamento)) {
       this.erro = 'Data de lançamento inválida. Use o formato DD/MM/AAAA.';
       this.enviando = false;

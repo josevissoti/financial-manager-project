@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-main">
@@ -20,13 +19,11 @@
   </header>
 
   <div class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando contas bancárias...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="alert alert-error">
       <div class="alert-content">
         <span class="alert-icon">⚠️</span>
@@ -40,7 +37,6 @@
       </button>
     </div>
 
-    <!-- Filtros e Busca -->
     <div *ngIf="!carregando && !erro" class="filters-section">
       <div class="filters-card">
         <div class="search-box">
@@ -79,10 +75,8 @@
       </div>
     </div>
 
-    <!-- Grid de Contas -->
     <div *ngIf="!carregando && !erro" class="accounts-grid">
       
-      <!-- Empty State -->
       <div *ngIf="contasFiltradas.length === 0" class="empty-state">
         <div class="empty-icon">🏦</div>
         <h3>Nenhuma conta encontrada</h3>
@@ -98,7 +92,6 @@
         </button>
       </div>
 
-      <!-- Cards de Contas -->
       <div *ngFor="let conta of contasFiltradas" class="account-card">
         <div class="account-header">
           <div class="account-info">
@@ -118,7 +111,6 @@
         </div>
 
         <div class="account-body">
-          <!-- Informações Bancárias -->
           <div class="bank-info">
             <div class="info-item">
               <span class="info-label">Agência</span>
@@ -128,17 +120,16 @@
               <span class="info-label">Conta</span>
               <span class="info-value">{{ formatarNumeroConta(conta.numero, conta.tipoConta) || '—' }}</span>
             </div>
-            <div class="info-item full-width">
+            <div class="info-item">
               <span class="info-label">Banco</span>
               <span class="info-value">{{ conta.razaoSocialBanco || 'Não informado' }}</span>
             </div>
-            <div class="info-item full-width">
+            <div class="info-item">
               <span class="info-label">Tipo da Conta</span>
               <span class="info-value">{{ getTipoContaTexto(conta.tipoConta) }}</span>
             </div>
           </div>
 
-          <!-- Saldo -->
           <div class="balance-section">
             <div class="balance-main">
               <span class="balance-label">Saldo Atual</span>
@@ -148,7 +139,6 @@
             </div>
           </div>
 
-          <!-- Limite (apenas para cartão de crédito e contas com limite) -->
           <div *ngIf="conta.limite > 0 && (conta.tipoConta === 2 || conta.saldo < 0)" class="limit-section">
             <div class="limit-header">
               <span class="limit-label">

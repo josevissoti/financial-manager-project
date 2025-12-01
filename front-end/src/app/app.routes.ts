@@ -9,7 +9,6 @@ export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   
-  // ===== ROTAS PÚBLICAS DO SISTEMA (qualquer usuário logado) =====
   {
     path: 'dashboard',
     loadComponent: () => import('./components/dashboard/dashboard/dashboard.component')
@@ -95,7 +94,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
 
-  // ===== ROTAS ADMINISTRATIVAS (somente administradores) =====
   {
     path: 'admin/usuarios',
     component: GerenciarUsuariosComponent,
@@ -107,6 +105,5 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
 
-  // ===== ROTA PARA PÁGINAS NÃO ENCONTRADAS =====
   { path: '**', redirectTo: '/dashboard' }
 ];

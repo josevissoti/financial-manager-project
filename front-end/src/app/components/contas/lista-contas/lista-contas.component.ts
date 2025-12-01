@@ -17,7 +17,6 @@ export class ListaContasComponent implements OnInit {
   carregando: boolean = true;
   erro: string = '';
   
-  // Filtros
   termoBusca: string = '';
   filtroTipo: string = '';
   filtroStatus: string = '';
@@ -42,7 +41,6 @@ export class ListaContasComponent implements OnInit {
         this.carregando = false;
         console.log(`✅ ${contas.length} contas carregadas`);
 
-        // Debug: verificar dados
         contas.forEach(conta => {
           console.log(`Conta: ${conta.descricao}`, {
             tipoConta: conta.tipoConta,
@@ -61,16 +59,13 @@ export class ListaContasComponent implements OnInit {
 
   filtrarContas(): void {
     this.contasFiltradas = this.contas.filter(conta => {
-      // Filtro por busca
       const buscaMatch = !this.termoBusca || 
         conta.descricao.toLowerCase().includes(this.termoBusca.toLowerCase()) ||
         (conta.razaoSocialBanco && conta.razaoSocialBanco.toLowerCase().includes(this.termoBusca.toLowerCase())) ||
         this.getTipoContaTexto(conta.tipoConta).toLowerCase().includes(this.termoBusca.toLowerCase());
 
-      // Filtro por tipo
       const tipoMatch = !this.filtroTipo || conta.tipoConta.toString() === this.filtroTipo;
 
-      // Filtro por status (removido filtro de "limite-alto")
       let statusMatch = true;
       if (this.filtroStatus) {
         switch (this.filtroStatus) {
@@ -119,7 +114,6 @@ export class ListaContasComponent implements OnInit {
     return this.contaService.formatarValor(valor);
   }
 
-  // ✅ CORRIGIDO: Bug do tipo "desconhecido"
   getTipoContaTexto(tipo: number): string {
     const tipos = {
       0: 'Conta Corrente',
@@ -131,17 +125,11 @@ export class ListaContasComponent implements OnInit {
     return tipos[tipo as keyof typeof tipos] || 'Desconhecido';
   }
 
-  // ✅ NOVA FUNÇÃO: Formata número da conta com máscara
-  // ✅ ATUALIZADA: Formata número da conta com máscara correta
-// ✅ CORRIGIDA: Função para formatar número da conta com máscara
-// ✅ CORRIGIDA: Função para formatar número da conta
 formatarNumeroConta(numero: string, tipoConta: number): string {
   if (!numero) return '';
   
-  // Remove tudo que não é número
   const numeros = numero.replace(/\D/g, '');
   
-  // Para cartão de crédito (tipo 2): formata como XXXX XXXX XXXX XXXX
   if (tipoConta === 2) {
     if (numeros.length === 0) return '';
     if (numeros.length <= 4) return numeros;
@@ -151,7 +139,6 @@ formatarNumeroConta(numero: string, tipoConta: number): string {
     return `${numeros.slice(0, 4)} ${numeros.slice(4, 8)} ${numeros.slice(8, 12)} ${numeros.slice(12, 16)}`;
   }
   
-  // Para outros tipos de conta: formata como XXXXX-X (5 dígitos + 1 dígito verificador)
   if (numeros.length === 0) return '';
   if (numeros.length <= 5) {
     return numeros;
@@ -163,19 +150,16 @@ formatarNumeroConta(numero: string, tipoConta: number): string {
     return saldo >= 0 ? 'positive' : 'negative';
   }
 
-  // ✅ ATUALIZADO: Cálculo do limite utilizado apenas para cartão e cheque especial
   getLimiteUtilizado(conta: Conta): number {
     if (conta.limite <= 0) return 0;
 
     const tipo = conta.tipoConta;
 
-    // Cartão de Crédito (ID 2)
     if (tipo === 2) {
       const utilizado = Math.max(-conta.saldo, 0);
       return Math.min((utilizado / conta.limite) * 100, 100);
     }
 
-    // Cheque Especial (Conta Corrente com saldo negativo)
     if (tipo === 0 && conta.saldo < 0) {
       const utilizado = Math.abs(conta.saldo);
       return Math.min((utilizado / conta.limite) * 100, 100);
@@ -184,7 +168,6 @@ formatarNumeroConta(numero: string, tipoConta: number): string {
     return 0;
   }
 
-  // ✅ ATUALIZADO: Classes para a barra de progresso
   getLimiteClasse(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 
@@ -198,7 +181,6 @@ formatarNumeroConta(numero: string, tipoConta: number): string {
     return 'secondary';
   }
 
-  // ✅ ATUALIZADO: Texto descritivo para o limite
   getLimiteTexto(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 
@@ -218,7 +200,6 @@ formatarNumeroConta(numero: string, tipoConta: number): string {
     return 'Limite';
   }
 
-  // ✅ ATUALIZADO: Detalhe específico do limite
   getLimiteDetalhe(conta: Conta): string {
     const utilizacao = this.getLimiteUtilizado(conta);
 

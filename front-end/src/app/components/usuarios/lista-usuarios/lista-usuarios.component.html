@@ -1,5 +1,4 @@
 <div class="container-fluid">
-  <!-- Header -->
   <nav class="navbar navbar-light bg-light border-bottom">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center w-100">
@@ -19,7 +18,6 @@
 
   <div class="container mt-4">
     
-    <!-- Loading -->
     <div *ngIf="carregando" class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Carregando...</span>
@@ -27,7 +25,6 @@
       <p class="mt-2 text-muted">Carregando usuários...</p>
     </div>
 
-    <!-- Erro -->
     <div *ngIf="erro && !carregando" class="alert alert-danger">
       {{ erro }}
       <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarUsuarios()">
@@ -35,10 +32,8 @@
       </button>
     </div>
 
-    <!-- Tabela de Usuários -->
     <div *ngIf="!carregando && !erro">
       
-      <!-- Tabela -->
       <div class="card">
         <div class="table-responsive">
           <table class="table table-hover mb-0">
@@ -99,7 +94,6 @@
           </table>
         </div>
 
-        <!-- Mensagem sem usuários -->
         <div *ngIf="usuarios.length === 0" class="text-center py-5">
           <div class="text-muted mb-3">👥</div>
           <h4 class="text-muted">Nenhum usuário cadastrado</h4>

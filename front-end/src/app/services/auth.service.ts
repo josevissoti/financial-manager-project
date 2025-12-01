@@ -38,7 +38,6 @@ export class AuthService {
           localStorage.setItem('token', token);
           console.log('🔑 Token salvo no localStorage');
 
-          // ✅ CORREÇÃO: Buscar informações completas do usuário
           return this.buscarUsuarioCompleto(credenciais.username).pipe(
             tap(usuarioCompleto => {
               console.log('👤 Usuário completo carregado:', usuarioCompleto);
@@ -53,25 +52,20 @@ export class AuthService {
       );
   }
 
-  // ✅ MÉTODO CORRIGIDO: Buscar informações completas do usuário
   private buscarUsuarioCompleto(email: string): Observable<any> {
     console.log('🔍 Buscando informações completas do usuário:', email);
     
-    // Primeiro tenta como Admin
     return this.adminService.findByEmail(email).pipe(
       catchError(errorAdmin => {
         console.log('❌ Não é admin, tentando como usuário...');
-        // Se não for admin, tenta como usuário normal
         return this.usuarioService.findByEmail(email);
       })
     );
   }
 
-  // ✅ MÉTODO CORRIGIDO: Salvar dados do usuário
   private salvarDadosUsuario(usuarioBackend: any, token: string): void {
     console.log('💾 Salvando dados do usuário:', usuarioBackend);
     
-    // ✅ CORREÇÃO: Converter funções para números se forem strings
     const funcoes = this.converterFuncoesParaNumeros(usuarioBackend.funcaoPessoa);
     const isAdmin = this.verificarSeEhAdmin(funcoes);
     
@@ -85,7 +79,7 @@ export class AuthService {
       isAdmin: isAdmin,
       tipo: isAdmin ? 'ADMIN' : 'USER',
       idUsuario: usuarioBackend.idUsuario || usuarioBackend.idAdmin || usuarioBackend.idPessoa,
-      dadosCompletos: usuarioBackend // Salva todos os dados do backend
+      dadosCompletos: usuarioBackend
     };
 
     localStorage.setItem('usuario', JSON.stringify(usuario));
@@ -93,7 +87,6 @@ export class AuthService {
     console.log('👤 Dados COMPLETOS do usuário salvos:', usuario);
   }
 
-  // ✅ NOVO MÉTODO: Converter funções strings para números
   private converterFuncoesParaNumeros(funcoes: any): number[] {
     if (!funcoes) return [0];
     
@@ -104,7 +97,6 @@ export class AuthService {
         if (typeof funcao === 'number') {
           return funcao;
         } else if (typeof funcao === 'string') {
-          // Converte string para número
           switch (funcao.toUpperCase()) {
             case 'ADMIN': return 1;
             case 'USUARIO': return 0;
@@ -112,7 +104,6 @@ export class AuthService {
             default: return 0;
           }
         } else if (typeof funcao === 'object' && funcao !== null) {
-          // Se for objeto, extrai o ID
           return funcao.id || 0;
         }
         return 0;
@@ -122,18 +113,15 @@ export class AuthService {
     return [0];
   }
 
-  // ✅ MÉTODO CORRIGIDO: Verificar se é admin baseado nas funções
   private verificarSeEhAdmin(funcoes: number[]): boolean {
     console.log('🔍 Verificando funções para admin:', funcoes);
     
-    // Se tem função 1 (ADMIN), é admin
     const isAdmin = Array.isArray(funcoes) && funcoes.includes(1);
     
     console.log('👑 Resultado da verificação de admin:', isAdmin);
     return isAdmin;
   }
 
-  // ✅ MÉTODO: Mapear funções numéricas para roles de texto
   private mapearFuncoesParaRoles(funcoes: number[]): string[] {
     const roles: string[] = [];
     
@@ -145,7 +133,6 @@ export class AuthService {
     return roles;
   }
 
-  // ✅ MÉTODO CORRIGIDO: Verificar se é Admin
   isAdmin(): boolean {
     const usuario = this.getUsuarioLogado();
     
@@ -154,7 +141,6 @@ export class AuthService {
       return false;
     }
 
-    // ✅ CORREÇÃO: Verificar diretamente as funções
     const isAdmin = this.verificarSeEhAdmin(usuario.funcaoPessoa);
 
     console.log('👑 Verificação de Admin:', {
@@ -220,7 +206,6 @@ export class AuthService {
     }
   }
 
-  // ✅ MÉTODO DE DEBUG MELHORADO
   debugAdminCheck(): void {
     const token = this.getToken();
     const usuario = this.getUsuarioLogado();

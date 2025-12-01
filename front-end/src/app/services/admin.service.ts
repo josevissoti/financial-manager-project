@@ -81,7 +81,6 @@ export class AdminService {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
-  // ✅ MÉTODO NOVO: Promover usuário para admin
   promoteToAdmin(userId: number): Observable<any> {
     return this.http.put(`http://localhost:8080/admin/users/promote/${userId}`, {});
   }

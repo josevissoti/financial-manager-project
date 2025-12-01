@@ -1,6 +1,4 @@
-<!-- form-lancamento.component.html -->
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <h1 class="page-title">
@@ -15,13 +13,11 @@
   </header>
 
   <div class="form-container">
-    <!-- Indicador de Carregamento -->
     <div *ngIf="carregandoDados" class="loading-state">
       <div class="loading-spinner"></div>
       <p>🔄 Carregando categorias e contas...</p>
     </div>
 
-    <!-- Mensagem de Erro -->
     <div *ngIf="erro" class="alert alert-error">
       <span class="alert-icon">⚠️</span>
       <span>{{ erro }}</span>
@@ -30,7 +26,6 @@
 
     <form (ngSubmit)="onSubmit()" #lancamentoForm="ngForm" class="lancamento-form">
       
-      <!-- Card: Informações Básicas -->
       <div class="form-card">
         <div class="card-header">
           <h3>📋 Informações Básicas</h3>
@@ -69,9 +64,6 @@
                 <input type="number" id="parcela" name="parcela" 
                        [(ngModel)]="lancamento.parcela" min="1" 
                        class="form-control" placeholder="1">
-                <div class="input-prefix">de</div>
-                <input type="number" [(ngModel)]="totalParcelas" min="1" 
-                       class="form-control" placeholder="1" name="totalParcelas">
               </div>
               <div class="form-hint">Número da parcela atual e total de parcelas</div>
             </div>
@@ -79,7 +71,6 @@
         </div>
       </div>
 
-      <!-- Card: Datas e Prazos -->
       <div class="form-card">
         <div class="card-header">
           <h3>📅 Datas e Prazos</h3>
@@ -153,7 +144,6 @@
         </div>
       </div>
 
-      <!-- Card: Classificação -->
       <div class="form-card">
         <div class="card-header">
           <h3>🏷️ Classificação</h3>
@@ -233,7 +223,6 @@
         </div>
       </div>
 
-      <!-- Preview Rápido -->
       <div *ngIf="showPreview" class="form-card preview-card">
         <div class="card-header">
           <h3>👁️ Pré-visualização</h3>
@@ -256,7 +245,6 @@
         </div>
       </div>
 
-      <!-- Ações do Formulário -->
       <div class="form-actions">
         <button type="button" (click)="voltar()" class="btn btn-secondary">
           ↩️ Cancelar

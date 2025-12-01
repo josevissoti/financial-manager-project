@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // ✅ ADICIONAR FormsModule
+import { FormsModule } from '@angular/forms';
 import { LancamentoService, Lancamento } from '../../../services/lancamento.service';
 
 @Component({
   selector: 'app-lista-lancamentos',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule], // ✅ ADICIONAR FormsModule
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './lista-lancamentos.component.html',
   styleUrls: ['./lista-lancamentos.component.css']
 })
 export class ListaLancamentosComponent implements OnInit {
   lancamentos: Lancamento[] = [];
-  lancamentosFiltrados: Lancamento[] = []; // ✅ ADICIONAR array filtrado
+  lancamentosFiltrados: Lancamento[] = [];
   carregando: boolean = true;
   erro: string = '';
 
-  // ✅ ADICIONAR propriedades de filtro
   filtroDescricao: string = '';
   filtroTipo: string = 'todos';
 
@@ -37,7 +36,7 @@ export class ListaLancamentosComponent implements OnInit {
     this.lancamentoService.findAll().subscribe({
       next: (lancamentos) => {
         this.lancamentos = lancamentos;
-        this.lancamentosFiltrados = lancamentos; // ✅ INICIALIZAR filtrados
+        this.lancamentosFiltrados = lancamentos;
         this.carregando = false;
         console.log(`✅ ${lancamentos.length} lançamentos carregados`);
       },
@@ -49,7 +48,6 @@ export class ListaLancamentosComponent implements OnInit {
     });
   }
 
-  // ✅ ADICIONAR método para aplicar filtros
   aplicarFiltros(): void {
     this.lancamentosFiltrados = this.lancamentos.filter(lancamento => {
       const descricaoMatch = lancamento.descricao.toLowerCase().includes(this.filtroDescricao.toLowerCase());
@@ -63,7 +61,6 @@ export class ListaLancamentosComponent implements OnInit {
     });
   }
 
-  // ✅ ADICIONAR método para limpar filtros
   limparFiltros(): void {
     this.filtroDescricao = '';
     this.filtroTipo = 'todos';
@@ -122,7 +119,6 @@ export class ListaLancamentosComponent implements OnInit {
     }
   }
 
-  // ✅ ADICIONAR método para ícone do tipo
   getTipoLancamentoIcone(tipo: number): string {
     switch(tipo) {
       case 0: return '📤';
@@ -157,7 +153,6 @@ export class ListaLancamentosComponent implements OnInit {
     }
   }
 
-  // ✅ ADICIONAR método para classe do tipo (se necessário no HTML)
   getTipoLancamentoClasse(tipo: number): string {
     return this.getTipoClasse(tipo);
   }

@@ -17,16 +17,12 @@ export class FormCategoriaComponent implements OnInit {
     idPessoa: 1
   };
 
-  // REMOVIDO: corSelecionada e iconeSelecionado
 
   isEditando: boolean = false;
   carregando: boolean = false;
   enviando: boolean = false;
   erro: string = '';
 
-  // REMOVIDO: coresCategoria e iconesCategoria
-
-  // Categorias sugeridas
   categoriasSugeridas = [
     'Alimentação',
     'Transporte',
@@ -80,7 +76,6 @@ export class FormCategoriaComponent implements OnInit {
     this.enviando = true;
     this.erro = '';
 
-    // Validações
     if (!this.categoria.descricao) {
       this.erro = 'Por favor, informe a descrição da categoria.';
       this.enviando = false;
@@ -93,7 +88,6 @@ export class FormCategoriaComponent implements OnInit {
       return;
     }
 
-    // Preparar dados para envio
     const categoriaParaEnviar: Categoria = {
       ...this.categoria
     };
@@ -151,7 +145,6 @@ export class FormCategoriaComponent implements OnInit {
         this.enviando = false;
         this.mostrarSucesso('Categoria criada com sucesso!');
         
-        // Limpa o formulário para criar outra categoria
         this.categoria = {
           descricao: '',
           idPessoa: 1
@@ -164,8 +157,6 @@ export class FormCategoriaComponent implements OnInit {
       }
     });
   }
-
-  // REMOVIDO: selecionarCor() e selecionarIcone()
 
   sugerirCategoria(): void {
     const sugestaoAleatoria = this.categoriasSugeridas[

@@ -1,5 +1,4 @@
 <div class="container-fluid">
-  <!-- Header -->
   <nav class="navbar navbar-light bg-light border-bottom">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center w-100">
@@ -26,7 +25,6 @@
 
   <div class="container mt-4">
     
-    <!-- Loading -->
     <div *ngIf="carregando" class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Carregando...</span>
@@ -34,18 +32,15 @@
       <p class="mt-2 text-muted">Carregando usuário...</p>
     </div>
 
-    <!-- Erro -->
     <div *ngIf="erro && !carregando" class="alert alert-danger">
       {{ erro }}
     </div>
 
-    <!-- Formulário -->
     <div *ngIf="!carregando">
       <form id="formUsuario" (ngSubmit)="onSubmit()" #form="ngForm">
         
         <div class="row">
           
-          <!-- Coluna Esquerda - Dados Pessoais -->
           <div class="col-lg-6">
             <div class="card mb-4">
               <div class="card-header bg-primary text-white">
@@ -53,7 +48,6 @@
               </div>
               <div class="card-body">
                 
-                <!-- Nome -->
                 <div class="mb-3">
                   <label for="nome" class="form-label">📝 Nome Completo *</label>
                   <input type="text" class="form-control" id="nome"
@@ -65,7 +59,6 @@
                   </div>
                 </div>
 
-                <!-- CPF -->
                 <div class="mb-3">
                   <label for="cpf" class="form-label">🔢 CPF *</label>
                   <input type="text" class="form-control" id="cpf"
@@ -79,7 +72,6 @@
                   </div>
                 </div>
 
-                <!-- Data de Nascimento -->
                 <div class="mb-3">
                   <label for="datanascimento" class="form-label">🎂 Data de Nascimento *</label>
                   <div class="input-group">
@@ -98,7 +90,6 @@
                   </div>
                 </div>
 
-                <!-- Telefone -->
                 <div class="mb-3">
                   <label for="telefone" class="form-label">📞 Telefone *</label>
                   <input type="text" class="form-control" id="telefone"
@@ -116,7 +107,6 @@
             </div>
           </div>
 
-          <!-- Coluna Direita - Dados de Acesso -->
           <div class="col-lg-6">
             <div class="card mb-4">
               <div class="card-header bg-info text-white">
@@ -124,7 +114,6 @@
               </div>
               <div class="card-body">
                 
-                <!-- Email -->
                 <div class="mb-3">
                   <label for="email" class="form-label">📧 Email *</label>
                   <input type="email" class="form-control" id="email"
@@ -136,7 +125,6 @@
                   </div>
                 </div>
 
-                <!-- Senha -->
                 <div *ngIf="!isEditando" class="mb-3">
                   <label for="senha" class="form-label">🔑 Senha *</label>
                   <input type="password" class="form-control" id="senha"
@@ -152,7 +140,6 @@
                   </div>
                 </div>
 
-                <!-- Confirmar Senha -->
                 <div *ngIf="!isEditando" class="mb-3">
                   <label for="confirmarSenha" class="form-label">🔑 Confirmar Senha *</label>
                   <input type="password" class="form-control" id="confirmarSenha"
@@ -164,7 +151,6 @@
                   </div>
                 </div>
 
-                <!-- Campo de senha para edição (opcional) -->
                 <div *ngIf="isEditando" class="mb-3">
                   <label for="senha" class="form-label">🔑 Nova Senha</label>
                   <input type="password" class="form-control" id="senha"
@@ -185,7 +171,6 @@
               </div>
               <div class="card-body">
                 
-                <!-- Status -->
                 <div class="mb-3">
                   <label for="status" class="form-label">🎯 Status *</label>
                   <select class="form-select" id="status"
@@ -196,7 +181,6 @@
                   </select>
                 </div>
 
-                <!-- Funções -->
                 <div class="mb-3">
                   <label class="form-label">👥 Funções *</label>
                   <div class="form-check">
@@ -227,7 +211,6 @@
           </div>
         </div>
 
-        <!-- Botões de Ação -->
         <div class="row mt-4">
           <div class="col-12">
             <div class="card">

@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-main">
@@ -31,13 +30,11 @@
   </header>
 
   <div class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando perfil...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="alert alert-error">
       <div class="alert-content">
         <span class="alert-icon">⚠️</span>
@@ -48,7 +45,6 @@
       </div>
     </div>
 
-    <!-- Success Message -->
     <div *ngIf="sucesso && !carregando" class="alert alert-success">
       <div class="alert-content">
         <span class="alert-icon">✅</span>
@@ -60,14 +56,11 @@
       <button class="alert-close" (click)="sucesso = ''">×</button>
     </div>
 
-    <!-- Perfil do Usuário -->
     <div *ngIf="!carregando && usuario.email" class="profile-container">
       <div class="profile-layout">
 
-        <!-- Coluna Principal -->
         <div class="profile-main">
 
-          <!-- Card: Informações Pessoais -->
           <div class="profile-card">
             <div class="card-header">
               <h3>📋 Informações Pessoais</h3>
@@ -77,7 +70,6 @@
             </div>
             <div class="card-body">
 
-              <!-- Modo Visualização -->
               <div *ngIf="!editando" class="view-mode">
                 <div class="info-grid">
                   <div class="info-item">
@@ -112,7 +104,6 @@
                 </div>
               </div>
 
-              <!-- Modo Edição -->
               <div *ngIf="editando" class="edit-mode">
                 <div class="form-grid">
                   <div class="form-group">
@@ -160,14 +151,12 @@
             </div>
           </div>
 
-          <!-- Card: Segurança -->
           <div class="profile-card security-card">
             <div class="card-header">
               <h3>🔐 Segurança</h3>
             </div>
             <div class="card-body">
 
-              <!-- Modo Visualização -->
               <div *ngIf="!editando" class="security-view">
                 <div class="security-info">
                   <div class="security-icon">🔒</div>
@@ -182,7 +171,6 @@
                 </button>
               </div>
 
-              <!-- Modo Edição - Segurança -->
               <div *ngIf="editando" class="security-edit">
                 <div class="security-toggle">
                   <label class="toggle-label">
@@ -230,10 +218,8 @@
 
         </div>
 
-        <!-- Sidebar -->
         <div class="profile-sidebar">
 
-          <!-- Card: Resumo do Perfil -->
           <div class="profile-card summary-card">
             <div class="card-header">
               <h3>👤 Resumo</h3>
@@ -245,14 +231,10 @@
               <div class="user-summary">
                 <h4>{{ usuario.nome || 'Usuário' }}</h4>
                 <p class="user-email">{{ usuario.email }}</p>
-                <div class="user-role">
-                  <span class="role-badge">{{ getFuncoesTexto() }}</span>
-                </div>
               </div>
             </div>
           </div>
 
-          <!-- Card: Informações do Sistema -->
           <div class="profile-card system-card">
             <div class="card-header">
               <h3>⚙️ Sistema</h3>
@@ -283,7 +265,6 @@
       </div>
     </div>
 
-    <!-- Empty State -->
     <div *ngIf="!carregando && !usuario.email" class="empty-state">
       <div class="empty-icon">👤</div>
       <h3>Não foi possível carregar o perfil</h3>

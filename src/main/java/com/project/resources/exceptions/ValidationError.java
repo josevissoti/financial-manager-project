@@ -1,7 +1,5 @@
 package com.project.resources.exceptions;
 
-import com.project.resources.exceptions.FieldMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 

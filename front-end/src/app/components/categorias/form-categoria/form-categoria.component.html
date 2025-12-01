@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- Header Padrão -->
   <header class="page-header">
     <div class="header-content">
       <div class="header-main">
@@ -16,13 +15,11 @@
   </header>
 
   <div class="page-content">
-    <!-- Loading State -->
     <div *ngIf="carregando" class="loading-state">
       <div class="loading-spinner"></div>
       <p>Carregando dados da categoria...</p>
     </div>
 
-    <!-- Error State -->
     <div *ngIf="erro && !carregando" class="alert alert-error">
       <div class="alert-content">
         <span class="alert-icon">⚠️</span>
@@ -33,23 +30,19 @@
       </div>
     </div>
 
-    <!-- Formulário -->
     <div *ngIf="!carregando" class="form-container">
       <form (ngSubmit)="onSubmit()" #form="ngForm" class="categoria-form">
         
         <div class="form-layout">
           
-          <!-- Coluna Principal -->
           <div class="form-main">
             
-            <!-- Card: Informações da Categoria -->
             <div class="form-card">
               <div class="card-header">
                 <h3>📋 Informações da Categoria</h3>
               </div>
               <div class="card-body">
                 
-                <!-- Descrição -->
                 <div class="form-group">
                   <label for="descricao" class="form-label">
                     Descrição da Categoria <span class="required">*</span>
@@ -71,7 +64,6 @@
               </div>
             </div>
 
-            <!-- Card: Dicas e Sugestões -->
             <div class="form-card tips-card">
               <div class="card-header">
                 <h3>💡 Dicas para Categorias</h3>
@@ -112,10 +104,8 @@
 
           </div>
 
-          <!-- Sidebar: Preview e Ações -->
           <div class="form-sidebar">
             
-            <!-- Card: Preview -->
             <div class="form-card preview-card">
               <div class="card-header">
                 <h3>👁️ Pré-visualização</h3>
@@ -123,7 +113,6 @@
               <div class="card-body">
                 <div class="preview-content">
                   
-                  <!-- Preview da Categoria -->
                   <div class="category-preview">
                     <div class="preview-header">
                       <span class="preview-name">{{ categoria.descricao || 'Nome da Categoria' }}</span>
@@ -136,7 +125,6 @@
                     </div>
                   </div>
 
-                  <!-- Informações Adicionais -->
                   <div class="preview-info">
                     <div class="info-item">
                       <span class="info-label">Tipo:</span>
@@ -152,7 +140,6 @@
               </div>
             </div>
 
-            <!-- Card: Ações Rápidas -->
             <div class="form-card actions-card">
               <div class="card-header">
                 <h3>⚡ Ações Rápidas</h3>
@@ -175,7 +162,6 @@
           </div>
         </div>
 
-        <!-- Ações do Formulário -->
         <div class="form-actions">
           <button type="button" (click)="voltar()" class="btn btn-secondary">
             ↩️ Cancelar
