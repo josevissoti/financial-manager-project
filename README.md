@@ -1,7 +1,19 @@
 # Financial Manager Project
 
 Sistema completo para gestão financeira pessoal que permite o controle de contas bancárias, lançamentos financeiros e categorização de transações. Desenvolvido para auxiliar usuários no acompanhamento de sua saúde financeira com diferentes tipos de contas e transações.
-Funcionalidades
+O Financial Manager é um sistema de gestão financeira pessoal que permite:
+
+<ul>
+<li>Gestão de Usuários e Administradores: Cadastro e autenticação com diferentes níveis de permissão</li>
+
+<li>Controle de Contas Bancárias: Diferentes tipos de contas (corrente, investimento, poupança, etc.)</li>
+
+<li>Lançamentos Financeiros: Registro de débitos e créditos com categorização</li>
+
+<li>Categorias Personalizadas: Organização de lançamentos por categorias definidas pelo usuário</li>
+
+<li>Gestão de Bancos: Cadastro de instituições financeiras</li>
+</ul>
 
 # Diagrama de Classe
 
